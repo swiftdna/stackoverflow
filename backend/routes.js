@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-	res.json({success: true, message: 'Welcome to API page!'});
+	res.json({success: true, message: 'Welcome to API page everyone!'});
 });
 
 router.get('/session', (req, res) => {
