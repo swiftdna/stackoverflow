@@ -5,9 +5,14 @@ import {
   Route
 } from "react-router-dom";
 import Login from './Login';
-import Navbar from './Navbar';
+import Header from './Header';
+import Home from './Home';
+import Question from './Question';
+import AskQuestion from './AskQuestion';
+// import Header from '../components/header';
 // import Footer from './Footer';
 // import Register from './Register';
+import "../Main.css";
 import { useLocation } from 'react-router-dom';
 import { checkSession } from '../utils';
 import { Toast, ToastContainer } from 'react-bootstrap';
@@ -36,7 +41,7 @@ export function Main() {
 
     return(
         <>
-            {location.pathname !== '/login' && <Navbar />}
+            {location.pathname !== '/login' && <Header />}
             {
                 alert ? 
                 <div className="container pull-down">
@@ -54,7 +59,9 @@ export function Main() {
                 </Toast>
             </ToastContainer>
             <Routes>
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/questions/:questionID" element={<Question />} />
+              <Route path="/questions/ask" element={<AskQuestion />} />
             </Routes>
         </>
     )
