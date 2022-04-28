@@ -6,7 +6,7 @@ const session = require('express-session')
 const app = express();
 const routes = require('./routes');
 require('dotenv').config();
-const fileupload = require('express-fileupload');
+// const fileupload = require('express-fileupload');
 const connect = require('./config/connect');
 
 const port = process.env.NODE_LOCAL_PORT || 8081;
@@ -28,7 +28,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
-app.use(fileupload());
+// app.use(fileupload());
 app.use('/api', routes);
 COREAPP = {};
 
