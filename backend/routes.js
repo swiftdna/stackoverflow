@@ -1,8 +1,50 @@
 const express = require('express');
 const router = express.Router();
 
+const kakfafy = (rid, req, res) => {
+  const kafka = require('./kafka/client');
+  const {user, params, query, body} = req;
+  const modifiedRequest = { rid, user, params, query, body };
+  return kafka.make_request('so_backend_processing', modifiedRequest, (err,results) => {
+    if (err){
+      console.log("Inside err");
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
 router.get('/', (req, res) => {
 	res.json({success: true, message: 'Welcome to API page everyone!'});
+});
+
+router.get('/answers', (req, res) => {
+    return kakfafy('getAnswers', req, res);
+})
+
+router.get('/answers/:questionID', (req, res) => {
+  res.json({
+    success: true,
+    data: [{
+      content: "This is not related to an HTTP proxy.",
+      author: "Amirhossein Mehrvarzi",
+      owner: true,
+      created: "Oct 30, 2020 at 20:48",
+      comments: [
+        {
+          content: "1st comment",
+          author: "Apple",
+          created: "Oct 28, 2020 at 18:41"
+        },
+        {
+          content: "Second comment comes here",
+          author: "Oranga",
+          created: "Oct 30, 2020 at 11:03"
+        }
+      ]
+    }]
+  });
 });
 
 router.get('/questions/:questionID', (req, res) => {
@@ -13,7 +55,7 @@ router.get('/questions/:questionID', (req, res) => {
       created: "",
       modified: "",
       viewed: "",
-      description: `
+      content: `
         Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
       
       `,
