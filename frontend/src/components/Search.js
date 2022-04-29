@@ -28,7 +28,19 @@ function Search() {
                     </Col>
                 </Row>
                 <Row style={{marginTop: '20px'}}>
-                    <h4>13,531 results</h4>
+                    <Row style={{marginTop: '10px', marginBottom: '20px'}}>
+                    <Col xs={8}>
+                        <h4>13,531 results</h4>
+                    </Col>
+                    <Col>
+                        <div className="d-flex s-btn-group js-filter-btn">
+                            <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=xyz" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
+                                Relevance</a>
+                            <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
+                                Newest</a>
+                        </div>
+                    </Col>
+                    </Row>
                     <hr />
                     {Array(15).fill().map(ar => <QuestionSummaryCard />)}
                 </Row>
