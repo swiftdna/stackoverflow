@@ -3,6 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
   questionPostedCount} = require('./controllers/questions');
+const { signup,login} = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
 
@@ -49,8 +50,22 @@ router.get('/searchQuestion',(req, res) => {
 router.delete('/deletebookmark',checkAuth, (req, res) => {
     return kakfafy('deletebookmark', req, res);
   });
- 
+  router.get('/getUserStats',checkAuth, (req, res) => {
+    return kakfafy('getUserStats', req, res);
+  });
+  router.put('/editUserDetails',checkAuth, (req, res) => {
+    return kakfafy('editUserDetails', req, res);
+  });
+router.post('/signup', signup);
+router.post('/login', login);
 router.put('/approvequestion/:questionid', (req, res) => {
     return kakfafy('approvequestion', req, res);
   });
+
+  router.get('/getUserDetails',(req, res) => {
+    return kakfafy('getUserDetails', req, res);
+  })
+  router.get('/userActivity',checkAuth,(req, res) => {
+    return kakfafy('userActivity', req, res);
+  })
 module.exports = router;
