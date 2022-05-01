@@ -21,6 +21,7 @@ import { Toast, ToastContainer } from 'react-bootstrap';
 import { selectAlertFlag, selectToastFlag, selectAlertMessage, selectAlertType, selectIsLoggedIn } from '../selectors/appSelector';
 import { clearToast } from '../actions/app-actions';
 import { loadQuestions } from '../utils';
+import Register from './Register';
 
 //Create a Main Component
 export function Main() {
@@ -68,6 +69,9 @@ export function Main() {
               <Route path="/questions/ask" element={<AskQuestion />} />
               <Route path="/search" element={<Search />} />
               <Route path="/messages" element={<Messages />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
             </Routes>
         </>
     )

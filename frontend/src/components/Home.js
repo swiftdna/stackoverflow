@@ -38,6 +38,7 @@ function Home() {
                 <p onClick={() => navigate('/messages')}>messages</p>
                 </Col>
             </Row>
+
         </div>
     )
 }
