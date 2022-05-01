@@ -1,11 +1,15 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
+const { questionValidate} = require('./controllers/questions');
+const {checkAuth, auth} = require("./utils/passport");
+auth();
 
 const kakfafy = (rid, req, res) => {
   const kafka = require('./kafka/client');
   const {user, params, query, body} = req;
   const modifiedRequest = { rid, user, params, query, body };
-  return kafka.make_request('so_backend_processing', modifiedRequest, (err,results) => {
+  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
     if (err){
       console.log("Inside err");
       res.json(err);
@@ -19,81 +23,36 @@ router.get('/', (req, res) => {
 	res.json({success: true, message: 'Welcome to API page everyone!'});
 });
 
-router.get('/answers', (req, res) => {
-    return kakfafy('getAnswers', req, res);
-})
-
-router.get('/answers/:questionID', (req, res) => {
-  res.json({
-    success: true,
-    data: [{
-      content: "This is not related to an HTTP proxy.",
-      author: "Amirhossein Mehrvarzi",
-      owner: true,
-      created: "Oct 30, 2020 at 20:48",
-      comments: [
-        {
-          content: "1st comment",
-          author: "Apple",
-          created: "Oct 28, 2020 at 18:41"
-        },
-        {
-          content: "Second comment comes here",
-          author: "Oranga",
-          created: "Oct 30, 2020 at 11:03"
-        }
-      ]
-    }]
+router.post('/questions', questionValidate,checkAuth, (req, res) => {
+    return kakfafy('createQuestion', req, res);
   });
-});
-
-router.get('/questions/:questionID', (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      title: "Unable to resolve dependency tree error when installing npm packages",
-      created: "",
-      modified: "",
-      viewed: "",
-      content: `
-        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-      
-      `,
-      tags: [
-        "angular",
-        "typescript",
-        "npm",
-        "angular9"
-      ],
-      comments: [
-        {
-          content: "Show your package.json - it looks like you've upgraded @angular/core, but did not upgrade @angular/http?",
-          author: "Adam",
-          created: "Oct 28, 2020 at 18:41"
-        },
-        {
-          content: "my @angular/core version is 9.1.4, so shall i update @angular/http?",
-          author: "Pearl",
-          created: "Oct 30, 2020 at 11:03"
-        },
-        {
-          content: "Please share your package.json file. The problem seems to be in your dependencies",
-          author: "Olwen Kevin",
-          created: "Nov 08, 2020 at 01:33"
-        }
-      ]
-    }
+router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
+    return kakfafy('editQuestion', req, res);
   });
-});
-
-router.get('/session', (req, res) => {
-  if (req.isAuthenticated && req.isAuthenticated() && req.session) {
-    const {passport: {user}} = req.session ? req.session : {};
-    console.log('req.session ->> ', req.session);
-    res.json({ success: true, isAuthenticated: true, user: {email: user.email, id: user._id, username: user.username} });
-  } else {
-    res.status(401).json({message: "Not authorized", success: false});
-  }
-});
-
+router.get('/questions', (req, res) => {
+    return kakfafy('loadQuestions', req, res);
+  });
+router.get('/getquestion/:questionid',(req, res) => {
+    return kakfafy('questiondetail', req, res);
+  })
+router.post('/addbookmark',checkAuth,(req, res) => {
+    return kakfafy('addbookmark', req, res);
+  });
+router.get('/searchQuestion',(req, res) => {
+    return kakfafy('searchQuestion', req, res);
+  });
+  router.get('/mostViewedQuestions',(req, res) => {
+    return kakfafy('mostViewedQuestions', req, res);
+  });
+  router.get('/questionPostedCount',(req, res) => {
+    return kakfafy('questionPostedCount', req, res);
+  });
+  
+router.delete('/deletebookmark',checkAuth, (req, res) => {
+    return kakfafy('deletebookmark', req, res);
+  });
+ 
+router.put('/approvequestion/:questionid', (req, res) => {
+    return kakfafy('approvequestion', req, res);
+  });
 module.exports = router;
