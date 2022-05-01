@@ -1,25 +1,27 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
-  questionPostedCount} = require('./controllers/questions');
+const { questionValidate} = require('./controllers/questions');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
 
-
 const kakfafy = (rid, req, res) => {
-    const kafka = require('./kafka/client');
-    const {user, params, query, body} = req;
-    const modifiedRequest = { rid, user, params, query, body };
-    return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
-      if (err){
-        console.log("Inside err");
-        res.json(err);
-      } else {
-        res.json(results);
-      }
-    });
-  };
+  const kafka = require('./kafka/client');
+  const {user, params, query, body} = req;
+  const modifiedRequest = { rid, user, params, query, body };
+  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
+    if (err){
+      console.log("Inside err");
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+router.get('/', (req, res) => {
+	res.json({success: true, message: 'Welcome to API page everyone!'});
+});
 
 router.post('/questions', questionValidate,checkAuth, (req, res) => {
     return kakfafy('createQuestion', req, res);
@@ -27,7 +29,7 @@ router.post('/questions', questionValidate,checkAuth, (req, res) => {
 router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
     return kakfafy('editQuestion', req, res);
   });
-router.get('/loadQuestions', (req, res) => {
+router.get('/questions', (req, res) => {
     return kakfafy('loadQuestions', req, res);
   });
 router.get('/getquestion/:questionid',(req, res) => {
