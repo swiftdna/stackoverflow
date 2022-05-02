@@ -55,4 +55,30 @@ router.delete('/deletebookmark',checkAuth, (req, res) => {
 router.put('/approvequestion/:questionid', (req, res) => {
     return kakfafy('approvequestion', req, res);
   });
+
+router.get('/answers', (req, res) => {
+    return kakfafy('loadAnswers', req, res);
+  });
+
+router.post('/answers', answerValidate,checkAuth, (req, res) => {
+    return kakfafy('createAnswer', req, res);
+  });
+
+router.delete('/deleteanswer',checkAuth, (req, res) => {
+    return kakfafy('removeAnswer', req, res);
+  });
+
+router.get('/comments', (req, res) => {
+    return kakfafy('loadComments', req, res);
+  });
+
+router.post('/comments', commentValidate,checkAuth, (req, res) => {
+    return kakfafy('createAnswer', req, res);
+  });
+
+router.delete('/deletecomment',checkAuth, (req, res) => {
+    return kakfafy('removeComment', req, res);
+  });
+
+
 module.exports = router;
