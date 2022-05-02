@@ -1,11 +1,16 @@
-const { createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,mostViewedQuestions} = require('../controllers/questions');
+const { createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,questionPostedCount,approvequestion,searchQuestion,mostViewedQuestions} = require('../controllers/questions');
 const {createAnswer,removeAnswer}=require('../controllers/answers');
 const {createComment, removeComment}=require('../controllers/comments');
 const {upvote,downvote,unvote}=require('../controllers/votes');
+const { getUserDetails,getUserStats,editUserDetails,userActivity}= require('../controllers/users');
 
 const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
     editQuestion,approvequestion,searchQuestion,mostViewedQuestions,
+    createAnswer,removeAnswer,createComment,removeComment,upvote,downvote,unvote,
+    createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
+    editQuestion,approvequestion,searchQuestion,mostViewedQuestions,questionPostedCount,
+    getUserDetails,getUserStats,editUserDetails,userActivity,
     createAnswer,removeAnswer,createComment,removeComment,upvote,downvote,unvote
 };
 

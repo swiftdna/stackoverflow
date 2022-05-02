@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
 const routes = require('./routes');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -51,7 +51,7 @@ app.post('/logout', (req, res) => {
   req.session.destroy(()=>{
     // destroy session data
     req.session = null;
-    res.clearCookie("etsy_token");
+    res.clearCookie("so_token");
     res.json({success: true});
   });
 });

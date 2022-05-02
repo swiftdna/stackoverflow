@@ -1,8 +1,10 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const { questionValidate} = require('./controllers/questions');
-const {answerValidate} = require('./controller/answers');
+const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
+  questionPostedCount } = require('./controllers/questions');
+const { answerValidate } = require('./controllers/answers');
+const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
 
@@ -33,47 +35,67 @@ router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
 router.get('/questions', (req, res) => {
     return kakfafy('loadQuestions', req, res);
   });
-router.get('/getquestion/:questionid',(req, res) => {
+router.get('/questions/:questionid',(req, res) => {
     return kakfafy('questiondetail', req, res);
   })
 router.post('/addbookmark',checkAuth,(req, res) => {
     return kakfafy('addbookmark', req, res);
   });
 router.get('/searchQuestion',(req, res) => {
-    return kakfafy('searchQuestion', req, res);
-  });
-  router.get('/mostViewedQuestions',(req, res) => {
-    return kakfafy('mostViewedQuestions', req, res);
-  });
-  router.get('/questionPostedCount',(req, res) => {
-    return kakfafy('questionPostedCount', req, res);
-  });
+  return kakfafy('searchQuestion', req, res);
+});
+router.get('/mostViewedQuestions',(req, res) => {
+  return kakfafy('mostViewedQuestions', req, res);
+});
+router.get('/questionPostedCount',(req, res) => {
+  return kakfafy('questionPostedCount', req, res);
+});
   
 router.delete('/deletebookmark',checkAuth, (req, res) => {
-    return kakfafy('deletebookmark', req, res);
-  });
- 
+  return kakfafy('deletebookmark', req, res);
+});
+router.get('/getUserStats',checkAuth, (req, res) => {
+  return kakfafy('getUserStats', req, res);
+});
+router.put('/editUserDetails',checkAuth, (req, res) => {
+  return kakfafy('editUserDetails', req, res);
+});
+router.post('/signup', signup);
+router.post('/login', login);
 router.put('/approvequestion/:questionid', (req, res) => {
-    return kakfafy('approvequestion', req, res);
-  });
+  return kakfafy('approvequestion', req, res);
+});
 
+router.get('/getUserDetails',(req, res) => {
+  return kakfafy('getUserDetails', req, res);
+});
+
+router.get('/userActivity',checkAuth,(req, res) => {
+  return kakfafy('userActivity', req, res);
+});
+
+router.get('/answers', (req, res) => {
+  return kakfafy('loadAnswers', req, res);
+});
 
 router.post('/answers', answerValidate,checkAuth, (req, res) => {
-    return kakfafy('createAnswer', req, res);
-  });
+  return kakfafy('createAnswer', req, res);
+});
 
 router.delete('/deleteanswer',checkAuth, (req, res) => {
-    return kakfafy('removeAnswer', req, res);
-  });
-
+  return kakfafy('removeAnswer', req, res);
+});
 
 router.post('/comments', commentValidate,checkAuth, (req, res) => {
-    return kakfafy('createComment', req, res);
-  });
+  return kakfafy('createComment', req, res);
+});
+
+router.get('/comments', (req, res) => {
+  return kakfafy('loadComments', req, res);
+});
 
 router.delete('/deletecomment',checkAuth, (req, res) => {
-    return kakfafy('removeComment', req, res);
-  });
-
+  return kakfafy('removeComment', req, res);
+});
 
 module.exports = router;
