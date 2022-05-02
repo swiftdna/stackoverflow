@@ -2,8 +2,8 @@ const Question = require('../models/question');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const moment = require('moment');
+const mongoose = require('mongoose');
 
-// posting the question
 const createQuestion = async (req, callback ) => {
 	const result = validationResult(req);
 	if (!result.isEmpty()) {
@@ -15,7 +15,6 @@ const createQuestion = async (req, callback ) => {
 	try {
 	  const { title, tags, text,status} = req.body;
 	  const author = req.user.id;
-
 	  const question = await Question.create({
 		title,
 		author,
@@ -23,6 +22,14 @@ const createQuestion = async (req, callback ) => {
 		text,
 		status
 	  });
+	  await tags.forEach( async (tag) =>
+        {   
+	 //const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
+	 await User.updateOne(
+		{ '_id': mongoose.Types.ObjectId(req.user.id) },
+		{ $inc: { [`tags_post_count.${tag}`]: 1 } }
+	 )
+		})
       return callback(null, {
 		success: true,
         data : question
@@ -35,7 +42,6 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
-// in the landing page getting all the question details
   const loadQuestions = async (req, callback) => {
 	try {
 		const sortType = req.query.tab
@@ -53,16 +59,17 @@ const createQuestion = async (req, callback ) => {
 		});
 	  }
 	  else {
-		const question = await Question.find().sort(sort);
-		question.map(ques=>
-			{
-				
-				if (ques.created !== ques.modified)
-				{
-					console.log(ques.created);
-					ques.modifies = true
-				}
-			});
+		let question = await Question.find().sort(sort);
+		question = await question.map(ques=> {
+			let temp = {};
+			if (ques.created !== ques.modified) {
+				console.log('changing this ->>>', JSON.stringify(temp));
+				temp.hello = true;
+				console.log('changed this ->>>',JSON.stringify(temp));
+			}
+			return ques;
+		});
+		console.log('question ---> ',JSON.stringify(question) );
 		return callback(null, {
 			data : question
 		});
@@ -75,7 +82,7 @@ const createQuestion = async (req, callback ) => {
 	}
   };
   
-// getting  the details of the question overview  page
+  
   const questiondetail = async (req, callback) => {
 		try {
 		  const  id  = req.params.questionid;
@@ -110,7 +117,6 @@ const createQuestion = async (req, callback ) => {
 		}
   };
 
-  // adding the bookmark of the question
   const addbookmark = async (req, callback) => {
 	try {
 	  const  {_id}  = req.body;
@@ -131,7 +137,6 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
-  // delete the bookmark of the question
   const deletebookmark = async (req, callback) => {
 	try {
 	  const  {_id}  = req.body;
@@ -153,7 +158,6 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
-// editing the question 
   const editQuestion = async (req, callback) => {
 	const result = validationResult(req);
 	if (!result.isEmpty()) {
@@ -168,6 +172,7 @@ const createQuestion = async (req, callback ) => {
       const id = req.params.questionid
 	  console.log(id);
 	  const question = await Question.findByIdAndUpdate(id,{title:title,tags:tags,text:text,modified:Date.now()},{new:true});
+	  
 	  return callback(null, {
 		data : question
 	});
@@ -179,7 +184,6 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
-  // admin approving the question
   const approvequestion = async (req, callback) => {
 	
 	try {
@@ -198,7 +202,6 @@ const createQuestion = async (req, callback ) => {
 	}
   };
   
-  // top 10 viewed questions till date
   const mostViewedQuestions = async (req, callback) => {
 	
 	try {
@@ -216,7 +219,36 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
- // need to complete half search is done
+  const questionPostedCount = async (req, callback) => {
+	
+	try {
+      const todaydate= Date.now();
+	  console.log('date',todaydate);
+	  const date= todaydate.split('T');
+	  const questions = await Question.find({}).sort({created:-1});
+	  const count=0;
+	  await questions.map(ques=>
+		{
+           {
+			   if (ques.created.split('T')[0] === date[0])
+			   {
+				   count=count+1
+			   }
+		   }
+		})
+		console.log(count)
+	  return callback(null, {
+		  success : true,
+		data : count
+	});
+	} catch (error) {
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
+  
   const searchQuestion = async (req, callback) => {
 	try {
 		const sortType = req.query.tab
@@ -268,5 +300,5 @@ module.exports = {
 	editQuestion,
 	approvequestion,
 	searchQuestion,
-	mostViewedQuestions,
+	mostViewedQuestions,questionPostedCount
 };
