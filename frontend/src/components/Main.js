@@ -20,6 +20,7 @@ import { checkSession } from '../utils';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { selectAlertFlag, selectToastFlag, selectAlertMessage, selectAlertType, selectIsLoggedIn } from '../selectors/appSelector';
 import { clearToast } from '../actions/app-actions';
+import { loadQuestions } from '../utils';
 
 //Create a Main Component
 export function Main() {
@@ -39,6 +40,7 @@ export function Main() {
     
     useEffect(() => {
         checkSession(dispatch);
+        loadQuestions(dispatch);
     }, []);
 
     return(

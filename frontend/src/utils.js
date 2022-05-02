@@ -1,5 +1,6 @@
 import { handleLoginResponse, setToast, handleCountriesResponse } from './actions/app-actions';
-import { handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
+import { questionDetailsLoading, handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
+import { questionsLoading, handleQuestionsResponse } from './actions/questions-actions';
 // import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
@@ -22,6 +23,7 @@ export function register(dispatch, data, callback) {
 }
 
 export function checkSession(dispatch) {
+    dispatch(questionDetailsLoading());
     axios.get('/api/session')
         .then(response => {
             dispatch(handleLoginResponse(response));
@@ -35,6 +37,17 @@ export function getQuestionDetails(dispatch, id) {
     axios.get(`/api/questions/${id}`)
         .then(response => {
             dispatch(handleQuestionDetailsResponse(response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function loadQuestions(dispatch) {
+    dispatch(questionsLoading());
+    axios.get(`/api/questions`)
+        .then(response => {
+            dispatch(handleQuestionsResponse(response));
         })
         .catch(err => {
             console.log(err.message);
