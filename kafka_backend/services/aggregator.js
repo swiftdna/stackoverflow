@@ -1,9 +1,12 @@
 const { createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,mostViewedQuestions} = require('../controllers/questions');
+const {createAnswer,removeAnswer}=require('../controllers/answers');
+const {createComment, removeComment}=require('../controllers/comments');
+const {upvote,downvote,unvote}=require('../controllers/votes');
 
 const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
     editQuestion,approvequestion,searchQuestion,mostViewedQuestions,
-   
+    createAnswer,removeAnswer,createComment,removeComment,upvote,downvote,unvote
 };
 
 function handle_request(msg, callback){

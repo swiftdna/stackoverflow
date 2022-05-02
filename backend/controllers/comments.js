@@ -1,30 +1,13 @@
 const { body, validationResult } = require('express-validator');
 
-const loadComments = async (req, res, next, id) => {
-  try {
-    let comment;
-
-    if (req.answer) {
-      comment = await req.answer.comments.id(id);
-    } else {
-      comment = await req.question.comments.id(id);
-    }
-
-    if (!comment) return res.status(404).json({ message: 'Comment not found.' });
-    req.comment = comment;
-  } catch (error) {
-    if (error.name === 'CastError') return res.status(400).json({ message: 'Invalid comment id.' });
-    return next(error);
-  }
-  next();
-};
-
-const createComment = async (req, res, next) => {
+const createComment = async (req, callback) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
-    return res.status(422).json({ errors });
+    return callback({
+		errors
+	});
   }
 
   try {
@@ -38,30 +21,42 @@ const createComment = async (req, res, next) => {
     }
 
     const question = await req.question.addComment(id, comment);
-    return res.status(201).json(question);
-  } catch (error) {
-    next(error);
-  }
+    return callback(null, {
+        data : question
+    });
+	} catch (error) {
+        return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
 };
 
-const removeComment = async (req, res, next) => {
+const removeComment = async (req, callback) => {
   const { comment } = req.params;
 
   try {
     if (req.params.answer) {
       req.answer.removeComment(comment);
       const question = await req.question.save();
-      return res.json(question);
+      return callback(null, {
+		success : true,
+	});
     }
 
     const question = await req.question.removeComment(comment);
-    return res.json(question);
+    return callback(null, {
+		success : true,
+	});
   } catch (error) {
-    next(error);
-  }
+    return callback(error,{
+        success: false,
+        message: error.message
+    });
+}
 };
 
-const validate = [
+const commentValidate = [
   body('comment')
     .exists()
     .trim()
@@ -77,5 +72,5 @@ module.exports = {
 	loadComments,
     createComment,
     removeComment,
-	validate
+	commentValidate
 };
