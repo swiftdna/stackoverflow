@@ -49,7 +49,7 @@ export default function questionDetailsReducer(state = initialState, action) {
         loading_answer: true
       }
     }
-    case CLEAR_QUESTION_DETAILS:
+    case CLEAR_ANSWER_DETAILS:
       return {
         ...state,
         answers: []

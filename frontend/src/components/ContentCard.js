@@ -20,7 +20,7 @@ export default function ContentCard({ data, type}) {
         	type==='question' && 
         	<>
         	<p className="q_subheading">
-            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> 606k times
+            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> {data.views} times
         	</p>
         	<hr />
         	</>
@@ -35,7 +35,7 @@ export default function ContentCard({ data, type}) {
                 <FaHistory className="history_ctrl" />
             </Col>
             <Col xs={11}>
-                <p className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}><Output data={ data.text } /></p>
+                <div className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
                 <p className="q_tags">
                     {data.tags && data.tags.map((tag, index) => <span key={index} className="q_tag">{tag}</span>)}
                 </p>

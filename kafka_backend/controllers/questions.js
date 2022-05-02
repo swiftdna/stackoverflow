@@ -3,6 +3,7 @@ const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const moment = require('moment');
 const mongoose = require('mongoose');
+const helper = require('./helper');
 
 const createQuestion = async (req, callback ) => {
 	const result = validationResult(req);
@@ -71,6 +72,7 @@ const createQuestion = async (req, callback ) => {
 		});
 		console.log('question ---> ',JSON.stringify(question) );
 		return callback(null, {
+			success: true,
 			data : question
 		});
 	  }
@@ -98,9 +100,10 @@ const createQuestion = async (req, callback ) => {
 		  });
 
 		  question.total_votes = totalVotes;
-		  if (question.text) {
+		  if (question.text && helper.isJsonString(question.text)) {
 			const tmp = JSON.parse(question.text);
 			question.text = tmp.blocks;
+			question.isMultiMedia = true;
 		  }
 		  question.createdText = moment(question.created).fromNow();
 		  question.modifiedText = moment(question.modified).fromNow();
