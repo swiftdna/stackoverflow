@@ -1,6 +1,5 @@
 import { handleLoginResponse, setToast, handleCountriesResponse } from './actions/app-actions';
-import { handleQuestionDetailsResponse } from './actions/question-details-actions';
-
+import { handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
 // import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
@@ -36,6 +35,16 @@ export function getQuestionDetails(dispatch, id) {
     axios.get(`/api/questions/${id}`)
         .then(response => {
             dispatch(handleQuestionDetailsResponse(response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function getAnswers(dispatch, id) {
+    axios.get(`/api/answers/${id}`)
+        .then(response => {
+            dispatch(handleAnswerResponse(response));
         })
         .catch(err => {
             console.log(err.message);

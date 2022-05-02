@@ -1,9 +1,9 @@
-const { createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,mostViewedQuestions} = require('../controllers/questions');
-
+const { createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,questionPostedCount,approvequestion,searchQuestion,mostViewedQuestions} = require('../controllers/questions');
+const { getUserDetails,getUserStats,editUserDetails,userActivity}= require('../controllers/users');
 const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
-    editQuestion,approvequestion,searchQuestion,mostViewedQuestions,
-   
+    editQuestion,approvequestion,searchQuestion,mostViewedQuestions,questionPostedCount,
+    getUserDetails,getUserStats,editUserDetails,userActivity
 };
 
 function handle_request(msg, callback){
