@@ -2,8 +2,9 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
-  questionPostedCount} = require('./controllers/questions');
-const { signup,login} = require('./controllers/users');
+  questionPostedCount } = require('./controllers/questions');
+const { answerValidate } = require('./controllers/answers');
+const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
 
@@ -34,7 +35,7 @@ router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
 router.get('/questions', (req, res) => {
     return kakfafy('loadQuestions', req, res);
   });
-router.get('/getquestion/:questionid',(req, res) => {
+router.get('/questions/:questionid',(req, res) => {
     return kakfafy('questiondetail', req, res);
   })
 router.post('/addbookmark',checkAuth,(req, res) => {
@@ -89,7 +90,7 @@ router.get('/comments', (req, res) => {
   return kakfafy('loadComments', req, res);
 });
 
-router.post('/comments', commentValidate,checkAuth, (req, res) => {
+router.post('/comments', checkAuth, (req, res) => {
   return kakfafy('createAnswer', req, res);
 });
 

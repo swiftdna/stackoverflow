@@ -81,21 +81,21 @@ const login = async (req, res) => {
 
     //const passwordValid = await verifyPassword(password, user.password);
     bcrypt.compare(password, user.password, function(err, isMatch){
-        if (err) {
-            throw err
-          } else if (!isMatch) {
-            res.status(403).json({
-                message: 'password did not match'
-              });
-          } else {
-            const payload = {id : user.id,email : user.email};
-            const token = jwt.sign(payload,secret, {
-             expiresIn: 10080000
-            });
-            res.status(200).json({token: "JWT " + token, data :user});
-            
+      if (err) {
+          throw err
+        } else if (!isMatch) {
+          res.status(403).json({
+            message: 'password did not match'
+          });
+        } else {
+          const payload = {id : user.id,email : user.email};
+          const token = jwt.sign(payload,secret, {
+           expiresIn: 10080000
+          });
+          res.cookie('so_token', token, { httpOnly: true });
+          res.status(200).json({token: "JWT " + token, data :user});
         }
-          })
+      });
     }  
  catch (error) {
     return res.status(500).json({

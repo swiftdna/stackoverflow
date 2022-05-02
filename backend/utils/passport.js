@@ -13,11 +13,11 @@ const path = require('path');
 function auth()
 {
     var opts = {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: secret
     };
-passport.use (new JwtStrategy(opts,(jwt_payload,callback) => {
-    const email = jwt_payload.email
+passport.use(new JwtStrategy(opts,(jwt_payload,callback) => {
+    const email = jwt_payload.email;
     User.findOne({email:email},(error,results) => {
         if(error){
             console.log("Invalid user from server");
@@ -29,10 +29,25 @@ passport.use (new JwtStrategy(opts,(jwt_payload,callback) => {
             else {
                 console.log("InValid user");
                 callback(null,results);}
-});
-}))
+        });
+    }));
 }
 
 
 exports.auth = auth;
-exports.checkAuth =passport.authenticate("jwt",{session :false});
+exports.checkAuth = (req, res, next) => {
+  const {so_token} = req.cookies;
+  req.headers.authorization = `Bearer ${so_token}`;
+  return passport.authenticate('jwt', {session: false}, async (err, user) => {
+    if (process.env.NODE_ENV === 'test') {
+      // for testing only
+      return next();
+    }
+    if (user && user._id) {
+      req.user = user;
+      return next();
+    }
+    res.status(401).json({message: "Not authorized to see this page. Please login!", status: 401});
+  })(req, res, next);
+};
+// passport.authenticate("jwt",{ session :false });
