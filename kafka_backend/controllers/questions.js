@@ -1,7 +1,7 @@
 const Question = require('../models/question');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
-
+const moment = require('moment');
 
 // posting the question
 const createQuestion = async (req, callback ) => {
@@ -76,22 +76,32 @@ const createQuestion = async (req, callback ) => {
   
 // getting  the details of the question overview  page
   const questiondetail = async (req, callback) => {
-	try {
-	  const  id  = req.params.questionid;
-	  const question = await Question.findByIdAndUpdate(
-		id,
-		{ $inc: { views: 1 } },
-		{ new: true }
-	  ).populate('answers');
-	  return callback(null, {
-		data : question
-	});
-	} catch (error) {
-		return callback(error,{
-            success: false,
-	    	message: error.message
-        });
-	}
+		try {
+		  const  id  = req.params.questionid;
+		  const question = await Question.findByIdAndUpdate(
+				id,
+				{ $inc: { views: 1 } },
+				{ new: true, lean:true }
+		  ).populate('answers');
+
+		  let totalVotes = 0;
+		  question.votes.map(vt => {
+			totalVotes = totalVotes + vt.vote;
+		  });
+
+		  question.total_votes = totalVotes;
+		  question.createdText = moment(question.created).fromNow();
+
+		  return callback(null, {
+		  	success: true,
+				data : question
+			});
+		} catch (error) {
+			return callback(error,{
+	      success: false,
+		    message: error.message
+	    });
+		}
   };
 
   // adding the bookmark of the question

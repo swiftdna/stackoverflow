@@ -30,7 +30,7 @@ function Home() {
                     <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
                         Newest</a>
                 </div>
-                <p onClick={() => navigate('/questions/315135')}>click here</p>
+                <p onClick={() => navigate('/questions/6268fb6a33b5d718c13fa054')}>click here</p>
                 <p onClick={() => navigate('/messages')}>messages</p>
                 </Col>
             </Row>

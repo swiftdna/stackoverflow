@@ -16,8 +16,8 @@ function auth()
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
         secretOrKey: secret
     };
-passport.use (new JwtStrategy(opts,(jwt_payload,callback) => {
-    const email = jwt_payload.email
+passport.use(new JwtStrategy(opts,(jwt_payload,callback) => {
+    const email = jwt_payload.email;
     User.findOne({email:email},(error,results) => {
         if(error){
             console.log("Invalid user from server");
@@ -29,10 +29,10 @@ passport.use (new JwtStrategy(opts,(jwt_payload,callback) => {
             else {
                 console.log("InValid user");
                 callback(null,results);}
-});
-}))
+        });
+    }));
 }
 
 
 exports.auth = auth;
-exports.checkAuth =passport.authenticate("jwt",{session :false});
+exports.checkAuth = passport.authenticate("jwt",{session :false});

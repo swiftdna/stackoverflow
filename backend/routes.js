@@ -32,7 +32,7 @@ router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
 router.get('/questions', (req, res) => {
     return kakfafy('loadQuestions', req, res);
   });
-router.get('/getquestion/:questionid',(req, res) => {
+router.get('/questions/:questionid',(req, res) => {
     return kakfafy('questiondetail', req, res);
   })
 router.post('/addbookmark',checkAuth,(req, res) => {
