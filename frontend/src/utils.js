@@ -50,3 +50,19 @@ export function getAnswers(dispatch, id) {
             console.log(err.message);
         });
 }
+
+export function postQuestion(dispatch, data, callback) {
+    const tempObj = {...data, text: JSON.stringify(data.text)};
+    axios.post(`/api/questions`, tempObj)
+        .then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh categories
+                return callback(null, true);
+            }
+            return callback(false);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}

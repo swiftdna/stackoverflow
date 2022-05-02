@@ -1,6 +1,7 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
+import Output from 'editorjs-react-renderer';
 
 export default function ContentCard({ data, type}) {
 	return (
@@ -19,7 +20,7 @@ export default function ContentCard({ data, type}) {
         	type==='question' && 
         	<>
         	<p className="q_subheading">
-            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> 4 days ago <span className="mini-heading">Viewed</span> 606k times
+            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> 606k times
         	</p>
         	<hr />
         	</>
@@ -34,7 +35,7 @@ export default function ContentCard({ data, type}) {
                 <FaHistory className="history_ctrl" />
             </Col>
             <Col xs={11}>
-                <p className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.text}</p>
+                <p className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}><Output data={ data.text } /></p>
                 <p className="q_tags">
                     {data.tags && data.tags.map((tag, index) => <span key={index} className="q_tag">{tag}</span>)}
                 </p>

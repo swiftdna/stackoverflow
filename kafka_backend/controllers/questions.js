@@ -24,6 +24,7 @@ const createQuestion = async (req, callback ) => {
 		status
 	  });
       return callback(null, {
+		success: true,
         data : question
     });
 	} catch (error) {
@@ -90,7 +91,12 @@ const createQuestion = async (req, callback ) => {
 		  });
 
 		  question.total_votes = totalVotes;
+		  if (question.text) {
+			const tmp = JSON.parse(question.text);
+			question.text = tmp.blocks;
+		  }
 		  question.createdText = moment(question.created).fromNow();
+		  question.modifiedText = moment(question.modified).fromNow();
 
 		  return callback(null, {
 		  	success: true,
