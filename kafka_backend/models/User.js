@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const userTagSchema = require('./usertags');
 
 const userModel = new Schema({
   email: { type: String, required: true, unique: true },
@@ -15,7 +16,11 @@ const userModel = new Schema({
   location: {type: String, default: null},
   Reputation :{type :Number, default :0},
   lastseen : {type: Date, default : null},
-  about : {type: String, default : null}
+  about : {type: String, default : null},
+  tags_score :{type : Object,default : null},
+  tags_post_count : {type : Object,default : null}
+
+
 });
 
 userModel.set('toJSON', { getters: true });
