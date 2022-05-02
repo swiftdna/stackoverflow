@@ -63,13 +63,6 @@ const { body, validationResult } = require('express-validator');
 	body('tags').exists().withMessage('is required')
   ];
 module.exports = {
-	createQuestion,
 	questionValidate,
-	loadQuestions,
-	questiondetail,
-	addbookmark,
-	deletebookmark,
-	editQuestion,
-	approvequestion,
 	searchQuestion
 };
