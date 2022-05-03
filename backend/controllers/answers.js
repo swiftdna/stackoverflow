@@ -1,22 +1,12 @@
 const { body, validationResult } = require('express-validator');
 
-const loadAnswers = async (req, res, next, id) => {
-  try {
-    const answer = await req.question.answers.id(id);
-    if (!answer) return res.status(404).json({ message: 'Answer not found.' });
-    req.answer = answer;
-  } catch (error) {
-    if (error.name === 'CastError') return res.status(400).json({ message: 'Invalid answer id.' });
-    return next(error);
-  }
-  next();
-};
-
-const createAnswer = async (req, res, next) => {
+const createAnswer = async (req, callback) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
-    return res.status(422).json({ errors });
+    return callback({
+		errors
+	});
   }
 
   try {
@@ -25,21 +15,32 @@ const createAnswer = async (req, res, next) => {
 
     const question = await req.question.addAnswer(id, text);
 
-    res.status(201).json(question);
-  } catch (error) {
-    next(error);
-  }
-};
+    return callback(null, {
+        data : question
+    });
+	} catch (error) {
+        return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
 
-const removeAnswer = async (req, res, next) => {
+const removeAnswer = async (req, callback) => {
   try {
     const { answer } = req.params;
     const question = await req.question.removeAnswer(answer);
-    res.json(question);
-  } catch (error) {
-    next(error);
-  }
-};
+    return callback(null, {
+		success : true,
+	});
+
+	} catch (error) {
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
 
 const answerValidate = [
   body('text')

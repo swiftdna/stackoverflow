@@ -86,12 +86,12 @@ router.delete('/deleteanswer',checkAuth, (req, res) => {
   return kakfafy('removeAnswer', req, res);
 });
 
-router.get('/comments', (req, res) => {
-  return kakfafy('loadComments', req, res);
+router.post('/comments', commentValidate,checkAuth, (req, res) => {
+  return kakfafy('createComment', req, res);
 });
 
-router.post('/comments', checkAuth, (req, res) => {
-  return kakfafy('createAnswer', req, res);
+router.get('/comments', (req, res) => {
+  return kakfafy('loadComments', req, res);
 });
 
 router.delete('/deletecomment',checkAuth, (req, res) => {
