@@ -241,23 +241,266 @@ const createQuestion = async (req, callback ) => {
             
             sort[sortType] = -1
         }
-		if(req.query.tag)
+		if(req.query.key === 'tag')
 		{
-			const tags =req.query.tag
+			const tags =req.query.value;
 			const data = tags.split(" ");
-			const questions = await Question.find({ tags: { $all: data[0] }}).sort(sort);
+			const tagdata= data[0];
+			data.shift();
+			const searchstring = data.join('');
+			console.log(tagdata,searchstring);
+			let questions = await Question.find({ tags: { $all: tagdata }, $or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}).lean()
+			
+			console.log("initial questions are",(questions))
+    
+			for (let i = 0; i < questions.length; i++) {
+				questions[i].type="question";
+				questions[i].temp=questions[i].created;
+			}
+			console.log("questions are",questions)
+			let answ = await Question.find({ tags: { $all: tagdata },"answers.text": new RegExp(searchstring,'i')}).lean();
+			console.log("initial answ",answ);
+			const regex = new RegExp(searchstring,'i')
+			for (let j = 0;   j< answ.length; j++) {
+				let count =0;
+				for (let k = 0; k < answ[j].answers.length; k++)
+				{
+					if (regex.test(answ[j].answers[k].text ))
+					{
+						if (count <1){
+							answ[j].temp=answ[j].answers[k].created;
+							answ[j].ansauthor=answ[j].answers[k].author;
+							count=count+1
+							}
+							else
+							{
+								if (answ[j].temp < answ[j].answers[k].created)
+								{
+									answ[j].temp=answ[j].answers[k].created;
+									answ[j].ansauthor=answ[j].answers[k].author;
+								}
+							}
+					}
+				}
+				answ[j].type='answer';
+			}
+			console.log("answers are",answ)
+			let consolidated = questions.concat(answ);
+			// sorting based on score or newest
+			if (sortType === "temp")
+			{
+            consolidated.sort( (a, b) => {
+				let da = new Date(a.temp),
+			db = new Date(b.temp);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            consolidated.sort( (a, b) => b.score - a.score);
+		}
+			//console.log("consolidated data are",consolidated)
+			
 			return callback(null, {
 				success : true,
-			  data : questions
+			  data : consolidated,
+			  resultcount :consolidated.length
 		  });
 		}
-		else if(req.query.exactphrase)
+		// exact phrase search
+		else if(req.query.key === 'exactphrase')
 		{
-			const words =req.query.exactphrase
-			const questions = await Question.find({ title : new RegExp(words,'i') }).sort(sort);
+			const questions = await Question.find({$or: [ { "title": new RegExp(req.query.value,'i')}, { "text": new RegExp(req.query.value,'i') }]}).lean();
+			//{"answers.text": new RegExp(req.query.value,'i')}]}).sort(sort)
+			for (let i = 0; i < questions.length; i++) {
+                //Object.assign(questions[i], {type:'question',temp:'temp'})
+				console.log('----->count ', i);
+				questions[i].type="question";
+				questions[i].temp=questions[i].created;			
+			}
+			//console.log("questions are",questions)
+			const regex = new RegExp(req.query.value,'i')
+			const answ = await Question.find({"answers.text": new RegExp(req.query.value,'i')}).lean()
+			for (let j = 0;   j< answ.length; j++) {
+				let count=0
+				for (let k = 0; k < answ[j].answers.length; k++)
+				{
+					if (regex.test(answ[j].answers[k].text ))
+					{
+						if (count <1){
+							answ[j].temp=answ[j].answers[k].created;
+							answ[j].ansauthor=answ[j].answers[k].author;
+							count=count+1
+							}
+							else
+							{
+								if (answ[j].temp < answ[j].answers[k].created)
+								{
+									answ[j].temp=answ[j].answers[k].created;
+									answ[j].ansauthor=answ[j].answers[k].author;
+								}
+							}
+					}
+				}
+				answ[j].type='answer';
+			}
+			console.log("answers are",answ)
+			let consolidated = questions.concat(answ);
+			// sorting based on score or newest
+			if (sortType === "temp")
+			{
+            consolidated.sort( (a, b) => {
+				let da = new Date(a.temp),
+			db = new Date(b.temp);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            consolidated.sort( (a, b) => b.score - a.score);
+		}
+			//console.log("consolidated data are",consolidated)
+			
 			return callback(null, {
 				success : true,
-			  data : questions
+			  data : consolidated,
+			  resultcount :consolidated.length
+		  });
+		}
+		else if(req.query.key === 'user')
+		{
+			const users = req.query.value
+			const data = users.split(" ");
+			const userdata= data[0];
+			data.shift();
+			const searchstring = data.join('');
+			const questions = await Question.find({$and:[{$or:[{author : userdata}]},{$or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}]}).lean();
+			for (let i = 0; i < questions.length; i++) {
+                //Object.assign(questions[i], {type:'question',temp:'temp'})
+				//console.log('----->count ', i);
+				questions[i].type="question";
+				questions[i].temp=questions[i].created;			
+			}
+			const regex = new RegExp(searchstring,'i');
+			const answ = await Question.find({$and:[{$or:[{"answers.author" : userdata}]},{$or: [ { "answers.text": new RegExp(searchstring,'i')}]}]}).lean();
+			console.log('-------> answer are',answ);
+			for (let j = 0;   j< answ.length; j++) {
+				let count =0
+				for (let k = 0; k < answ[j].answers.length; k++)
+				{
+					if (answ[j].answers[k].author === userdata && regex.test(answ[j].answers[k].text ))
+					{
+						if (count <1){
+							answ[j].temp=answ[j].answers[k].created;
+							answ[j].ansauthor=answ[j].answers[k].author;
+							count=count+1
+							}
+							else
+							{
+								if (answ[j].temp < answ[j].answers[k].created)
+								{
+									answ[j].temp=answ[j].answers[k].created;
+									answ[j].ansauthor=answ[j].answers[k].author;
+								}
+							}
+					}
+				}
+				
+				answ[j].type='answer';
+			}
+			let consolidated = questions.concat(answ);
+			// sorting based on score or newest
+			if (sortType === "temp")
+			{
+            consolidated.sort( (a, b) => {
+				let da = new Date(a.temp),
+			db = new Date(b.temp);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            consolidated.sort( (a, b) => b.score - a.score);
+		}
+			//console.log("consolidated data are",consolidated)
+			
+			return callback(null, {
+				success : true,
+			  data : consolidated,
+			  resultcount :consolidated.length
+		  });
+		}
+		else if(req.query.key === 'question')
+		{
+			const quessearch = req.query.value
+			const questions = await Question.find({$or: [ { "title": new RegExp(quessearch,'i')}, { "text": new RegExp(quessearch,'i') }]}).lean();
+			if (sortType === "temp")
+			{
+            questions.sort( (a, b) => {
+				let da = new Date(a.created);
+			db = new Date(b.created);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            questions.sort( (a, b) => b.score - a.score);
+		}
+			// $or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') },{"answers.text": new RegExp(searchstring,'i')}]}).sort(sort)
+			//{"answers.author":userdata}
+			return callback(null, {
+				success : true,
+			  data : questions,
+			  resultscount: questions.length
+		  });
+		}
+		else if(req.query.key === 'answer')
+		{
+			const anssearch = req.query.value
+			const answ = await Question.find({'answers.isbestanswer': true, "answers.text": new RegExp(anssearch,'i')}).lean();
+			const regex = new RegExp(anssearch,'i');
+			//let count=0
+			for (let j = 0;j< answ.length; j++) {
+				let count=0
+				for (let k = 0; k < answ[j].answers.length; k++)
+				{	
+					if (answ[j].answers[k].isbestanswer === true && regex.test(answ[j].answers[k].text ))
+					{
+						if (count <1){
+						answ[j].temp=answ[j].answers[k].created;
+						answ[j].ansauthor=answ[j].answers[k].author;
+						count=count+1
+						}
+						else
+						{
+							if (answ[j].temp < answ[j].answers[k].created)
+							{
+								answ[j].temp=answ[j].answers[k].created;
+								answ[j].ansauthor=answ[j].answers[k].author;
+							}
+						}
+					}
+				}
+				answ[j].type='answer';
+			}
+			if (sortType === "temp")
+			{
+            answ.sort( (a, b) => {
+				let da = new Date(a.temp);
+			db = new Date(b.temp);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            answ.sort( (a, b) => b.score - a.score);
+		}
+			// $or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') },{"answers.text": new RegExp(searchstring,'i')}]}).sort(sort)
+			//{"answers.author":userdata}
+			return callback(null, {
+				success : true,
+			  data : answ,
+			  resultscount: answ.length
 		  });
 		}
 		else{
