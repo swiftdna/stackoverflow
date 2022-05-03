@@ -1889,7 +1889,9 @@ nav {
 
 .vote_counter {
   font-size: 20px;
-  margin-left: 8px;
+  /*margin-left: 8px;*/
+  margin-left: -22px;
+  text-align: center;
   margin-top: 0px;
   margin-bottom: 0px;
   color: var(--bs-gray-600);
@@ -1909,9 +1911,10 @@ nav {
 
 .bookmark_counter {
   margin-top: 5px;
-  margin-left: 20px;
+  margin-left: -18px;
   color: var(--bs-gray-500);
   font-size: 10px;
+  text-align: center;
 }
 
 .history_ctrl {
