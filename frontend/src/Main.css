@@ -2381,3 +2381,9 @@ nav {
     border-bottom-color: ;
     border-left-color: ;
 }
+.js-sort-preference-change {
+  color: var(--black-500);
+}
+.js-sort-preference-change: hover {
+  color: var(--black-700);
+}

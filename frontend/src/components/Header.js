@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { handleLogoutResponse } from '../actions/app-actions';
 //create the Navbar Component
 function Navbar() {
     const isAuthenticated = useSelector(selectIsLoggedIn);
-    // const [searchText, setSearchText] = useState('');
+    const [searchText, setSearchText] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -29,6 +29,7 @@ function Navbar() {
     }
 
     const home = () => {
+        setSearchText('');
         navigate('/');
     }
 
@@ -61,8 +62,8 @@ function Navbar() {
 
     const _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-          const searchText = e.target.value;
-          navigate(`/search?q=${searchText}`);
+          const searchKeyword = e.target.value;
+          navigate(`/search?q=${searchKeyword}`);
         }
     }
 
@@ -138,7 +139,7 @@ function Navbar() {
                 <div className="search-container">
                     <FaSearch style={{fontSize: '14px'}} />
                     <OverlayTrigger trigger="focus" placement="bottom" overlay={popover}>
-                        <input type="text" id="" placeholder="Search..." onKeyDown={_handleKeyDown}/>
+                        <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search..." onKeyDown={_handleKeyDown}/>
                     </OverlayTrigger>
                 </div>
             </div>
