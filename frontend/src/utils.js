@@ -65,7 +65,7 @@ export function getAnswers(dispatch, id) {
         });
 }
 
-export function searchQuestions(dispatch, searchQuery) {
+export function searchQuestions(dispatch, searchQuery, sortBy) {
     const params = {};
     if (searchQuery && typeof searchQuery === 'string') {
         if (searchQuery.indexOf('[') === 0 && searchQuery.indexOf('[') !== -1) {
@@ -82,6 +82,9 @@ export function searchQuestions(dispatch, searchQuery) {
             params.key = 'exactphrase';
         }
         params.value = searchQuery;
+    }
+    if (sortBy) {
+        params.tab = sortBy;
     }
     dispatch(questionSearchLoading());
     axios.get(`/api/searchQuestion`, { params })
