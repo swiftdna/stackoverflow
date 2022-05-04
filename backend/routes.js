@@ -86,7 +86,7 @@ router.delete('/deleteanswer',checkAuth, (req, res) => {
   return kakfafy('removeAnswer', req, res);
 });
 
-router.post('/comments', commentValidate,checkAuth, (req, res) => {
+router.post('/comments',checkAuth, (req, res) => {
   return kakfafy('createComment', req, res);
 });
 

@@ -6,6 +6,15 @@ const mongoose = require('mongoose');
 const helper = require('./helper');
 
 const createQuestion = async (req, callback ) => {
+	let {tags: inputTags} = req.body;
+	if (!Array.isArray(inputTags) && typeof inputTags === 'string') {
+		if (inputTags.indexOf(',')) {
+			inputTags = inputTags.split(',');
+		} else {
+			inputTags = [inputTags];
+		}
+	}
+	req.body.tags = inputTags;
 	const result = validationResult(req);
 	if (!result.isEmpty()) {
 	  const errors = result.array({ onlyFirstError: true });
@@ -23,18 +32,17 @@ const createQuestion = async (req, callback ) => {
 		text,
 		status
 	  });
-	  await tags.forEach( async (tag) =>
-        {   
-	 //const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
-	 await User.updateOne(
-		{ '_id': mongoose.Types.ObjectId(req.user.id) },
-		{ $inc: { [`tags_post_count.${tag}`]: 1 } }
-	 )
-		})
+	  await tags.forEach( async (tag) => {   
+			//const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
+			await User.updateOne(
+				{ '_id': mongoose.Types.ObjectId(req.user.id) },
+				{ $inc: { [`tags_post_count.${tag}`]: 1 } }
+			)
+		});
       return callback(null, {
 		success: true,
-        data : question
-    });
+		data : question
+	  });
 	} catch (error) {
         return callback(error,{
             success: false,
@@ -64,9 +72,9 @@ const createQuestion = async (req, callback ) => {
 		question = await question.map(ques=> {
 			let temp = {};
 			if (ques.created !== ques.modified) {
-				console.log('changing this ->>>', JSON.stringify(temp));
+				// console.log('changing this ->>>', JSON.stringify(temp));
 				temp.hello = true;
-				console.log('changed this ->>>',JSON.stringify(temp));
+				// console.log('changed this ->>>',JSON.stringify(temp));
 			}
 			return ques;
 		});
@@ -106,7 +114,9 @@ const createQuestion = async (req, callback ) => {
 			question.isMultiMedia = true;
 		  }
 		  question.createdText = moment(question.created).fromNow();
+		  question.createdFullText = moment(question.created).format('MMMM Do, YYYY at h:mm:ss a');
 		  question.modifiedText = moment(question.modified).fromNow();
+		  question.modifiedFullText = moment(question.modified).format('MMMM Do, YYYY h:mm:ss a');
 
 		  return callback(null, {
 		  	success: true,
@@ -261,14 +271,16 @@ const createQuestion = async (req, callback ) => {
             
             sort[sortType] = -1
         }
-		if(req.query.key === 'tag')
-		{
+		if(req.query.key === 'tag') {
 			const tags =req.query.value;
 			const data = tags.split(" ");
-			const tagdata= data[0];
+			let tagdata= data[0];
 			data.shift();
 			const searchstring = data.join('');
-			console.log(tagdata,searchstring);
+			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
+				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
+			}
+			console.log(tagdata, searchstring);
 			let questions = await Question.find({ tags: { $all: tagdata }, $or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}).lean()
 			
 			console.log("initial questions are",(questions))
@@ -276,6 +288,10 @@ const createQuestion = async (req, callback ) => {
 			for (let i = 0; i < questions.length; i++) {
 				questions[i].type="question";
 				questions[i].temp=questions[i].created;
+				questions[i].createdText = moment(questions[i].created).fromNow();
+				questions[i].createdFullText = moment(questions[i].created).format('MMMM Do, YYYY at h:mm:ss a');
+				questions[i].modifiedText = moment(questions[i].modified).fromNow();
+				questions[i].modifiedFullText = moment(questions[i].modified).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			console.log("questions are",questions)
 			let answ = await Question.find({ tags: { $all: tagdata },"answers.text": new RegExp(searchstring,'i')}).lean();

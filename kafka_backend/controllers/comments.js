@@ -69,8 +69,7 @@ const commentValidate = [
     .withMessage('must be at most 1000 characters long')
 ];
 module.exports = {
-	loadComments,
-    createComment,
-    removeComment,
+  createComment,
+  removeComment,
 	commentValidate
 };

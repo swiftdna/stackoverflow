@@ -46,8 +46,7 @@ export default function ContentCard({ data, type}) {
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
-                        <UserCard />
-                        <UserCard owner={true} />
+                        <UserCard owner={true} data={{...data.author, modified: data.modifiedFullText}} />
                     </Col>
                 </Row>
                 <hr />
@@ -55,7 +54,7 @@ export default function ContentCard({ data, type}) {
                     <ul>
                     {data.comments && data.comments.map((comment, index) => 
                         <li key={index} className="q_comment">
-                            {comment.content} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
+                            {comment.body} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
                             <hr />
                         </li>
                     )}
