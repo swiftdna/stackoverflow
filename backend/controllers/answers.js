@@ -58,7 +58,7 @@ const answerValidate = [
     .withMessage('must be at most 30000 characters long')
 ];
 module.exports = {
-	loadAnswers,
+	// loadAnswers,
     createAnswer,
     removeAnswer,
     answerValidate
