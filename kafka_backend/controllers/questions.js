@@ -1,9 +1,9 @@
 const Question = require('../models/question');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
-const moment = require('moment');
 const mongoose = require('mongoose');
 const helper = require('./helper');
+const moment = require('moment');
 
 const createQuestion = async (req, callback ) => {
 	let {tags: inputTags} = req.body;
@@ -53,6 +53,7 @@ const createQuestion = async (req, callback ) => {
 
   const loadQuestions = async (req, callback) => {
 	try {
+		
 		const sortType = req.query.tab
 		if (sortType)
         {
@@ -63,27 +64,18 @@ const createQuestion = async (req, callback ) => {
 	  if (sortType === 'Unanswered')
 	  {
 		const question = await Question.find({ "answers": { $size: 0 } }).sort({"score" : -1});
-		return callback(null, {
+        return callback(null, {
 			data : question
 		});
 	  }
 	  else {
 		let question = await Question.find().sort(sort);
-		question = await question.map(ques=> {
-			let temp = {};
-			if (ques.created !== ques.modified) {
-				// console.log('changing this ->>>', JSON.stringify(temp));
-				temp.hello = true;
-				// console.log('changed this ->>>',JSON.stringify(temp));
-			}
-			return ques;
-		});
-		console.log('question ---> ',JSON.stringify(question) );
 		return callback(null, {
 			success: true,
 			data : question
 		});
 	  }
+	  
 	} catch (error) {
 		return callback(error,{
             success: false,
@@ -94,40 +86,87 @@ const createQuestion = async (req, callback ) => {
   
   
   const questiondetail = async (req, callback) => {
-		try {
-		  const  id  = req.params.questionid;
-		  const question = await Question.findByIdAndUpdate(
-				id,
-				{ $inc: { views: 1 } },
-				{ new: true, lean:true }
-		  ).populate('answers');
+	try {
+		var activity =[];
+	  const  id  = req.params.questionid;
+	  const question = await Question.findByIdAndUpdate(
+		id,
+		{ $inc: { views: 1 } },
+		{ new: true }
+	  ).populate('answers').lean();
+		  if (question.created === question.modified)
+		  {
+		  activity.push({
+		  type:'question',
+		  author:question.author,
+		  created:question.created,
+	  })
+	  }
+	  else{
+		activity.push({
+			type:'question',
+			author:question.author,
+			created:question.created,
+		})
+		activity.push({
+			type:'question_modified',
+			author:question.author,
+			created:question.modified,
+		})  
+	  }
+	  question.answers.map(ans => {
+		activity.push({
+			type:'answer',
+			author:ans.author,
+			created:ans.created,
+		}) 
+		ans.comments.map(anscomment=>{
+			activity.push({
+				type:'answer_comment',
+				author:anscomment.author,
+				created:anscomment.created,
+				comment : anscomment.body
+			}) 	
+		}) 
+	  })
+	  question.comments.map(ques => {
+		activity.push({
+			type:'question_comment',
+			author:ques.author,
+			created:ques.created,
+			comment:ques.body,
+		})  
+	  })
+	  activity.sort( (a, b) => {
+		let da = new Date(a.created),
+		db = new Date(b.created);
+		return db - da;
+	  });
+	  let totalVotes = 0;
+	  question.votes.map(vt => {
+		totalVotes = totalVotes + vt.vote;
+	  });
 
-		  let totalVotes = 0;
-		  question.votes.map(vt => {
-			totalVotes = totalVotes + vt.vote;
-		  });
-
-		  question.total_votes = totalVotes;
-		  if (question.text && helper.isJsonString(question.text)) {
-			const tmp = JSON.parse(question.text);
-			question.text = tmp.blocks;
-			question.isMultiMedia = true;
-		  }
-		  question.createdText = moment(question.created).fromNow();
-		  question.createdFullText = moment(question.created).format('MMMM Do, YYYY at h:mm:ss a');
-		  question.modifiedText = moment(question.modified).fromNow();
-		  question.modifiedFullText = moment(question.modified).format('MMMM Do, YYYY h:mm:ss a');
-
-		  return callback(null, {
-		  	success: true,
-				data : question
-			});
-		} catch (error) {
-			return callback(error,{
-	      success: false,
-		    message: error.message
-	    });
-		}
+	  question.total_votes = totalVotes;
+	  if (question.text && helper.isJsonString(question.text)) {
+		const tmp = JSON.parse(question.text);
+		question.text = tmp.blocks;
+		question.isMultiMedia = true;
+	  }
+	  question.createdText = moment(question.created).fromNow();
+	  question.createdFullText = moment(question.created).format('MMMM Do, YYYY at h:mm:ss a');
+	  question.modifiedText = moment(question.modified).fromNow();
+	  question.modifiedFullText = moment(question.modified).format('MMMM Do, YYYY h:mm:ss a');
+	  return callback(null, {
+		data : question,
+		activityresult : activity
+	  });
+	} catch (error) {
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
   };
 
   const addbookmark = async (req, callback) => {
@@ -235,24 +274,27 @@ const createQuestion = async (req, callback ) => {
   const questionPostedCount = async (req, callback) => {
 	
 	try {
-      const todaydate= Date.now();
-	  console.log('date',todaydate);
-	  const date= todaydate.split('T');
-	  const questions = await Question.find({}).sort({created:-1});
-	  const count=0;
-	  await questions.map(ques=>
+		const today = new Date().toISOString().slice(0, 10)
+console.log('todaydateis',today);
+	  const questions = await Question.find({
+	  }).sort({created:-1});
+	  let count=0;
+	  //console.log(questions)
+	  
+	  questions.map(ques=>
 		{
-           {
-			   if (ques.created.split('T')[0] === date[0])
-			   {
+            const create= ques.created.toISOString().slice(0, 10);
+			console.log('converrted date',create);
+			   if (create === today)
+			{
 				   count=count+1
-			   }
-		   }
+			 }
+		   
 		})
-		console.log(count)
+		//console.log(questions)
 	  return callback(null, {
 		  success : true,
-		data : count
+		questionpostedcount : count
 	});
 	} catch (error) {
 		return callback(error,{
@@ -340,7 +382,7 @@ const createQuestion = async (req, callback ) => {
 			return callback(null, {
 				success : true,
 			  data : consolidated,
-			  resultcount :consolidated.length
+			  resultscount :consolidated.length
 		  });
 		}
 		// exact phrase search
@@ -400,7 +442,7 @@ const createQuestion = async (req, callback ) => {
 			return callback(null, {
 				success : true,
 			  data : consolidated,
-			  resultcount :consolidated.length
+			  resultscount :consolidated.length
 		  });
 		}
 		else if(req.query.key === 'user')
@@ -463,7 +505,7 @@ const createQuestion = async (req, callback ) => {
 			return callback(null, {
 				success : true,
 			  data : consolidated,
-			  resultcount :consolidated.length
+			  resultscount :consolidated.length
 		  });
 		}
 		else if(req.query.key === 'question')
@@ -519,12 +561,11 @@ const createQuestion = async (req, callback ) => {
 				}
 				answ[j].type='answer';
 			}
-			if (sortType === "temp")
-			{
+			if (sortType === "temp") {
             answ.sort( (a, b) => {
 				let da = new Date(a.temp);
-			db = new Date(b.temp);
-		return db - da;
+				db = new Date(b.temp);
+				return db - da;
 			});
 		}
 		if (sortType === "score")
