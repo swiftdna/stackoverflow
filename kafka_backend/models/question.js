@@ -71,7 +71,9 @@ questionSchema.methods = {
   },
 
   addAnswer: function (author, text) {
+    console.log("in question",author,text,this.answers)
     this.answers.push({ author, text });
+    console.log("saving-------------------")
     return this.save();
   },
 

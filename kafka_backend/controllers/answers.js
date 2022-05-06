@@ -1,6 +1,8 @@
 const { body, validationResult } = require('express-validator');
+const Question = require('./../models/question')
 
 const createAnswer = async (req, callback) => {
+    
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
@@ -8,15 +10,14 @@ const createAnswer = async (req, callback) => {
 		errors
 	});
   }
-
   try {
-    const { id } = req.user;
     const { text } = req.body;
-
-    const question = await req.question.addAnswer(id, text);
-
+    const answer = await Question.updateOne(
+        {_id : req.params.question},
+        {$push:{answers:{author:req.user.id,
+        text:text}}});
     return callback(null, {
-        data : question
+        data : answer
     });
 	} catch (error) {
         return callback(error,{
@@ -27,19 +28,21 @@ const createAnswer = async (req, callback) => {
   };
 
 const removeAnswer = async (req, callback) => {
-  try {
-    const { answer } = req.params;
-    const question = await req.question.removeAnswer(answer);
-    return callback(null, {
-		success : true,
-	});
-
-	} catch (error) {
-		return callback(error,{
-            success: false,
-	    	message: error.message
+    try {
+        const { text } = req.body;
+        const answer = await Question.updateOne(
+            {_id : req.params.question,"answers._id" : req.params.answer},
+            {$push:{answers:{author:req.user.id,
+            text:text}}});
+        return callback(null, {
+            data : answer
         });
-	}
+        } catch (error) {
+            return callback(error,{
+                success: false,
+                message: error.message
+            });
+        }
   };
 
 const answerValidate = [
@@ -58,7 +61,6 @@ const answerValidate = [
     .withMessage('must be at most 30000 characters long')
 ];
 module.exports = {
-	loadAnswers,
     createAnswer,
     removeAnswer,
     answerValidate

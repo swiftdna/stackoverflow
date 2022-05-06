@@ -1,3 +1,4 @@
+const question = require('./../models/question')
 const upvote = async (req, callback) => {
     const { id } = req.user;
   

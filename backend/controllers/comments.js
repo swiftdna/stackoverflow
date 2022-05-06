@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const question = require('./../models/question')
 
 const createComment = async (req, callback) => {
   const result = validationResult(req);
@@ -9,29 +10,50 @@ const createComment = async (req, callback) => {
 		errors
 	});
   }
-
   try {
-    const { id } = req.user;
-    const { comment } = req.body;
-
-    if (req.params.answer) {
-      req.answer.addComment(id, comment);
-      const question = await req.question.save();
-      return res.status(201).json(question);
-    }
-
-    const question = await req.question.addComment(id, comment);
-    return callback(null, {
-        data : question
+    const { body } = req.body;
+    const comment = await question.update(
+        
+        {_id : req.params.question,"answers._id" : req.params.answer},
+        {$push:{"answers.$.comments":{author:req.user.id,
+            body:body}}}
+    );
+    return callback(null,{
+        data:comment
     });
-	} catch (error) {
+ } catch (error) {
         return callback(error,{
             success: false,
 	    	message: error.message
         });
 	}
 };
-
+const createquestioncomment = async(req,callback) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        const errors = result.array({ onlyFirstError: true });
+        return callback({
+            errors
+        });
+      }
+      try {
+        const { body } = req.body;
+        const comment = await question.updateOne(
+            
+            {_id : req.params.question},
+            {$push:{"comments":{author:req.user.id,
+                body:body}}}
+        );
+        return callback(null,{
+            data:comment
+        });
+     } catch (error) {
+            return callback(error,{
+                success: false,
+                message: error.message
+            });
+        }
+    };
 const removeComment = async (req, callback) => {
   const { comment } = req.params;
 
@@ -69,8 +91,8 @@ const commentValidate = [
     .withMessage('must be at most 1000 characters long')
 ];
 module.exports = {
-	loadComments,
     createComment,
     removeComment,
+    createquestioncomment,
 	commentValidate
 };

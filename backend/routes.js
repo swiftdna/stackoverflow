@@ -4,6 +4,7 @@ const router = express.Router();
 const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
   questionPostedCount } = require('./controllers/questions');
 const { answerValidate } = require('./controllers/answers');
+const {commentValidate } = require('./controllers/comments');
 const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
@@ -66,7 +67,7 @@ router.put('/approvequestion/:questionid', (req, res) => {
   return kakfafy('approvequestion', req, res);
 });
 
-router.get('/getUserDetails',(req, res) => {
+router.get('/ ',(req, res) => {
   return kakfafy('getUserDetails', req, res);
 });
 
@@ -74,28 +75,39 @@ router.get('/userActivity',checkAuth,(req, res) => {
   return kakfafy('userActivity', req, res);
 });
 
-router.get('/answers', (req, res) => {
-  return kakfafy('loadAnswers', req, res);
-});
+// router.get('/answers', (req, res) => {
+//   return kakfafy('loadAnswers', req, res);
+// });
 
-router.post('/answers', answerValidate,checkAuth, (req, res) => {
+router.post('/answers/:question',checkAuth, (req, res) => {
+  console.log("1 here")
   return kakfafy('createAnswer', req, res);
 });
 
-router.delete('/deleteanswer',checkAuth, (req, res) => {
-  return kakfafy('removeAnswer', req, res);
-});
+// router.delete('/answers/:question/:answer',checkAuth, (req, res) => {
+//   return kakfafy('removeAnswer', req, res);
+// });
 
-router.post('/comments', commentValidate,checkAuth, (req, res) => {
+router.post('/comments/:question/:answer',checkAuth, (req, res) => {
   return kakfafy('createComment', req, res);
 });
 
+router.post('/comments/:question',checkAuth,(req,res) => {
+  return kakfafy('createquestioncomment',req,res);
+})
 router.get('/comments', (req, res) => {
   return kakfafy('loadComments', req, res);
 });
 
-router.delete('/deletecomment',checkAuth, (req, res) => {
-  return kakfafy('removeComment', req, res);
+// router.delete('/deletecomment',checkAuth, (req, res) => {
+//   return kakfafy('removeComment', req, res);
+// });
+
+router.get('/votes/upvote/:question/:answer',(req,res)=>{
+  return kakfafy('upvote',req,res);
 });
 
+router.post('/downvote',(req,res)=>{
+  return kakfafy('downvote',req,res);
+})
 module.exports = router;

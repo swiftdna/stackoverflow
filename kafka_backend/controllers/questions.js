@@ -22,6 +22,7 @@ const createQuestion = async (req, callback ) => {
 		text,
 		status
 	  });
+	  
 	  await tags.forEach( async (tag) =>
         {   
 	 //const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
