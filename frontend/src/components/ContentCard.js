@@ -20,7 +20,7 @@ export default function ContentCard({ data, type}) {
         	type==='question' && 
         	<>
         	<p className="q_subheading">
-            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> 606k times
+            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> {data.views} times
         	</p>
         	<hr />
         	</>
@@ -35,7 +35,7 @@ export default function ContentCard({ data, type}) {
                 <FaHistory className="history_ctrl" />
             </Col>
             <Col xs={11}>
-                <p className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}><Output data={ data.text } /></p>
+                <div className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
                 <p className="q_tags">
                     {data.tags && data.tags.map((tag, index) => <span key={index} className="q_tag">{tag}</span>)}
                 </p>
@@ -46,8 +46,7 @@ export default function ContentCard({ data, type}) {
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
-                        <UserCard />
-                        <UserCard owner={true} />
+                        <UserCard owner={true} data={{...data.author, modified: data.modifiedFullText}} />
                     </Col>
                 </Row>
                 <hr />
@@ -55,7 +54,7 @@ export default function ContentCard({ data, type}) {
                     <ul>
                     {data.comments && data.comments.map((comment, index) => 
                         <li key={index} className="q_comment">
-                            {comment.content} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
+                            {comment.body} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
                             <hr />
                         </li>
                     )}
