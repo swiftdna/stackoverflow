@@ -9,7 +9,7 @@ function ConnectionProvider() {
     this.client.on("ready", function () {
       console.log("client ready!");
     });
-
+    
     return this.kafkaConsumerConnection;
   };
 
