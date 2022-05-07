@@ -8,15 +8,26 @@ const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 auth();
 
-const kakfafy = (rid, req, res) => {
+const kakfafy = async (rid, req, res) => {
   const kafka = require('./kafka/client');
   const {user, params, query, body} = req;
   const modifiedRequest = { rid, user, params, query, body };
-  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
+  // // caching layer with redis
+  // const client = COREAPP.rclient;
+  // const cachedResponse = await client.get(rid);
+  // if (query && query.cache && cachedResponse) {
+  //   res.json(JSON.parse(cachedResponse));
+  //   console.log(`Served ${rid} from cache`);
+  //   return;
+  // }
+  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, async (err,results) => {
     if (err){
       console.log("Inside err");
       res.json(err);
     } else {
+      // Add data to cache
+      // await client.set(rid, JSON.stringify(results));
+      // console.log(`Saved ${rid} data to cache`);
       res.json(results);
     }
   });
@@ -96,6 +107,13 @@ router.get('/comments', (req, res) => {
 
 router.delete('/deletecomment',checkAuth, (req, res) => {
   return kakfafy('removeComment', req, res);
+});
+
+router.get('/v1/questions', (req, res) => {
+  return loadQuestions(req, (err, results) => {
+    return res.json(results);
+  })
+  // return kakfafy('loadQuestions', req, res);
 });
 
 module.exports = router;

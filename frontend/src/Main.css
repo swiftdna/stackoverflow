@@ -1919,9 +1919,9 @@ nav {
 
 .history_ctrl {
   margin-top: 25px;
-  margin-left: 20px;
+  margin-left: 18px;
   color: var(--bs-gray-500);
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .share_author_panel {
@@ -2386,4 +2386,10 @@ nav {
 }
 .js-sort-preference-change: hover {
   color: var(--black-700);
+}
+.history_title > a {
+  color: #0070BA !important;
+}
+.history_title > a:hover {
+  text-decoration: underline !important;
 }

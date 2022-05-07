@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
 const routes = require('./routes');
+// const redis = require('./config/redis-connect');
 const PORT = process.env.PORT || 3000;
 
 const jwt = require('jsonwebtoken');
@@ -14,6 +15,9 @@ const connectDB = require('./config/db');
 
 const config = require('config');
 connectDB();
+COREAPP = {};
+//redis connection
+// redis();
 //For BodyParser
 app.use(bodyParser.urlencoded({
     extended: true

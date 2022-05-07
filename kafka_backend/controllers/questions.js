@@ -70,6 +70,7 @@ const createQuestion = async (req, callback ) => {
 	  }
 	  else {
 		let question = await Question.find().sort(sort);
+		console.log('got data - ', question.length);
 		return callback(null, {
 			success: true,
 			data : question
@@ -158,6 +159,7 @@ const createQuestion = async (req, callback ) => {
 	  question.modifiedText = moment(question.modified).fromNow();
 	  question.modifiedFullText = moment(question.modified).format('MMMM Do, YYYY h:mm:ss a');
 	  return callback(null, {
+		success: true,
 		data : question,
 		activityresult : activity
 	  });
