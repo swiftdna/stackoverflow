@@ -10,7 +10,6 @@ const commentSchema = new Schema({
   body: { type: String, required: true },
   created: { type: Date, default: Date.now }
 });
-
 commentSchema.set('toJSON', { getters: true });
 commentSchema.options.toJSON.transform = (doc, ret) => {
   const obj = { ...ret };
