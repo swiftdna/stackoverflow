@@ -11,7 +11,9 @@ function ConnectionProvider() {
             });*/
     this.kafkaConsumerConnection = new kafka.Consumer(this.client, [
       { topic: topic_name, partition: 0 }
-    ]);
+    ], {
+      fetchMaxBytes: 1024 * 1024 * 1000
+    });
     this.client.on("ready", function () {
       console.log("client ready!");
     });

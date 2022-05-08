@@ -5,9 +5,7 @@ const passport = require('passport');
 const session = require('express-session')
 const app = express();
 const routes = require('./routes');
-const mysql = require('mysql')
-const db = require('./config/sqlConnect')
-
+// const redis = require('./config/redis-connect');
 require('dotenv').config();
 // const fileupload = require('express-fileupload');
 const connect = require('./config/connect');
@@ -37,6 +35,8 @@ app.use(passport.session()); // persistent login sessions
 app.use('/api', routes);
 COREAPP = {};
 
+//redis connection
+// redis();
 connect().then(() => {
   console.log('passport bootstrap!');
   require('./config/passport.js')(passport);

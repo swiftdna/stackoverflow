@@ -35,7 +35,7 @@ function Question() {
                         qloading ? <Loader text="Loading question details.." /> : <>
                             <ContentCard data={qdetails} type="question" />
                             {
-                                answers && <div style={{marginLeft: '14px', marginTop: '10px'}}>
+                                answers && <div style={{marginLeft: '14px', marginTop: '20px'}}>
                                 <h3>{answers.length} Answers</h3>
                                 {
                                     answers.map(answer => <ContentCard data={answer} />)

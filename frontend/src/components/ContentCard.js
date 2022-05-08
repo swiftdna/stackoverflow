@@ -1,9 +1,15 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
+import { useNavigate } from 'react-router-dom';
 import Output from 'editorjs-react-renderer';
 
 export default function ContentCard({ data, type}) {
+    const navigate = useNavigate();
+    const viewHistory = () => {
+        navigate(`/questions/${data._id}/timeline`);
+    };
+
 	return (
 		<>
 		<Row>
@@ -32,7 +38,9 @@ export default function ContentCard({ data, type}) {
                 <FaCaretDown className="vote_ctrl" />
                 {data.bookmarks && <><FaRegBookmark className="bookmark_ctrl" />
                 <p className="bookmark_counter">{data.bookmarks.length}</p></>}
-                <FaHistory className="history_ctrl" />
+                {
+                    type==='question' && <FaHistory className="history_ctrl" onClick={() => viewHistory()} />
+                }
             </Col>
             <Col xs={11}>
                 <div className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>

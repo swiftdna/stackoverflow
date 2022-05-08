@@ -173,9 +173,16 @@ router.get('/votes/upvote/:question/:answer',(req,res)=>{
   return kakfafy('upvote',req,res);
 });
 
+router.get('/v1/questions', (req, res) => {
+  return loadQuestions(req, (err, results) => {
+    return res.json(results);
+  })
+  // return kakfafy('loadQuestions', req, res);
+});
+
 router.post('/downvote',(req,res)=>{
   return kakfafy('downvote',req,res);
-})
+});
 
 // badge routes
 router.get('/badges/getAllbadges/:userID', (req, res) => {
