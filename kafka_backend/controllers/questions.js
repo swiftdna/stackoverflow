@@ -1,4 +1,5 @@
 const Question = require('../models/question');
+const Bookmark = require('./../models/bookmark')
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const moment = require('moment');
@@ -136,6 +137,19 @@ const createQuestion = async (req, callback ) => {
         });
 	}
   };
+
+
+  const getBookmarks = async (req,callback) => {
+	  try {
+		  const bookmarks = await Bookmark.findAll()
+		  console.log(bookmarks)
+	  } catch (error) {
+			return callback(error,{
+				success:false,
+				message:error.message
+			})
+	  }
+  }
 
   const deletebookmark = async (req, callback) => {
 	try {
