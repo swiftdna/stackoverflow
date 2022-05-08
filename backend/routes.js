@@ -16,19 +16,41 @@ const { getBadgesById } = require('./controllers/badgeController')
 auth();
 
 
-const kakfafy = (rid, req, res) => {
-    const kafka = require('./kafka/client');
-    const {user, params, query, body} = req;
-    const modifiedRequest = { rid, user, params, query, body };
-    return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
-      if (err){
-        console.log("Inside err");
-        res.json(err);
-      } else {
-        res.json(results);
-      }
-    });
-  };
+const kakfafy = async (rid, req, res) => {
+  const kafka = require('./kafka/client');
+  const {user, params, query, body} = req;
+  const modifiedRequest = { rid, user, params, query, body };
+  // // caching layer with redis
+  // const client = COREAPP.rclient;
+  // const cachedResponse = await client.get(rid);
+  // if (query && query.cache && cachedResponse) {
+  //   res.json(JSON.parse(cachedResponse));
+  //   console.log(`Served ${rid} from cache`);
+  //   return;
+  // }
+  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, async (err,results) => {
+    if (err){
+      console.log("Inside err");
+      res.json(err);
+    } else {
+      // Add data to cache
+      // await client.set(rid, JSON.stringify(results));
+      // console.log(`Saved ${rid} data to cache`);
+      res.json(results);
+    }
+  });
+};
+
+
+
+// Tags Routes
+router.post('/tags/addTag', addTag)
+router.get('/tags/getAllTags', getALLtags)
+router.get('/tags/getPopularTags', getPopularTags)
+router.get('/tags/searchTags/:searchQuery', getSearchTags)
+
+// Badges Routes
+//router.get('/badges/getAllbadges/:userID', getBadgesById)
 
 router.post('/questions', questionValidate,checkAuth, (req, res) => {
     return kakfafy('createQuestion', req, res);
@@ -36,7 +58,7 @@ router.post('/questions', questionValidate,checkAuth, (req, res) => {
 router.put('/questions/:questionid', questionValidate,checkAuth,(req, res) => {
     return kakfafy('editQuestion', req, res);
   });
-router.get('/loadQuestions', (req, res) => {
+router.get('/questions', (req, res) => {
     return kakfafy('loadQuestions', req, res);
   });
 router.get('/questions/:questionid',(req, res) => {
@@ -68,7 +90,7 @@ router.delete('/deletebookmark',checkAuth, (req, res) => {
     return kakfafy('topUserTags', req, res);
   });
 
-router.get('/getALLtags', getALLtags);
+
 
 router.post('/signup', signup);
 router.post('/login', login);
@@ -159,9 +181,5 @@ router.post('/downvote',(req,res)=>{
 router.get('/badges/getAllbadges/:userID', (req, res) => {
   return kakfafy('getBadgesById', req, res);
 });
-<<<<<<< HEAD
->>>>>>> develop
+
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 6f5328915d1cd8810790f94e0bc5a4d85000b799
