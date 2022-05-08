@@ -16,7 +16,6 @@ const { getBadgesById } = require('./controllers/badgeController')
 auth();
 
 
-<<<<<<< HEAD
 const kakfafy = (rid, req, res) => {
     const kafka = require('./kafka/client');
     const {user, params, query, body} = req;
@@ -30,26 +29,6 @@ const kakfafy = (rid, req, res) => {
       }
     });
   };
-=======
-
-
-// Tags Routes
-router.post('/tags/addTag', addTag)
-router.get('/tags/getAllTags', getALLtags)
-router.get('/tags/getPopularTags', getPopularTags)
-router.get('/tags/searchTags/:searchQuery', getSearchTags)
-
-// Badges Routes
-//router.get('/badges/getAllbadges/:userID', getBadgesById)
-
-
-
-
-
-router.get('/', (req, res) => {
-	res.json({success: true, message: 'Welcome to API page everyone!'});
-});
->>>>>>> develop
 
 router.post('/questions', questionValidate,checkAuth, (req, res) => {
     return kakfafy('createQuestion', req, res);
