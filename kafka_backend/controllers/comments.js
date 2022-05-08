@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 // const question = require('../../backend/models/question');
 const question = require('./../models/question')
+const mongoose = require('mongoose');
 
 const createComment = async (req, callback) => {
   const result = validationResult(req);
@@ -15,11 +16,12 @@ const createComment = async (req, callback) => {
     const { body } = req.body;
     const comment = await question.update(
         
-        {_id : req.params.question,"answers._id" : req.params.answer},
+        {_id : mongoose.Types.ObjectId(req.params.question),"answers._id" : mongoose.Types.ObjectId(req.params.answer)},
         {$push:{"answers.$.comments":{author:req.user.id,
             body:body}}}
     );
     return callback(null,{
+        success: true,
         data:comment
     });
  } catch (error) {
@@ -28,6 +30,37 @@ const createComment = async (req, callback) => {
 	    	message: error.message
         });
 	}
+};
+const getAllComments = async(req,callback)=>{
+    try {
+        const data = await question.findOne({_id: mongoose.Types.ObjectId(req.params.question)}, {comments: 1}, {lean: true});
+        return callback(null, {
+            data: data.comments
+        });
+    } catch (error){
+        return callback(error,{
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+const getAllAnswerComments = async(req,callback)=>{
+    try {
+        const data = await question.findOne({
+        "answers._id": mongoose.Types.ObjectId(req.params.answer)},
+        {"answers.comments":1}
+        );
+        console.log(data,"****************************");
+        return callback(null,{
+            data : data.answers.comments
+        });
+    } catch (error){
+        return callback(error,{
+            success:false,
+            message:error.message
+        });
+    }
 };
 
 const createquestioncomment = async(req,callback) => {
@@ -41,11 +74,13 @@ const createquestioncomment = async(req,callback) => {
       try {
         const { body } = req.body;
         const comment = await question.updateOne(
-            {_id : req.params.question},
+            {"_id" : mongoose.Types.ObjectId(req.params.question)},
             {$push:{comments:{author:req.user.id,
                 body:body}}}
         );
+        console.log("Comment called");
         return callback(null,{
+            success: true,
             data:comment
         });
      } catch (error) {
@@ -96,5 +131,7 @@ module.exports = {
     createComment,
     removeComment,
     createquestioncomment,
+    getAllComments,
+    getAllAnswerComments,
 	commentValidate
 };

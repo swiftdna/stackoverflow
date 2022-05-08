@@ -23,7 +23,7 @@ function Question() {
 
     useEffect(() => {
         getQuestionDetails(dispatch, questionID);
-        getAnswers(dispatch, questionID);
+        // getAnswers(dispatch, questionID);
     }, []);
 
     return(
@@ -33,12 +33,12 @@ function Question() {
                 <Col xs={10} style={{paddingLeft: '20px'}}>
                     {
                         qloading ? <Loader text="Loading question details.." /> : <>
-                            <ContentCard data={qdetails} type="question" />
+                            <ContentCard questionID={qdetails._id} data={qdetails} type="question" />
                             {
-                                answers && <div style={{marginLeft: '14px', marginTop: '10px'}}>
+                                answers && <div style={{marginLeft: '14px', marginTop: '20px'}}>
                                 <h3>{answers.length} Answers</h3>
                                 {
-                                    answers.map(answer => <ContentCard data={answer} />)
+                                    answers.map(answer => <ContentCard questionID={qdetails._id} data={answer} />)
                                 }
                                 </div>
                             }

@@ -1,9 +1,50 @@
+import React, { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
+import {addQuestionComment, addAnswerComment} from '../utils';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Output from 'editorjs-react-renderer';
 
-export default function ContentCard({ data, type}) {
+export default function ContentCard({ data, type, questionID}) {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const viewHistory = () => {
+        navigate(`/questions/${data._id}/timeline`);
+    };
+    const [comment, setComment] = useState('');
+
+    const handleComment = (e) => {
+        setComment(e.target.value);
+    }
+
+    const _handleKeyDown = (e) => {
+        const commentType = type === 'question' ? type : 'answer';
+        const elementID = data._id;
+        const qID = questionID ? questionID : data._id;
+        if (e.key === 'Enter' && comment) {
+            // Add the comment here
+            if (qID === elementID) {
+                // Question comment
+                console.log('q comment');
+                addQuestionComment(dispatch, qID, comment, (err, successFlag) => {
+                    setComment('');
+                });
+            } else {
+                addAnswerComment(dispatch, {
+                    qid: qID,
+                    answerID: elementID,
+                    data: comment
+                }, (err, successFlag) => {
+                    setComment('');
+                });
+                console.log('a comment');
+            }
+            // console.log(commentType, comment, qID, elementID);
+        }
+    }
+
 	return (
 		<>
 		<Row>
@@ -28,11 +69,13 @@ export default function ContentCard({ data, type}) {
         <Row>
             <Col xs={1}>
                 <FaCaretUp className="vote_ctrl" />
-                <p className="vote_counter">{data.total_votes}</p>
+                <p className="vote_counter">{data.score}</p>
                 <FaCaretDown className="vote_ctrl" />
                 {data.bookmarks && <><FaRegBookmark className="bookmark_ctrl" />
                 <p className="bookmark_counter">{data.bookmarks.length}</p></>}
-                <FaHistory className="history_ctrl" />
+                {
+                    type==='question' && <FaHistory className="history_ctrl" onClick={() => viewHistory()} />
+                }
             </Col>
             <Col xs={11}>
                 <div className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
@@ -54,11 +97,12 @@ export default function ContentCard({ data, type}) {
                     <ul>
                     {data.comments && data.comments.map((comment, index) => 
                         <li key={index} className="q_comment">
-                            {comment.body} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
+                            {comment.body} - <span className="q_comment_author">{data.author.username}</span> <span className="q_comment_time">{comment.created}</span>
                             <hr />
                         </li>
                     )}
                     </ul>
+                    <input className="comment_input" value={comment} placeholder="Add a comment.." onChange={handleComment} onKeyDown={_handleKeyDown} />
                 </div>
             </Col>
         </Row>
