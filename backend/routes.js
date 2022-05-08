@@ -1,9 +1,11 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,questionPostedCount} = require('./controllers/questions');
-const { signup,login} = require('./controllers/users');
-const {getALLtags} = require('./controllers/tags');
+const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
+  questionPostedCount } = require('./controllers/questions');
+const { answerValidate } = require('./controllers/answers');
+const {commentValidate } = require('./controllers/comments');
+const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
 const {
   addTag,
@@ -14,7 +16,6 @@ const {
 
 const { getBadgesById } = require('./controllers/badgeController')
 auth();
-
 
 const kakfafy = async (rid, req, res) => {
   const kafka = require('./kafka/client');
