@@ -163,12 +163,12 @@ router.post('/comments/:question',checkAuth,(req,res) => {
 })
 
 // Upvoting and Downvoting the Question.
-router.post('/votes/vote/:question',checkAuth,(req,res)=>{
+router.post('/votes/question/:question',checkAuth,(req,res)=>{
   return kakfafy('voteQuestion',req,res);
 });
 
 //Upvoting and Downvoting the answer.
-router.post('/votes/vote/:question/:answer',checkAuth,(req,res)=>{
+router.post('/votes/answer/:question/:answer',checkAuth,(req,res)=>{
   return kakfafy('voteAnswer',req,res);
 });
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
-import {addQuestionComment, addAnswerComment} from '../utils';
+import { addQuestionComment, addAnswerComment, voteQuestion, voteAnswer } from '../utils';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Output from 'editorjs-react-renderer';
@@ -45,6 +45,20 @@ export default function ContentCard({ data, type, questionID}) {
         }
     }
 
+    const vote = (type) => {
+        const commentType = type === 'question' ? type : 'answer';
+        const elementID = data._id;
+        const qID = questionID ? questionID : data._id;
+        const voteValue = type === 'upvote' ? 1 : -1;
+
+        if (qID === elementID) {
+            // Question vote
+            voteQuestion(dispatch, qID, voteValue);
+        } else {
+            voteAnswer(dispatch, qID, elementID, voteValue);
+        }
+    }
+
 	return (
 		<>
 		<Row>
@@ -68,9 +82,9 @@ export default function ContentCard({ data, type, questionID}) {
         }
         <Row>
             <Col xs={1}>
-                <FaCaretUp className="vote_ctrl" />
+                <FaCaretUp className="vote_ctrl" onClick={() => vote('upvote')}/>
                 <p className="vote_counter">{data.score}</p>
-                <FaCaretDown className="vote_ctrl" />
+                <FaCaretDown className="vote_ctrl" onClick={() => vote('downvote')}/>
                 {data.bookmarks && <><FaRegBookmark className="bookmark_ctrl" />
                 <p className="bookmark_counter">{data.bookmarks.length}</p></>}
                 {

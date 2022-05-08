@@ -23,7 +23,8 @@ const voteQuestion = async(req, callback) => {
 
 const voteAnswer = async(req, callback) => {
     try {
-        const {vote, user} = req.body;
+        const user = req.user.id; 
+        const {vote} = req.body;
         const votes = await question.update({
                 "_id": mongoose.Types.ObjectId(req.params.question),
                 "answers._id": mongoose.Types.ObjectId(req.params.answer)

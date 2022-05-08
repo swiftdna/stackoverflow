@@ -181,3 +181,35 @@ export function addAnswer(dispatch, questionID, data, callback) {
             console.log(err.message);
         });
 }
+
+export function voteQuestion(dispatch, questionID, value) {
+    const voteObj = {
+        vote: value
+    };
+    axios.post(`/api/votes/question/${questionID}`, voteObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function voteAnswer(dispatch, questionID, answerID, value) {
+    const voteObj = {
+        vote: value
+    };
+    axios.post(`/api/votes/question/${questionID}/${answerID}`, voteObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}

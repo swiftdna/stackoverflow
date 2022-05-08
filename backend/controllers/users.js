@@ -72,7 +72,7 @@ const login = async (req, res) => {
     await User.findOneAndUpdate({email:email},{email:email,lastseen:Date.now()},{upsert:true, new:true});
     const user = await User.findOne({
       email: email
-    });
+    }, {}, {lean: true});
     if (!user) {
       res.status(403).json({
         message: 'Wrong username or password.'
