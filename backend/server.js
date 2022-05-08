@@ -63,14 +63,14 @@ app.post('/logout', (req, res) => {
   });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(`${__dirname}/public/index.html`, (err) => {
-    if (err) {
-      console.log(err);
-      res.end(err.message);
-    }
-  });
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(`${__dirname}/public/index.html`, (err) => {
+//     if (err) {
+//       console.log(err);
+//       res.end(err.message);
+//     }
+//   });
+// });
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 

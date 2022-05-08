@@ -148,8 +148,16 @@ function Navbar() {
                     <i className="fas fa-search"></i>
                 </div>
 
-            <button onClick={ ()=>{login();}} className="btn btn-login">Log in</button>
-            <button  onClick={ ()=>{register();}}  className="btn btn-register">Sign up</button>
+
+              {
+                isAuthenticated ? 
+                    <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button> : 
+                    <>
+                        <button type="button" className="btn btn-login" title="Log In" onClick={() => login()}>login</button>
+                        <button type="button" className="btn btn-register" title="Log In" onClick={() => register()}>register</button>
+                    </>
+            }    
+            
         </div>
     </nav>
 </div>
