@@ -8,6 +8,7 @@ const {auth} = require('../utils/passport');
 auth();
 
 const signup = async (req, res) => {
+
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
@@ -21,11 +22,16 @@ const signup = async (req, res) => {
       email: email
     });
 
+    console.log('sunnyk' + existingUsername);
+
     if (existingUsername) {
       res.status(400).json({
         message: 'Username already exists.'
       });
+      console.log('Username already exists.');
     }
+    else
+    {
 
     const newUser = new User({email,password});
     const salt = await bcrypt.genSalt(10);
@@ -54,14 +60,16 @@ const signup = async (req, res) => {
         message: 'There was a problem creating your account.'
       });
     }
-  } catch (error) {
+  }} catch (error) {
     res.status(400).json({
       message: 'There was a problem creating your account.'
     });
   }
 };
 
+
 const login = async (req, res) => {
+
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
@@ -93,7 +101,7 @@ const login = async (req, res) => {
            expiresIn: 10080000
           });
           res.cookie('so_token', token, { httpOnly: true });
-          res.status(200).json({token: "JWT " + token, data :user});
+          res.status(200).json({token: "JWT " + token, data :user, success: true});
         }
       });
     }  

@@ -16,7 +16,7 @@ import Header from "./Header";
 
 //Define a Login Component
 export function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -30,7 +30,7 @@ export function Login() {
 
   const usernameChangeHandler = (e) => {
     const inputValue = e.target.value;
-    setUsername(inputValue);
+    setEmail(inputValue);
   };
 
   const passwordChangeHandler = (e) => {
@@ -39,9 +39,11 @@ export function Login() {
   };
 
   //submit Login handler to send a request to the node backend
-  const submitLogin = () => {
+  const submitLogin = (e) => 
+  {
+    e.preventDefault();
     const data = {
-      username,
+      email,
       password,
     };
 
@@ -49,11 +51,15 @@ export function Login() {
     // axios.defaults.withCredentials = true;
     //make a post request with the user data
 
-    axios.post("/signin", data).then((response) => {
-      alert(response);
-      console.log("----------");
+    axios.post("/api/login", data).then((response) => 
+    {
+      alert(response.data.data);
       dispatch(handleLoginResponse(response));
-    });
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+      })
+    ;
   };
 
   return (
@@ -181,7 +187,7 @@ export function Login() {
               type="submit"
               className="btn btn-lg btn-block btn-sm text-light"
               style={{ backgroundColor: "rgb(10, 149, 255)", width: "100%" }}
-              onClick={submitLogin}
+              onClick={(e) => {submitLogin(e)}}
             >
               Sign up
             </button>
