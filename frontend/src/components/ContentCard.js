@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
-import {addQuestionComment, addAnswerComment} from '../utils';
-import { useDispatch } from 'react-redux';
+import { addQuestionComment, addAnswerComment, voteQuestion, voteAnswer, addBookmark, removeBookmark } from '../utils';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { pluck } from 'underscore';
 import Output from 'editorjs-react-renderer';
 
 export default function ContentCard({ data, type, questionID}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const userDetails = useSelector(state => state.app.user);
     const viewHistory = () => {
         navigate(`/questions/${data._id}/timeline`);
     };
     const [comment, setComment] = useState('');
-
     const handleComment = (e) => {
         setComment(e.target.value);
     }
@@ -45,6 +46,43 @@ export default function ContentCard({ data, type, questionID}) {
         }
     }
 
+    const vote = (type) => {
+        const commentType = type === 'question' ? type : 'answer';
+        const elementID = data._id;
+        const qID = questionID ? questionID : data._id;
+        const voteValue = type === 'upvote' ? 1 : -1;
+
+        if (qID === elementID) {
+            // Question vote
+            voteQuestion(dispatch, qID, voteValue);
+        } else {
+            voteAnswer(dispatch, qID, elementID, voteValue);
+        }
+    }
+
+    const isQBookmarked = () => {
+        // const qID = questionID ? questionID : data._id;
+        if (data && data.bookmarks) {
+            const {id} = userDetails;
+            const users = pluck(data.bookmarks, 'user');
+            return users.indexOf(id) !== -1;
+        }
+        return false;
+    }
+
+    const bookmark = () => {
+        const cardType = type === 'question' ? type : 'answer';
+        const qID = questionID ? questionID : data._id;
+        if (cardType !== 'question') {
+            return;
+        }
+        if (!isQBookmarked()) {
+            addBookmark(dispatch, qID);
+        } else {
+            removeBookmark(dispatch, qID);
+        }
+    }
+
 	return (
 		<>
 		<Row>
@@ -68,10 +106,10 @@ export default function ContentCard({ data, type, questionID}) {
         }
         <Row>
             <Col xs={1}>
-                <FaCaretUp className="vote_ctrl" />
+                <FaCaretUp className="vote_ctrl" onClick={() => vote('upvote')}/>
                 <p className="vote_counter">{data.score}</p>
-                <FaCaretDown className="vote_ctrl" />
-                {data.bookmarks && <><FaRegBookmark className="bookmark_ctrl" />
+                <FaCaretDown className="vote_ctrl" onClick={() => vote('downvote')}/>
+                {data.bookmarks && <><FaRegBookmark className={isQBookmarked() ? "bookmark_ctrl bookmarked" : "bookmark_ctrl"} onClick={() => bookmark()} />
                 <p className="bookmark_counter">{data.bookmarks.length}</p></>}
                 {
                     type==='question' && <FaHistory className="history_ctrl" onClick={() => viewHistory()} />

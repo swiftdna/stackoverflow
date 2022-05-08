@@ -80,7 +80,7 @@ const login = async (req, res) => {
     await User.findOneAndUpdate({email:email},{email:email,lastseen:Date.now()},{upsert:true, new:true});
     const user = await User.findOne({
       email: email
-    });
+    }, {}, {lean: true});
     if (!user) {
       res.status(403).json({
         message: 'Wrong username or password.'
@@ -101,7 +101,7 @@ const login = async (req, res) => {
            expiresIn: 10080000
           });
           res.cookie('so_token', token, { httpOnly: true });
-          res.status(200).json({token: "JWT " + token, data :user, success: true});
+          res.status(200).json({token: "JWT " + token, user, success: true});
         }
       });
     }  

@@ -114,6 +114,10 @@ export function postQuestion(dispatch, data, callback) {
             const {data} = response;
             if (data.success) {
                 // refresh categories
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Question posted successfully!'
+                }));
                 return callback(null, true);
             }
             return callback(true);
@@ -132,6 +136,10 @@ export function addQuestionComment(dispatch, qid, data, callback) {
             const {data} = response;
             if (data.success) {
                 // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Comment added to the question successfully!'
+                }));
                 getQuestionDetails(dispatch, qid);
                 return callback(null, true);
             }
@@ -152,6 +160,10 @@ export function addAnswerComment(dispatch, inputData, callback) {
             const {data} = response;
             if (data.success) {
                 // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Comment added to the answer successfully!'
+                }));
                 getQuestionDetails(dispatch, qid);
                 return callback(null, true);
             }
@@ -172,10 +184,94 @@ export function addAnswer(dispatch, questionID, data, callback) {
             const {data} = response;
             if (data.success) {
                 // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Answer added successfully!'
+                }));
                 getQuestionDetails(dispatch, questionID);
                 return callback(null, true);
             }
             return callback(true);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function voteQuestion(dispatch, questionID, value) {
+    const voteObj = {
+        vote: value
+    };
+    axios.post(`/api/votes/question/${questionID}`, voteObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Question voted successfully!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function voteAnswer(dispatch, questionID, answerID, value) {
+    const voteObj = {
+        vote: value
+    };
+    axios.post(`/api/votes/answer/${questionID}/${answerID}`, voteObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Answer voted successfully!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function addBookmark(dispatch, questionID) {
+    const bookmarkObj = {
+        _id: questionID
+    };
+    axios.post(`/api/addbookmark`, bookmarkObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Question bookmarked!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function removeBookmark(dispatch, questionID) {
+    const bookmarkObj = {
+        _id: questionID
+    };
+    axios.post(`/api/deletebookmark`, bookmarkObj).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Question removed from bookmark!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
         })
         .catch(err => {
             console.log(err.message);

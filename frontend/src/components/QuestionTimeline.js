@@ -43,7 +43,7 @@ function QuestionTimeline() {
                                                 <td>{index+1}</td>
                                                 <td>{activity.created}</td>
                                                 <td>{activity.type}</td>
-                                                <td>{activity.author}</td>
+                                                <td>{activity.author ? activity.author.username : 'Unknown'}</td>
                                             </tr>
                                         )
                                       }

@@ -23,13 +23,14 @@ passport.use(new JwtStrategy(opts,(jwt_payload,callback) => {
             console.log("Invalid user from server");
             return callback(error,false)
         }
-        if(results.length !== 0){
+        if(results && results.length !== 0){
             console.log("Valid user");
-            callback(null,results);}
-            else {
-                console.log("InValid user");
-                callback(null,results);}
-        });
+            return callback(null,results);
+        } else {
+         console.log("InValid user");
+         return callback('user not found!');
+        }
+      });
     }));
 }
 
