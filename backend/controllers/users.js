@@ -101,7 +101,7 @@ const login = async (req, res) => {
            expiresIn: 10080000
           });
           res.cookie('so_token', token, { httpOnly: true });
-          res.status(200).json({token: "JWT " + token, data :user, success: true});
+          res.status(200).json({token: "JWT " + token, user, success: true});
         }
       });
     }  

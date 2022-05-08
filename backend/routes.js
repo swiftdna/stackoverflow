@@ -78,7 +78,7 @@ router.get('/searchQuestion',(req, res) => {
     return kakfafy('questionPostedCount', req, res);
   });
   
-router.delete('/deletebookmark',checkAuth, (req, res) => {
+router.post('/deletebookmark',checkAuth, (req, res) => {
     return kakfafy('deletebookmark', req, res);
   });
   router.get('/getUserStats',checkAuth, (req, res) => {
@@ -203,6 +203,15 @@ router.get('/tags/getPopularTags', (req, res) => {
 
 router.get('/tags/searchTags/:searchQuery', (req, res) => {
   return kakfafy('getSearchTags', req, res);
+});
+
+router.get('/session', checkAuth, async (req, res, next) => {
+  if (req.user) {
+    const {user} = req;
+    res.json({ success: true, isAuthenticated: true, user });
+  } else {
+    res.status(401).json({message: "Not authorized", success: false});
+  }
 });
 
 module.exports = router;

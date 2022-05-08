@@ -194,3 +194,7 @@
 .vote_ctrl {
   cursor: pointer;
 }
+
+.bookmark_ctrl.bookmarked {
+  color: hsl(47,76%,46%);
+}
