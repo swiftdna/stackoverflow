@@ -1,17 +1,9 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-<<<<<<< HEAD
 const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,questionPostedCount} = require('./controllers/questions');
 const { signup,login} = require('./controllers/users');
 const {getALLtags} = require('./controllers/tags');
-=======
-const { createQuestion,questionValidate,loadQuestions,questiondetail,addbookmark,deletebookmark,editQuestion,approvequestion,searchQuestion,
-  questionPostedCount } = require('./controllers/questions');
-const { answerValidate } = require('./controllers/answers');
-const {commentValidate } = require('./controllers/comments');
-const { signup, login } = require('./controllers/users');
->>>>>>> develop
 const {checkAuth, auth} = require("./utils/passport");
 const {
   addTag,
@@ -102,7 +94,6 @@ router.get('/getALLtags', getALLtags);
 router.post('/signup', signup);
 router.post('/login', login);
 router.put('/approvequestion/:questionid', (req, res) => {
-<<<<<<< HEAD
     return kakfafy('approvequestion', req, res);
   });
   router.get('/topUserPosts',checkAuth,(req, res) => {
@@ -124,10 +115,7 @@ router.put('/approvequestion/:questionid', (req, res) => {
   router.get('/userTagQuestions',checkAuth,(req, res) => {
     return kakfafy('userTagQuestions', req, res);
   })
-  
-=======
-  return kakfafy('approvequestion', req, res);
-});
+
 
 router.get('/ ',(req, res) => {
   return kakfafy('getUserDetails', req, res);
