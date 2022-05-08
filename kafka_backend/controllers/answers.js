@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const Question = require('./../models/question')
+const mongoose = require('mongoose');
 
 const createAnswer = async (req, callback) => {
     
@@ -26,24 +27,21 @@ const createAnswer = async (req, callback) => {
         });
 	}
   };
-
-const removeAnswer = async (req, callback) => {
+const getAllAnswersForQuestions = async(req,callback) => {
     try {
-        const { text } = req.body;
-        const answer = await Question.updateOne(
-            {_id : req.params.question,"answers._id" : req.params.answer},
-            {$push:{answers:{author:req.user.id,
-            text:text}}});
+        const data = await Question.findOne({_id: mongoose.Types.ObjectId(req.params.question)}, {answers: 1}, {lean: true});
         return callback(null, {
-            data : answer
+            data: data.answers
         });
-        } catch (error) {
-            return callback(error,{
-                success: false,
-                message: error.message
-            });
-        }
-  };
+    } catch (error){
+        return callback(error,{
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+
 
 const answerValidate = [
   body('text')
@@ -62,6 +60,6 @@ const answerValidate = [
 ];
 module.exports = {
     createAnswer,
-    removeAnswer,
-    answerValidate
+    answerValidate,
+    getAllAnswersForQuestions
 };
