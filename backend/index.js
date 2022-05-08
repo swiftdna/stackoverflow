@@ -5,11 +5,16 @@ const passport = require('passport');
 const session = require('express-session')
 const app = express();
 const routes = require('./routes');
+const mysql = require('mysql')
+const db = require('./config/sqlConnect')
+
 require('dotenv').config();
 // const fileupload = require('express-fileupload');
 const connect = require('./config/connect');
 
 const port = process.env.NODE_LOCAL_PORT || 8081;
+
+
 
 //For BodyParser
 app.use(bodyParser.urlencoded({
