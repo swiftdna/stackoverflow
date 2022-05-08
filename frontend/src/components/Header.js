@@ -14,11 +14,11 @@ function Navbar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/');
-        }
-    }, [isAuthenticated])
+    // useEffect(() => {
+    //     if (!isAuthenticated) {
+    //         navigate('/');
+    //     }
+    // }, [isAuthenticated])
 
     const login = () => {
         navigate('/login');
@@ -148,13 +148,12 @@ function Navbar() {
                     <i className="fas fa-search"></i>
                 </div>
 
-
-                <a href="#" className="btn btn-login">Log in</a>
-                <a href="#" className="btn btn-register">Sign up</a>
-            </div>
-        </nav>
-    </div>
-    </header>
+            <button onClick={ ()=>{login();}} className="btn btn-login">Log in</button>
+            <button  onClick={ ()=>{register();}}  className="btn btn-register">Sign up</button>
+        </div>
+    </nav>
+</div>
+</header>
     )
 }
 

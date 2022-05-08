@@ -15,7 +15,7 @@ function App() {
         <Main />
       </BrowserRouter>
     </Provider>
-  )
+  );
 }
 
 

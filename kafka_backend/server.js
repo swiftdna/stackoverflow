@@ -1,5 +1,7 @@
-var connection =  new require('./kafka/Connection');
+const process = require('node:process');
+const connection =  new require('./kafka/Connection');
 const connectDB = require('./config/db');
+const fs = require('fs');
 
 connectDB();
 //topics files
@@ -47,3 +49,10 @@ client.loadMetadataForTopics(["stackoverflow_backend_processing"], (err, resp) =
 });
 
 handleTopicRequest("stackoverflow_backend_processing", Aggregator);
+process.on('uncaughtException', (err, origin) => {
+    fs.writeSync(
+        process.stderr.fd,
+        `Caught exception: ${err}\n` +
+        `Exception origin: ${origin}`
+    );
+});

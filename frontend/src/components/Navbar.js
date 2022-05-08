@@ -63,7 +63,7 @@ function Navbar() {
         <nav className="navbar navbar-light bg-light justify-content-between">
             <div className="container">
                 <div className="col-1">
-                    <a className="navbar-brand" href onClick={() => home()}>Stack Overflow</a>
+                    <a className="" href onClick={() => home()}>Stack Overflow</a>
                 </div>
                 <div className="col-9">
                     <input style={{display: 'inline', width: '91%', borderTopRightRadius: 0, borderBottomRightRadius: 0}} className="form-control mr-sm-2" type="search" placeholder="Enter search text" aria-label="Search" />

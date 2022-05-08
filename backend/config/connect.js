@@ -1,6 +1,7 @@
 const { MongoClient } = require('mongodb');
 const config = require('config');
-const url = config.get('mongoURI');
+// const url = config.get('mongoURI');
+const url = 'mongodb://localhost:27017/stackoverflow';
 // Connection URL
 // const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
