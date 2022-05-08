@@ -168,17 +168,36 @@ const getBadgesById = async (req, callback ) => {
         count: FamousbadgeCount,
     }
     badges.push(badge)
-
+    const goldBadges = badges.filter(bd => bd.badgeValue === 'Gold');
+    let gold=0;
+    goldBadges.map(dt=> {
+      gold=gold+dt.count
+	})
+	  const silverBadges = badges.filter(bd => bd.badgeValue === 'Silver' );
+      let silver=0;
+    silverBadges.map(dt=> {
+      silver=silver+dt.count
+	})
+	  const bronzeBadges = badges.filter(bd => bd.badgeValue === 'Bronze');
+      let bronze=0;
+    bronzeBadges.map(dt=> {
+      bronze=bronze+dt.count
+	})
     try {
         if (user) {
+            const badgescount={Gold: gold,
+                Silver: silver,
+                Bronze: bronze}
             return callback(null, {
                 success:true,
-                data:badges
+                data:badges,
+                badgescount :badgescount
             });
         }
         return callback(null, {
             success:true,
-            data:[]
+            data:[],
+            badgescount :{}
         });
     } catch (error) {
         return callback(error, {

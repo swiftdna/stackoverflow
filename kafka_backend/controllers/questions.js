@@ -117,6 +117,14 @@ const createQuestion = async (req, callback ) => {
 		{ $inc: { views: 1 } },
 		{ new: true }
 	  ).populate('answers').lean();
+	  let req1 = {
+		params :{
+		  "userID" : question.author,
+		}
+	}
+	const getBadgesByIdFn = util.promisify(getBadgesById);
+	let badgecount= await getBadgesByIdFn(req1);
+	question.author.badgecount = badgecount.badgescount;
 		  if (question.created === question.modified)
 		  {
 		  activity.push({
@@ -137,12 +145,15 @@ const createQuestion = async (req, callback ) => {
 			created:question.modified,
 		})  
 	  }
-	  question.answers.map(ans => {
-	  	if (ans.text && helper.isJsonString(ans.text)) {
-			const tmp = JSON.parse(ans.text);
-			ans.text = tmp;
-			ans.isMultiMedia = true;
+	  await Promise.all(question.answers.map(async ans => {
+		let req1 = {
+			params :{
+			  "userID" : ans.author,
+			}
 		}
+        //const getBadgesByIdFn = util.promisify(getBadgesById);
+	  const badgecount= await getBadgesByIdFn(req1);
+	  ans.author.badgecount = badgecount.badgescount;
 		activity.push({
 			type:'answer',
 			author:ans.author,
@@ -156,7 +167,7 @@ const createQuestion = async (req, callback ) => {
 				comment : anscomment.body
 			}) 	
 		}) 
-	  })
+	  }))
 	  question.comments.map(ques => {
 		activity.push({
 			type:'question_comment',
