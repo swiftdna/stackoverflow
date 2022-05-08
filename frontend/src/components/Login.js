@@ -23,11 +23,11 @@ export function Login() {
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (isLoggedIn) {
-    //         navigate('/');
-    //     }
-    // }, [isLoggedIn]);
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn]);
 
     const usernameChangeHandler = (e) => {
         const inputValue = e.target.value;
@@ -52,12 +52,14 @@ export function Login() {
 
         axios.post('/signin',data)
             .then(response => {
-                dispatch(handleLoginResponse(response));
+
+                alert(response)
+                console.log('----------');
+                //dispatch(handleLoginResponse(response));
             });
     }
 
     return (
-
       <>
         <Header/>
 
@@ -115,6 +117,9 @@ export function Login() {
                 aria-label="gmail"
                 aria-describedby="addon-wrapping"
                 style={{height:"45px"}}
+                onChange={(event) => {
+                  usernameChangeHandler(event);
+                }}
               />
             </div>
           </div>
@@ -130,6 +135,11 @@ export function Login() {
                 aria-label="Username"
                 aria-describedby="addon-wrapping"
                 style={{height:"45px"}}
+
+                onChange={(event) => {
+                  passwordChangeHandler(event);
+                }}
+
               />
             </div>
           </div>
@@ -160,6 +170,7 @@ export function Login() {
             type="submit"
             className="btn btn-lg btn-block btn-sm text-light"
             style={{ backgroundColor: "rgb(10, 149, 255)", width:"100%" }}
+            onClick={submitLogin}
           >
             Sign up
           </button>

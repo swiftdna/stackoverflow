@@ -9,6 +9,7 @@ const routes = require('./routes');
 const PORT = process.env.PORT || 3000;
 const mysql = require('mysql')
 const sqlDB = require('./config/sqlConnect')
+
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');

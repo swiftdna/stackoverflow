@@ -4,8 +4,7 @@
   "description": "Stack overflow application backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "mocha --timeout 10000"
+    "dev": "nodemon server.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -30,11 +29,8 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "react-js-pagination": "^3.0.3"
-  },
-  "scripts": {
-    "dev": "nodemon server.js"
-    "underscore": "^1.13.2"
+    "react-js-pagination": "^3.0.3",
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
