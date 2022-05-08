@@ -5,6 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Col } from 'react-bootstrap';
 import { selectIsLoggedIn } from '../selectors/appSelector';
+import AllQuestions from './AllQuestions';
+import styled from 'styled-components';
+import { Link } from "react-router-dom";
+import RightSidebar from "./RightSideBar";
 
 //create the Navbar Component
 function Home() {
@@ -13,6 +17,7 @@ function Home() {
     const questions = useSelector(state => state.questions.data);
 
     return(
+      <>
         <div className="container" style={{marginTop: '80px'}}>
             <Row>
                 <Sidebar />
@@ -38,6 +43,7 @@ function Home() {
                 <p onClick={() => navigate('/messages')}>messages</p>
                 </Col>
             </Row>
+            </div>
       
 <HomeContainer>
         <div className="home-top">
