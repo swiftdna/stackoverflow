@@ -21,6 +21,7 @@ const createComment = async (req, callback) => {
             body:body}}}
     );
     return callback(null,{
+        success: true,
         data:comment
     });
  } catch (error) {
@@ -79,6 +80,7 @@ const createquestioncomment = async(req,callback) => {
         );
         console.log("Comment called");
         return callback(null,{
+            success: true,
             data:comment
         });
      } catch (error) {

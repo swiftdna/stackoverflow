@@ -1,5 +1,6 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Output from 'editorjs-react-renderer';
 
 export default function QuestionSummaryCard({data}) {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function QuestionSummaryCard({data}) {
                         </h3>
                     </div>
                     <div className="excerpt">
-                        {data.text}
+                        {data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}
                     </div>
                     <div className="tags d-flex gs4 fw-wrap mt2 t-java t-string t-random">
                         <a href="/questions/tagged/java" className="post-tag flex--item" title="" rel="tag">java</a> <a href="/questions/tagged/string" className="post-tag flex--item" title="" rel="tag">string</a> <a href="/questions/tagged/random" className="post-tag flex--item" title="" rel="tag">random</a> 

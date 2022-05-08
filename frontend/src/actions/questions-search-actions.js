@@ -4,8 +4,19 @@ import {
    // CLEAR_QUESTIONS_SEARCH,
    FETCH_QUESTIONS_SEARCH_ERROR
 } from '../constants/actionTypes';
+import {isJsonString} from '../utils';
 
 function fetchQuesSearchSuccess(data) {
+   data.map(dt => {
+      if (isJsonString(dt.text)) {
+         dt.text = JSON.parse(dt.text);
+         if (dt.text && dt.text.blocks) {
+            dt.text = dt.text.blocks;
+            dt.text.blocks = dt.text.blocks.filter(x => x.type !== 'image');
+         }
+         dt.isMultiMedia = true;
+      }
+   });
    return {
       type: ADD_QUESTIONS_SEARCH,
       payload: data

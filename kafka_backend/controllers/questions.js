@@ -138,6 +138,11 @@ const createQuestion = async (req, callback ) => {
 		})  
 	  }
 	  question.answers.map(ans => {
+	  	if (ans.text && helper.isJsonString(ans.text)) {
+			const tmp = JSON.parse(ans.text);
+			ans.text = tmp;
+			ans.isMultiMedia = true;
+		}
 		activity.push({
 			type:'answer',
 			author:ans.author,

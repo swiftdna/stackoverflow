@@ -182,3 +182,11 @@
 .total_sales_count {
   margin-left: 10px;
 }
+
+.comment_input {
+  border: none;
+  height: 30px;
+  outline: 0;
+  font-size: 12px;
+  width: 100%;
+}
