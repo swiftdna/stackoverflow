@@ -40,23 +40,8 @@ const getAllAnswersForQuestions = async(req,callback) => {
         });
     }
 };
-const removeAnswer = async (req, callback) => {
-    try {
-        const { text } = req.body;
-        const answer = await Question.updateOne(
-            {_id : req.params.question,"answers._id" : req.params.answer},
-            {$push:{answers:{author:req.user.id,
-            text:text}}});
-        return callback(null, {
-            data : answer
-        });
-        } catch (error) {
-            return callback(error,{
-                success: false,
-                message: error.message
-            });
-        }
-  };
+
+
 
 const answerValidate = [
   body('text')
@@ -75,7 +60,6 @@ const answerValidate = [
 ];
 module.exports = {
     createAnswer,
-    removeAnswer,
     answerValidate,
     getAllAnswersForQuestions
 };

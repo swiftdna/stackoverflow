@@ -75,47 +75,51 @@ router.get('/userActivity',checkAuth,(req, res) => {
   return kakfafy('userActivity', req, res);
 });
 
-// router.get('/answers', (req, res) => {
-//   return kakfafy('loadAnswers', req, res);
-// });
+//Creating answer for question.
 
 router.post('/answers/:question',checkAuth, (req, res) => {
-  console.log("1 here")
   return kakfafy('createAnswer', req, res);
 });
+
+//Getting answers for all questions.
 
 router.get('/getAnswers/:question',checkAuth,(req,res)=>{
   return kakfafy('getAllAnswersForQuestions',req,res);
 });
-// router.delete('/answers/:question/:answer',checkAuth, (req, res) => {
-//   return kakfafy('removeAnswer', req, res);
-// });
+
+//API for getting ALL comments for questions.
+
+router.get('/getComments/:question',checkAuth,(req,res)=>{
+  return kakfafy('getAllComments',req,res);
+});
+
+//API for getting ALL comments for answers.
+
+router.get('/getAnswerComments/:answer',checkAuth,(req,res) => {
+  return kakfafy('getAllAnswerComments',req,res);
+
+});
+
+//Creating comment for the answer.
 
 router.post('/comments/:question/:answer',checkAuth, (req, res) => {
   return kakfafy('createComment', req, res);
 });
 
+//Creating comments for question.
+
 router.post('/comments/:question',checkAuth,(req,res) => {
   return kakfafy('createquestioncomment',req,res);
 })
-router.get('/comments', (req, res) => {
-  return kakfafy('loadComments', req, res);
+
+// Upvoting and Downvoting the Question.
+router.post('/votes/vote/:question',checkAuth,(req,res)=>{
+  return kakfafy('voteQuestion',req,res);
 });
 
-// router.delete('/deletecomment',checkAuth, (req, res) => {
-//   return kakfafy('removeComment', req, res);
-// });
-
-router.post('/votes/upvote/:question',checkAuth,(req,res)=>{
-  // console.log("Inside the votes API");
-  return kakfafy('upvoteQuestion',req,res);
+//Upvoting and Downvoting the answer.
+router.post('/votes/vote/:question/:answer',checkAuth,(req,res)=>{
+  return kakfafy('voteAnswer',req,res);
 });
 
-router.post('/votes/upvote/:question/:answer',checkAuth,(req,res)=>{
-  // console.log("Inside the votes API");
-  return kakfafy('upvoteAnswer',req,res);
-});
-router.post('/downvote',(req,res)=>{
-  return kakfafy('downvote',req,res);
-})
 module.exports = router;
