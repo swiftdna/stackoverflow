@@ -5,6 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Col } from 'react-bootstrap';
 import { selectIsLoggedIn } from '../selectors/appSelector';
+import AllQuestions from './AllQuestions';
+import styled from 'styled-components';
+import { Link } from "react-router-dom";
+import RightSidebar from "./RightSideBar";
 
 //create the Navbar Component
 function Home() {
@@ -13,6 +17,7 @@ function Home() {
     const questions = useSelector(state => state.questions.data);
 
     return(
+      <>
         <div className="container" style={{marginTop: '80px'}}>
             <Row>
                 <Sidebar />
@@ -38,8 +43,98 @@ function Home() {
                 <p onClick={() => navigate('/messages')}>messages</p>
                 </Col>
             </Row>
+            </div>
+      
+<HomeContainer>
+        <div className="home-top">
+          <h1>All Questions</h1>
         </div>
-    )
+
+        <div className="askQuestnDiv">
+          <Link to="/questions/ask">
+            <button className="askBtn"> Ask Question </button>
+          </Link>
+        </div>
+
+        <div className="home-qst-count">
+          <h2>Total Questions</h2>
+        </div>
+
+        <div className="filterBtnDiv">
+          <button className="filterBtn">Hot</button>
+          <button className="filterBtn">Score</button>
+          <button className="filterBtn">Unanswered</button>
+        </div>
+
+        <div className="horizontalLine">
+          <hr />
+        </div>
+
+        <div>
+          <AllQuestions />
+          <AllQuestions />
+          <AllQuestions />
+          <AllQuestions />
+          <AllQuestions />
+          <AllQuestions />
+        </div>
+
+        <div>
+          <RightSidebar />
+        </div>
+      </HomeContainer>
+    </>
+  );
 }
 
 export default Home;
+
+const HomeContainer = styled.footer`
+  .home-top {
+    margin-left: 270px;
+    margin-top: -140px;
+  }
+
+  .askQuestnDiv {
+    margin-left: 890px;
+    margin-top: -35px;
+  }
+
+  .askBtn,
+  .filterBtn {
+    color: white;
+    background-color: var(--blue-500);
+    border-radius: 3px;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.15;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--fade);
+    border: 1px solid transparent;
+    box-shadow: rgb(255 255 255 / 40%) 0px 1px 0px 0px inset;
+    padding: 0.8em;
+  }
+
+  .home-qst-count {
+    margin-left: 270px;
+    margin-top: 40px;
+  }
+
+  .filterBtnDiv {
+    margin-left: 790px;
+    margin-top: -45px;
+  }
+
+  .filterBtn {
+    margin-left: 2px;
+    background-color: var(--blue-500);
+  }
+
+  .horizontalLine {
+    margin-left: 250px;
+    margin-right: 400px;
+  }
+`;
