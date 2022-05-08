@@ -14,7 +14,9 @@ const answerSchema = new Schema({
   text: { type: String, required: true },
   score: { type: Number, default: 0 },
   votes: [voteSchema],
-  comments: [commentSchema]
+  comments: [commentSchema],
+  isbestanswer: {type: Boolean,default : false},
+  isbestanswercreated:{ type: Date, default: Date.now}
 });
 
 answerSchema.set('toJSON', { getters: true });
