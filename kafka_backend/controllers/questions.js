@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const helper = require('./helper');
 const moment = require('moment');
-const db = require('../config/sqlConnect')
+const sqldb = require('../config/sqlConnect')
 const util = require('util');
 const _ = require('underscore');
 
@@ -342,7 +342,7 @@ console.log('todaydateis',today);
 			const data = tags.split(" ");
 			let tagdata= data[0];
 			data.shift();
-			const queryDB = util.promisify(db.query).bind(db);
+			const queryDB = util.promisify(sqldb.query).bind(sqldb);
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log('===> ', tagdesc);
@@ -428,7 +428,7 @@ console.log('todaydateis',today);
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
 			}
 			const question = await Question.find({$and:[{author : userdata},{tags: { $all: tagdata }}]}).lean()
-			const queryDB = util.promisify(db.query).bind(db);
+			const queryDB = util.promisify(sqldb.query).bind(sqldb);
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log('===> ', tagdesc);
