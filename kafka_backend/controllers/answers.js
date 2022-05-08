@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const Question = require('./../models/question')
+const mongoose = require('mongoose');
 
 const createAnswer = async (req, callback) => {
     
@@ -28,9 +29,9 @@ const createAnswer = async (req, callback) => {
   };
 const getAllAnswersForQuestions = async(req,callback) => {
     try {
-        const answer = await Question.findOne({_id:req.params.question}).answers;
+        const data = await Question.findOne({_id: mongoose.Types.ObjectId(req.params.question)}, {answers: 1}, {lean: true});
         return callback(null, {
-            data : answer
+            data: data.answers
         });
     } catch (error){
         return callback(error,{

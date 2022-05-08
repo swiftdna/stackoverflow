@@ -1,5 +1,6 @@
 const user = require('../../backend/models/user');
-const question = require('./../models/question')
+const question = require('./../models/question');
+const mongoose = require('mongoose');
 // const upvote1 = async (req, callback) => {
 //     const { id } = req.user;
   
@@ -39,16 +40,23 @@ const upvoteQuestion = async(req, callback) => {
 
 const upvoteAnswer = async(req, callback) => {
     try {
-        const user = req.user.id;
-        const {vote} = req.body;
-        const votes = await question.update(
-            {_id:req.params.question},
-            {"answers._id":req.params.answer},
-            {$push:{"answers.$.votes":{user:user,vote:vote
-            }}});
-            return callback(null, {
-                data : votes
+        const {vote, user} = req.body;
+        const votes = await question.update({
+                "_id": mongoose.Types.ObjectId(req.params.question),
+                "answers._id": mongoose.Types.ObjectId(req.params.answer)
+            },
+            {
+                $push: {
+                    "answers.$.votes": {
+                        user: user,
+                        vote: vote
+                    }
+                },
+                $inc: { "answers.$.score": vote }
             });
+        return callback(null, {
+            data: votes
+        });
     } catch(error) {
         return callback(error,{
             success: false,

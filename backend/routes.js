@@ -86,7 +86,6 @@ router.post('/answers/:question',checkAuth, (req, res) => {
 
 router.get('/getAnswers/:question',checkAuth,(req,res)=>{
   return kakfafy('getAllAnswersForQuestions',req,res);
-
 });
 // router.delete('/answers/:question/:answer',checkAuth, (req, res) => {
 //   return kakfafy('removeAnswer', req, res);
