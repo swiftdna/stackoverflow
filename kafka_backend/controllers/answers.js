@@ -17,6 +17,7 @@ const createAnswer = async (req, callback) => {
         {$push:{answers:{author:req.user.id,
         text:text}}});
     return callback(null, {
+        success: true,
         data : answer
     });
 	} catch (error) {

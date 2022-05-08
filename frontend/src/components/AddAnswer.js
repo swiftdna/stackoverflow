@@ -5,21 +5,20 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { createReactEditorJS } from "react-editor-js";
 
 import { EDITOR_JS_TOOLS } from "../constants/editortools";
-import { postQuestion } from "../utils";
+import { postQuestion, addAnswer } from "../utils";
 
 const ReactEditorJS = createReactEditorJS();
 
 //Create a AskQuestion Component
-export function AddAnswer() {
+export function AddAnswer({data}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [answerForm, setAnswerForm] = useState({
-        title: '',
+    const resetAnswerData = {
         text: {
           blocks: []
-        },
-        tags: ''
-    });
+        }
+    };
+    const [answerForm, setAnswerForm] = useState(resetAnswerData);
 
     const onEditorChange = async (api) => {
         // console.log(event);
@@ -35,6 +34,9 @@ export function AddAnswer() {
 
     const submitAnswer = () => {
         console.log(answerForm);
+        addAnswer(dispatch, data, answerForm, (err, successFlag) => {
+            setAnswerForm(resetAnswerData);
+        });
         // postQuestion(dispatch, questionForm, (err, successFlag) => {
         //     console.log(successFlag);
         //     if (successFlag) {

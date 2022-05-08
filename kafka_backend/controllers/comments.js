@@ -20,6 +20,7 @@ const createComment = async (req, callback) => {
             body:body}}}
     );
     return callback(null,{
+        success: true,
         data:comment
     });
  } catch (error) {
@@ -46,6 +47,7 @@ const createquestioncomment = async(req,callback) => {
                 body:body}}}
         );
         return callback(null,{
+            success: true,
             data:comment
         });
      } catch (error) {

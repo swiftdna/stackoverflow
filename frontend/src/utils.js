@@ -6,6 +6,15 @@ import { questionSearchLoading, handleQuesSearchResponse } from './actions/quest
 
 import axios from 'axios';
 
+export function isJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 export function register(dispatch, data, callback) {
     // const navigate = useNavigate();
     // dispatch(profileLoading());
@@ -68,7 +77,9 @@ export function getAnswers(dispatch, id) {
 export function searchQuestions(dispatch, searchQuery, sortBy) {
     const params = {};
     if (searchQuery && typeof searchQuery === 'string') {
-        if (searchQuery.indexOf('[') === 0 && searchQuery.indexOf('[') !== -1) {
+        if (searchQuery.indexOf('user:') !== -1 && searchQuery.indexOf('[') !== -1 && searchQuery.indexOf(']') !== -1) {
+            params.key = 'user_tag';
+        } else if (searchQuery.indexOf('[') === 0 && searchQuery.indexOf(']') !== -1) {
             params.key = 'tag';
         } else if (searchQuery.indexOf('user:') !== -1) {
             params.key = 'user';
@@ -105,7 +116,66 @@ export function postQuestion(dispatch, data, callback) {
                 // refresh categories
                 return callback(null, true);
             }
-            return callback(false);
+            return callback(true);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function addQuestionComment(dispatch, qid, data, callback) {
+    const commentObj = {
+        body: data
+    };
+    axios.post(`/api/comments/${qid}`, commentObj)
+        .then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                getQuestionDetails(dispatch, qid);
+                return callback(null, true);
+            }
+            return callback(true);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function addAnswerComment(dispatch, inputData, callback) {
+    const {qid, answerID, data} = inputData;
+    const commentObj = {
+        body: data
+    };
+    axios.post(`/api/comments/${qid}/${answerID}`, commentObj)
+        .then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                getQuestionDetails(dispatch, qid);
+                return callback(null, true);
+            }
+            return callback(true);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function addAnswer(dispatch, questionID, data, callback) {
+    const {text: {blocks}} = data;
+    const answerObj = {
+        text: JSON.stringify(blocks)
+    };
+    axios.post(`/api/answers/${questionID}`, answerObj)
+        .then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                getQuestionDetails(dispatch, questionID);
+                return callback(null, true);
+            }
+            return callback(true);
         })
         .catch(err => {
             console.log(err.message);

@@ -25,6 +25,7 @@ export default function questionDetailsReducer(state = initialState, action) {
         ...state,
         loading: false,
         data,
+        answers: data && data.answers ? data.answers : [],
         activities: activityresult
       }
     }
