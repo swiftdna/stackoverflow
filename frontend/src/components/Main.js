@@ -8,6 +8,7 @@ import Login from './Login';
 import Header from './Header';
 import Home from './Home';
 import Question from './Question';
+import QuestionTimeline from './QuestionTimeline';
 import AskQuestion from './AskQuestion';
 import Search from './Search';
 import Messages from './Messages';
@@ -70,6 +71,7 @@ export function Main() {
                 
               <Route path="/" element={<Home />} />
               <Route path="/questions/:questionID" element={<Question />} />
+              <Route path="/questions/:questionID/timeline" element={<QuestionTimeline />} />
               <Route path="/questions/ask" element={<AskQuestion />} />
               <Route path="/search" element={<Search />} />
               <Route path="/messages" element={<Messages />} />

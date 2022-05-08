@@ -30,7 +30,7 @@ export function questionDetailsLoading() {
 export function handleQuestionDetailsResponse(response) {
    const {data} = response;
    if (data.success) {
-      return fetchQuestionDetailsSuccess(data.data);
+      return fetchQuestionDetailsSuccess(data);
    } else {
       return fetchQuestionDtlsFailure({
          message: data.message

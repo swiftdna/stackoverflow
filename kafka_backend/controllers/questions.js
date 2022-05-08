@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const helper = require('./helper');
 const moment = require('moment');
-const db = require('../config/sqlConnect')
+const sqldb = require('../config/sqlConnect')
 const util = require('util');
 const _ = require('underscore');
 
@@ -72,40 +72,33 @@ const createQuestion = async (req, callback ) => {
 		});
 	  }
 	  else {
-		let question = await Question.find().lean()
+		let question = await Question.find({}, {lean: true}).sort(sort);
 		question && question.map(ques=>{
-			if (ques.modified !== ques.created)
-			{
+			if (ques.modified !== ques.created) {
                      ques.modifies=true
 					 ques.time= ques.modified
+			} else {
+				ques.time= ques.created
 			}
-		else{
-			ques.time= ques.created
-		}})
-        if (sortType === "time")
-			{
-            question.sort( (a, b) => {
+		});
+        if (sortType === "time") {
+            	question.sort( (a, b) => {
 				let da = new Date(a.time),
-			db = new Date(b.time);
-		return db - da;
+				db = new Date(b.time);
+				return db - da;
 			});
 		}
-		if (req.query.tab === "score")
-			{
-			
-         question.sort( (a, b) => { return b.score- a.score});
+		if (req.query.tab === "score") {
+			question.sort( (a, b) => { return b.score- a.score});
 		}
-		if (req.query.tab === "views")
-			{
-				
-         question.sort( (a, b) => b.views- a.views);
+		if (req.query.tab === "views") {
+			question.sort( (a, b) => b.views- a.views);
 		}
 		return callback(null, {
 			success: true,
 			data : question
 		});
 	  }
-	  
 	} catch (error) {
 		return callback(error,{
             success: false,
@@ -188,6 +181,7 @@ const createQuestion = async (req, callback ) => {
 	  question.modifiedText = moment(question.modified).fromNow();
 	  question.modifiedFullText = moment(question.modified).format('MMMM Do, YYYY h:mm:ss a');
 	  return callback(null, {
+		success: true,
 		data : question,
 		activityresult : activity
 	  });
@@ -348,7 +342,7 @@ console.log('todaydateis',today);
 			const data = tags.split(" ");
 			let tagdata= data[0];
 			data.shift();
-			const queryDB = util.promisify(db.query).bind(db);
+			const queryDB = util.promisify(sqldb.query).bind(sqldb);
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log('===> ', tagdesc);
@@ -434,7 +428,7 @@ console.log('todaydateis',today);
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
 			}
 			const question = await Question.find({$and:[{author : userdata},{tags: { $all: tagdata }}]}).lean()
-			const queryDB = util.promisify(db.query).bind(db);
+			const queryDB = util.promisify(sqldb.query).bind(sqldb);
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log('===> ', tagdesc);

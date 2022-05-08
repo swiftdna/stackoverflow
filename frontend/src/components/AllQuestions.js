@@ -88,7 +88,6 @@ const AllQuestionContainer = styled.footer`
     width: 30%;
     padding: 20px 0px;
     width: 100%;
-    margin-left : 250px;
     font-size: 15px;
   }
   

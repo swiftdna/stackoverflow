@@ -17,15 +17,26 @@ const {
 const { getBadgesById } = require('./controllers/badgeController')
 auth();
 
-const kakfafy = (rid, req, res) => {
+const kakfafy = async (rid, req, res) => {
   const kafka = require('./kafka/client');
   const {user, params, query, body} = req;
   const modifiedRequest = { rid, user, params, query, body };
-  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, (err,results) => {
+  // // caching layer with redis
+  // const client = COREAPP.rclient;
+  // const cachedResponse = await client.get(rid);
+  // if (query && query.cache && cachedResponse) {
+  //   res.json(JSON.parse(cachedResponse));
+  //   console.log(`Served ${rid} from cache`);
+  //   return;
+  // }
+  return kafka.make_request('stackoverflow_backend_processing', modifiedRequest, async (err,results) => {
     if (err){
       console.log("Inside err");
       res.json(err);
     } else {
+      // Add data to cache
+      // await client.set(rid, JSON.stringify(results));
+      // console.log(`Saved ${rid} data to cache`);
       res.json(results);
     }
   });
@@ -130,12 +141,20 @@ router.get('/votes/upvote/:question/:answer',(req,res)=>{
   return kakfafy('upvote',req,res);
 });
 
+router.get('/v1/questions', (req, res) => {
+  return loadQuestions(req, (err, results) => {
+    return res.json(results);
+  })
+  // return kakfafy('loadQuestions', req, res);
+});
+
 router.post('/downvote',(req,res)=>{
   return kakfafy('downvote',req,res);
-})
+});
 
 // badge routes
 router.get('/badges/getAllbadges/:userID', (req, res) => {
   return kakfafy('getBadgesById', req, res);
 });
+
 module.exports = router;

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
 const routes = require('./routes');
+// const redis = require('./config/redis-connect');
 const PORT = process.env.PORT || 3000;
 const mysql = require('mysql')
 const sqlDB = require('./config/sqlConnect')
@@ -17,6 +18,10 @@ const connectDB = require('./config/db');
 const config = require('config');
 connectDB();
 
+COREAPP = {};
+//redis connection
+// redis();
+
 // SQL Connection
 sqlDB.connect((err) => {
     if (err) {
@@ -25,8 +30,6 @@ sqlDB.connect((err) => {
     }
     console.log('Connected To DB ' + sqlDB.threadId)
 })
-
-
 
 //For BodyParser
 app.use(bodyParser.urlencoded({
@@ -47,18 +50,8 @@ app.use(passport.initialize());
 // app.use(passport.session()); // persistent login sessions
 
 app.use(express.json());
-app.use(session({
-     secret: 'mysql',
-     resave: false,
-     saveUninitialized: false,
-     duration: 60 * 60 * 1000,
-     activeDuration: 5 * 60 * 1000
- }));
- 
 // const models = require("./models");
-//load passport strategies
-//Sync Database
-
+app.use('/api', routes);
 
 app.post('/logout', (req, res) => {
   // req.logOut();
@@ -70,8 +63,7 @@ app.post('/logout', (req, res) => {
   });
 });
 
-/*
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`, (err) => {
     if (err) {
       console.log(err);
@@ -79,8 +71,7 @@ app.get('*', function (req, res) {
     }
   });
 });
-*/
-app.use('/api', routes);
+
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 module.exports = app;
