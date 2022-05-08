@@ -45,10 +45,10 @@ const kakfafy = async (rid, req, res) => {
 
 
 // Tags Routes
-router.post('/tags/addTag', addTag)
-router.get('/tags/getAllTags', getALLtags)
-router.get('/tags/getPopularTags', getPopularTags)
-router.get('/tags/searchTags/:searchQuery', getSearchTags)
+// router.post('/tags/addTag', addTag)
+// router.get('/tags/getAllTags', getALLtags)
+// router.get('/tags/getPopularTags', getPopularTags)
+// router.get('/tags/searchTags/:searchQuery', getSearchTags)
 
 // Badges Routes
 //router.get('/badges/getAllbadges/:userID', getBadgesById)
@@ -188,6 +188,23 @@ router.post('/downvote',(req,res)=>{
 // badge routes
 router.get('/badges/getAllbadges/:userID', (req, res) => {
   return kakfafy('getBadgesById', req, res);
+});
+
+// tag routes
+router.post('/tags/addTag',(req,res)=>{
+  return kakfafy('addTag',req,res);
+});
+
+router.get('/tags/getAllTags', (req, res) => {
+  return kakfafy('getALLtags', req, res);
+});
+
+router.get('/tags/getPopularTags', (req, res) => {
+  return kakfafy('getPopularTags', req, res);
+});
+
+router.get('/tags/searchTags/:searchQuery', (req, res) => {
+  return kakfafy('getSearchTags', req, res);
 });
 
 module.exports = router;
