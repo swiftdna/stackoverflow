@@ -6,6 +6,7 @@ import { createReactEditorJS } from "react-editor-js";
 
 import { EDITOR_JS_TOOLS } from "../constants/editortools";
 import { postQuestion } from "../utils";
+import gLogo from "./Images/g.png";
 
 const ReactEditorJS = createReactEditorJS();
 

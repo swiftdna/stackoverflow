@@ -7,6 +7,14 @@ const { answerValidate } = require('./controllers/answers');
 const {commentValidate } = require('./controllers/comments');
 const { signup, login } = require('./controllers/users');
 const {checkAuth, auth} = require("./utils/passport");
+const {
+  addTag,
+  getALLtags,
+  getPopularTags,
+  getSearchTags,
+} = require('./controllers/tagController')
+
+const { getBadgesById } = require('./controllers/badgeController')
 auth();
 
 const kakfafy = async (rid, req, res) => {
@@ -33,6 +41,21 @@ const kakfafy = async (rid, req, res) => {
     }
   });
 };
+
+
+
+// Tags Routes
+router.post('/tags/addTag', addTag)
+router.get('/tags/getAllTags', getALLtags)
+router.get('/tags/getPopularTags', getPopularTags)
+router.get('/tags/searchTags/:searchQuery', getSearchTags)
+
+// Badges Routes
+//router.get('/badges/getAllbadges/:userID', getBadgesById)
+
+
+
+
 
 router.get('/', (req, res) => {
 	res.json({success: true, message: 'Welcome to API page everyone!'});
@@ -127,6 +150,11 @@ router.get('/v1/questions', (req, res) => {
 
 router.post('/downvote',(req,res)=>{
   return kakfafy('downvote',req,res);
-})
+});
+
+// badge routes
+router.get('/badges/getAllbadges/:userID', (req, res) => {
+  return kakfafy('getBadgesById', req, res);
+});
 
 module.exports = router;

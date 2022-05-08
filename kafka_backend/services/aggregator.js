@@ -3,6 +3,7 @@ const {createAnswer,removeAnswer}=require('../controllers/answers');
 const {createComment, removeComment, createquestioncomment}=require('../controllers/comments');
 const {upvote,downvote,unvote}=require('../controllers/votes');
 const { getUserDetails,getUserStats,editUserDetails,userActivity}= require('../controllers/users');
+const {getBadgesById} = require('../controllers/badgeController')
 
 const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
@@ -11,7 +12,8 @@ const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
     editQuestion,approvequestion,searchQuestion,mostViewedQuestions,questionPostedCount,
     getUserDetails,getUserStats,editUserDetails,userActivity,
-    removeAnswer,createComment,removeComment,upvote,downvote,unvote
+    removeAnswer,createComment,removeComment,upvote,downvote,unvote,
+    getBadgesById
 };
 
 function handle_request(msg, callback){
