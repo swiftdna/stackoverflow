@@ -22,6 +22,9 @@ import { selectAlertFlag, selectToastFlag, selectAlertMessage, selectAlertType, 
 import { clearToast } from '../actions/app-actions';
 import { loadQuestions } from '../utils';
 import Register from './Register';
+import Tags from './Tags';
+import Users from './Users';
+import UserProfile from './UserProfile';
 
 //Create a Main Component
 export function Main() {
@@ -64,6 +67,7 @@ export function Main() {
                 </Toast>
             </ToastContainer>
             <Routes>
+                
               <Route path="/" element={<Home />} />
               <Route path="/questions/:questionID" element={<Question />} />
               <Route path="/questions/ask" element={<AskQuestion />} />
@@ -71,6 +75,9 @@ export function Main() {
               <Route path="/messages" element={<Messages />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/tags" element={<Tags />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/userProfile" element={<UserProfile />} />
 
             </Routes>
         </>
