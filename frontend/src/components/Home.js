@@ -16,6 +16,8 @@ function Home() {
     const navigate = useNavigate();
     const questions = useSelector(state => state.questions.data);
 
+    console.log('sunny' + isAuthenticated);
+
     return(
       <>
         <div className="container" style={{marginTop: '50px'}}>

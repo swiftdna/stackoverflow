@@ -10,8 +10,33 @@ import gLogo from "./Images/g.png";
 import styled from "styled-components";
 import fLogo from "./Images/fb.png";
 import gitLogo from "./Images/git.png";
+import axios from "axios";
 
 export default function Register() {
+
+const dispatch = useDispatch();
+const [userName, setUserName] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+
+const submitSignup = (e) => {
+	e.preventDefault();
+    const data = {
+	  email,
+      password,
+    };
+
+    axios.post("/api/signup", data).then((response) => 
+	{
+	    alert('user is successfully created, please login !!! ');
+		alert(success.response.data.message);
+    })
+	.catch((error) => {
+		alert(error.response.data.message);
+	  });
+
+  };
+
 	const info = [
 		{
 		  icon: (
@@ -130,7 +155,7 @@ export default function Register() {
 					  <form>
 						<div className="form-outline mb-4">
 						  <label className="form-label" for="form1Example13">
-							Full Name
+							User Name
 						  </label>
 						  <div class="input-group flex-nowrap">
 
@@ -141,6 +166,9 @@ export default function Register() {
 							  aria-label="Username"
 							  aria-describedby="addon-wrapping"
 							  style={{height:"45px"}}
+							  onChange={(event) => {
+								setUserName(event.target.value);
+							  }}
 							/>
 						  </div>
 						</div>
@@ -157,6 +185,9 @@ export default function Register() {
 							  aria-label="gmail"
 							  aria-describedby="addon-wrapping"
 							  style={{height:"45px"}}
+							  onChange={(event) => {
+								setEmail(event.target.value);
+							  }}
 							/>
 						  </div>
 						</div>
@@ -173,6 +204,9 @@ export default function Register() {
 							  aria-label="Username"
 							  aria-describedby="addon-wrapping"
 							  style={{height:"45px"}}
+							  onChange={(event) => {
+								setPassword(event.target.value);
+							  }}
 							/>
 						  </div>
 						</div>
@@ -196,6 +230,7 @@ export default function Register() {
 						  style={{ backgroundColor: "rgb(10, 149, 255)" ,								  width:"100%",
 						  width:"100%",
 						}}
+						onClick={(e) => {submitSignup(e)}}
 						>
 						  Sign up
 						</button>
