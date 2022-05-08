@@ -1,6 +1,7 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
 import UserCard from './UserCard';
+import Output from 'editorjs-react-renderer';
 
 export default function ContentCard({ data, type}) {
 	return (
@@ -19,7 +20,7 @@ export default function ContentCard({ data, type}) {
         	type==='question' && 
         	<>
         	<p className="q_subheading">
-            	<span className="mini-heading">Asked</span> 1 year, 5 months ago <span className="mini-heading">Modified</span> 4 days ago <span className="mini-heading">Viewed</span> 606k times
+            	<span className="mini-heading">Asked</span> {data.createdText} <span className="mini-heading">Modified</span> {data.modifiedText} <span className="mini-heading">Viewed</span> {data.views} times
         	</p>
         	<hr />
         	</>
@@ -27,14 +28,14 @@ export default function ContentCard({ data, type}) {
         <Row>
             <Col xs={1}>
                 <FaCaretUp className="vote_ctrl" />
-                <p className="vote_counter">246</p>
+                <p className="vote_counter">{data.total_votes}</p>
                 <FaCaretDown className="vote_ctrl" />
-                <FaRegBookmark className="bookmark_ctrl" />
-                <p className="bookmark_counter">36</p>
+                {data.bookmarks && <><FaRegBookmark className="bookmark_ctrl" />
+                <p className="bookmark_counter">{data.bookmarks.length}</p></>}
                 <FaHistory className="history_ctrl" />
             </Col>
             <Col xs={11}>
-                <p className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.content}</p>
+                <div className="q_desc" style={{marginTop: type==='question' ? '5px' : '20px'}}>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
                 <p className="q_tags">
                     {data.tags && data.tags.map((tag, index) => <span key={index} className="q_tag">{tag}</span>)}
                 </p>
@@ -45,8 +46,7 @@ export default function ContentCard({ data, type}) {
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
-                        <UserCard />
-                        <UserCard owner={true} />
+                        <UserCard owner={true} data={{...data.author, modified: data.modifiedFullText}} />
                     </Col>
                 </Row>
                 <hr />
@@ -54,7 +54,7 @@ export default function ContentCard({ data, type}) {
                     <ul>
                     {data.comments && data.comments.map((comment, index) => 
                         <li key={index} className="q_comment">
-                            {comment.content} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
+                            {comment.body} - <span className="q_comment_author">{comment.author}</span> <span className="q_comment_time">{comment.created}</span>
                             <hr />
                         </li>
                     )}

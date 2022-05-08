@@ -10,6 +10,7 @@ import { selectIsLoggedIn } from '../selectors/appSelector';
 function Home() {
     const isAuthenticated = useSelector(selectIsLoggedIn);
     const navigate = useNavigate();
+    const questions = useSelector(state => state.questions.data);
 
     return(
         <div className="container" style={{marginTop: '80px'}}>
@@ -30,7 +31,10 @@ function Home() {
                     <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
                         Newest</a>
                 </div>
-                <p onClick={() => navigate('/questions/315135')}>click here</p>
+                {
+                    questions && questions.map(q => <p onClick={() => navigate(`/questions/${q.id}`)}>check {q.id}</p>)
+                }
+                
                 <p onClick={() => navigate('/messages')}>messages</p>
                 </Col>
             </Row>

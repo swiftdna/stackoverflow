@@ -1,64 +1,83 @@
 const { body, validationResult } = require('express-validator');
+// const question = require('../../backend/models/question');
+const question = require('./../models/question')
 
-const loadComments = async (req, res, next, id) => {
-  try {
-    let comment;
-
-    if (req.answer) {
-      comment = await req.answer.comments.id(id);
-    } else {
-      comment = await req.question.comments.id(id);
-    }
-
-    if (!comment) return res.status(404).json({ message: 'Comment not found.' });
-    req.comment = comment;
-  } catch (error) {
-    if (error.name === 'CastError') return res.status(400).json({ message: 'Invalid comment id.' });
-    return next(error);
-  }
-  next();
-};
-
-const createComment = async (req, res, next) => {
+const createComment = async (req, callback) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
-    return res.status(422).json({ errors });
+    return callback({
+		errors
+	});
   }
-
   try {
-    const { id } = req.user;
-    const { comment } = req.body;
-
-    if (req.params.answer) {
-      req.answer.addComment(id, comment);
-      const question = await req.question.save();
-      return res.status(201).json(question);
-    }
-
-    const question = await req.question.addComment(id, comment);
-    return res.status(201).json(question);
-  } catch (error) {
-    next(error);
-  }
+    const { body } = req.body;
+    const comment = await question.update(
+        
+        {_id : req.params.question,"answers._id" : req.params.answer},
+        {$push:{"answers.$.comments":{author:req.user.id,
+            body:body}}}
+    );
+    return callback(null,{
+        data:comment
+    });
+ } catch (error) {
+        return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
 };
 
-const removeComment = async (req, res, next) => {
+const createquestioncomment = async(req,callback) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        const errors = result.array({ onlyFirstError: true });
+        return callback({
+            errors
+        });
+      }
+      try {
+        const { body } = req.body;
+        const comment = await question.updateOne(
+            {_id : req.params.question},
+            {$push:{comments:{author:req.user.id,
+                body:body}}}
+        );
+        return callback(null,{
+            data:comment
+        });
+     } catch (error) {
+            return callback(error,{
+                success: false,
+                message: error.message
+            });
+        }
+    };
+
+const removeComment = async (req, callback) => {
   const { comment } = req.params;
 
   try {
     if (req.params.answer) {
       req.answer.removeComment(comment);
       const question = await req.question.save();
-      return res.json(question);
+      return callback(null, {
+		success : true,
+	});
     }
 
     const question = await req.question.removeComment(comment);
-    return res.json(question);
+    return callback(null, {
+		success : true,
+	});
   } catch (error) {
-    next(error);
-  }
+    return callback(error,{
+        success: false,
+        message: error.message
+    });
+}
 };
 
 const commentValidate = [
@@ -74,8 +93,8 @@ const commentValidate = [
     .withMessage('must be at most 1000 characters long')
 ];
 module.exports = {
-	loadComments,
     createComment,
     removeComment,
+    createquestioncomment,
 	commentValidate
 };

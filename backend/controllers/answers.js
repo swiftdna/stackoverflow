@@ -1,45 +1,48 @@
 const { body, validationResult } = require('express-validator');
+const Question = require('./../models/question')
 
-const loadAnswers = async (req, res, next, id) => {
-  try {
-    const answer = await req.question.answers.id(id);
-    if (!answer) return res.status(404).json({ message: 'Answer not found.' });
-    req.answer = answer;
-  } catch (error) {
-    if (error.name === 'CastError') return res.status(400).json({ message: 'Invalid answer id.' });
-    return next(error);
-  }
-  next();
-};
-
-const createAnswer = async (req, res, next) => {
+const createAnswer = async (req, callback) => {
+    
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const errors = result.array({ onlyFirstError: true });
-    return res.status(422).json({ errors });
+    return callback({
+		errors
+	});
   }
-
   try {
-    const { id } = req.user;
     const { text } = req.body;
+    const answer = await Question.updateOne(
+        {_id : req.params.question},
+        {$push:{answers:{author:req.user.id,
+        text:text}}});
+    return callback(null, {
+        data : answer
+    });
+	} catch (error) {
+        return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
 
-    const question = await req.question.addAnswer(id, text);
-
-    res.status(201).json(question);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const removeAnswer = async (req, res, next) => {
+const removeAnswer = async (req, callback) => {
   try {
     const { answer } = req.params;
     const question = await req.question.removeAnswer(answer);
-    res.json(question);
-  } catch (error) {
-    next(error);
-  }
-};
+    return callback(null, {
+		success : true,
+        data : question
+	});
+
+	} catch (error) {
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
 
 const answerValidate = [
   body('text')
@@ -57,7 +60,6 @@ const answerValidate = [
     .withMessage('must be at most 30000 characters long')
 ];
 module.exports = {
-	loadAnswers,
     createAnswer,
     removeAnswer,
     answerValidate
