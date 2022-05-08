@@ -67,7 +67,7 @@ router.put('/approvequestion/:questionid', (req, res) => {
   return kakfafy('approvequestion', req, res);
 });
 
-router.get('/ ',(req, res) => {
+router.get('/',(req, res) => {
   return kakfafy('getUserDetails', req, res);
 });
 
@@ -84,6 +84,10 @@ router.post('/answers/:question',checkAuth, (req, res) => {
   return kakfafy('createAnswer', req, res);
 });
 
+router.get('/getAnswers/:question',checkAuth,(req,res)=>{
+  return kakfafy('getAllAnswersForQuestions',req,res);
+
+});
 // router.delete('/answers/:question/:answer',checkAuth, (req, res) => {
 //   return kakfafy('removeAnswer', req, res);
 // });
@@ -103,10 +107,15 @@ router.get('/comments', (req, res) => {
 //   return kakfafy('removeComment', req, res);
 // });
 
-router.get('/votes/upvote/:question/:answer',(req,res)=>{
-  return kakfafy('upvote',req,res);
+router.post('/votes/upvote/:question',checkAuth,(req,res)=>{
+  // console.log("Inside the votes API");
+  return kakfafy('upvoteQuestion',req,res);
 });
 
+router.post('/votes/upvote/:question/:answer',checkAuth,(req,res)=>{
+  // console.log("Inside the votes API");
+  return kakfafy('upvoteAnswer',req,res);
+});
 router.post('/downvote',(req,res)=>{
   return kakfafy('downvote',req,res);
 })

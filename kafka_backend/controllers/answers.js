@@ -26,7 +26,19 @@ const createAnswer = async (req, callback) => {
         });
 	}
   };
-
+const getAllAnswersForQuestions = async(req,callback) => {
+    try {
+        const answer = await Question.findOne({_id:req.params.question}).answers;
+        return callback(null, {
+            data : answer
+        });
+    } catch (error){
+        return callback(error,{
+            success:false,
+            message:error.message
+        });
+    }
+};
 const removeAnswer = async (req, callback) => {
     try {
         const { text } = req.body;
@@ -63,5 +75,6 @@ const answerValidate = [
 module.exports = {
     createAnswer,
     removeAnswer,
-    answerValidate
+    answerValidate,
+    getAllAnswersForQuestions
 };

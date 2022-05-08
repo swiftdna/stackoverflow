@@ -7,7 +7,7 @@ const voteSchema = new Schema(
     vote: { type: Number, required: true },
     created: { type: Date, default: Date.now }
   },
-  { _id: false }
+  // { _id: false }
 );
 
 module.exports = voteSchema
