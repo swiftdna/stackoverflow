@@ -53,14 +53,6 @@ router.get('/tags/searchTags/:searchQuery', getSearchTags)
 // Badges Routes
 //router.get('/badges/getAllbadges/:userID', getBadgesById)
 
-
-
-
-
-router.get('/', (req, res) => {
-	res.json({success: true, message: 'Welcome to API page everyone!'});
-});
-
 router.post('/questions', questionValidate,checkAuth, (req, res) => {
     return kakfafy('createQuestion', req, res);
   });
@@ -77,29 +69,55 @@ router.post('/addbookmark',checkAuth,(req, res) => {
     return kakfafy('addbookmark', req, res);
   });
 router.get('/searchQuestion',(req, res) => {
-  return kakfafy('searchQuestion', req, res);
-});
-router.get('/mostViewedQuestions',(req, res) => {
-  return kakfafy('mostViewedQuestions', req, res);
-});
-router.get('/questionPostedCount',(req, res) => {
-  return kakfafy('questionPostedCount', req, res);
-});
+    return kakfafy('searchQuestion', req, res);
+  });
+  router.get('/mostViewedQuestions',(req, res) => {
+    return kakfafy('mostViewedQuestions', req, res);
+  });
+  router.get('/questionPostedCount',(req, res) => {
+    return kakfafy('questionPostedCount', req, res);
+  });
   
 router.delete('/deletebookmark',checkAuth, (req, res) => {
-  return kakfafy('deletebookmark', req, res);
-});
-router.get('/getUserStats',checkAuth, (req, res) => {
-  return kakfafy('getUserStats', req, res);
-});
-router.put('/editUserDetails',checkAuth, (req, res) => {
-  return kakfafy('editUserDetails', req, res);
-});
+    return kakfafy('deletebookmark', req, res);
+  });
+  router.get('/getUserStats',checkAuth, (req, res) => {
+    return kakfafy('getUserStats', req, res);
+  });
+  router.put('/editUserDetails',checkAuth, (req, res) => {
+    return kakfafy('editUserDetails', req, res);
+  });
+  router.get('/topUserTags',checkAuth, (req, res) => {
+    return kakfafy('topUserTags', req, res);
+  });
+
+
+
 router.post('/signup', signup);
 router.post('/login', login);
 router.put('/approvequestion/:questionid', (req, res) => {
-  return kakfafy('approvequestion', req, res);
-});
+    return kakfafy('approvequestion', req, res);
+  });
+  router.get('/topUserPosts',checkAuth,(req, res) => {
+    return kakfafy('topUserPosts', req, res);
+  })
+ 
+  router.get('/getUserDetails',(req, res) => {
+    return kakfafy('getUserDetails', req, res);
+  })
+  router.get('/getTopUserReputation',(req, res) => {
+    return kakfafy('getTopUserReputation', req, res);
+  })
+  router.get('/getLeastUserReputation',(req, res) => {
+    return kakfafy('getLeastUserReputation', req, res);
+  })
+  router.get('/userActivity',checkAuth,(req, res) => {
+    return kakfafy('userActivity', req, res);
+  })
+  router.get('/userTagQuestions',checkAuth,(req, res) => {
+    return kakfafy('userTagQuestions', req, res);
+  })
+
 
 router.get('/ ',(req, res) => {
   return kakfafy('getUserDetails', req, res);
@@ -109,6 +127,21 @@ router.get('/userActivity',checkAuth,(req, res) => {
   return kakfafy('userActivity', req, res);
 });
 
+router.get('/topUserPosts',checkAuth,(req, res) => {
+  return kakfafy('topUserPosts', req, res);
+})
+
+
+router.get('/getTopUserReputation',(req, res) => {
+  return kakfafy('getTopUserReputation', req, res);
+})
+router.get('/getLeastUserReputation',(req, res) => {
+  return kakfafy('getLeastUserReputation', req, res);
+})
+
+router.get('/userTagQuestions',checkAuth,(req, res) => {
+  return kakfafy('userTagQuestions', req, res);
+})
 // router.get('/answers', (req, res) => {
 //   return kakfafy('loadAnswers', req, res);
 // });
