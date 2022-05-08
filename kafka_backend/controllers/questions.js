@@ -4,6 +4,9 @@ const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const helper = require('./helper');
 const moment = require('moment');
+const db = require('../config/sqlConnect')
+const util = require('util');
+const _ = require('underscore');
 
 const createQuestion = async (req, callback ) => {
 	let {tags: inputTags} = req.body;
@@ -69,7 +72,34 @@ const createQuestion = async (req, callback ) => {
 		});
 	  }
 	  else {
-		let question = await Question.find().sort(sort);
+		let question = await Question.find().lean()
+		question && question.map(ques=>{
+			if (ques.modified !== ques.created)
+			{
+                     ques.modifies=true
+					 ques.time= ques.modified
+			}
+		else{
+			ques.time= ques.created
+		}})
+        if (sortType === "time")
+			{
+            question.sort( (a, b) => {
+				let da = new Date(a.time),
+			db = new Date(b.time);
+		return db - da;
+			});
+		}
+		if (req.query.tab === "score")
+			{
+			
+         question.sort( (a, b) => { return b.score- a.score});
+		}
+		if (req.query.tab === "views")
+			{
+				
+         question.sort( (a, b) => b.views- a.views);
+		}
 		return callback(null, {
 			success: true,
 			data : question
@@ -318,6 +348,10 @@ console.log('todaydateis',today);
 			const data = tags.split(" ");
 			let tagdata= data[0];
 			data.shift();
+			const queryDB = util.promisify(db.query).bind(db);
+			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
+				]);
+			console.log('===> ', tagdesc);
 			const searchstring = data.join('');
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
@@ -329,14 +363,15 @@ console.log('todaydateis',today);
     
 			for (let i = 0; i < questions.length; i++) {
 				questions[i].type="question";
-				questions[i].temp=questions[i].created;
+				questions[i].time=questions[i].created;
 				questions[i].createdText = moment(questions[i].created).fromNow();
 				questions[i].createdFullText = moment(questions[i].created).format('MMMM Do, YYYY at h:mm:ss a');
 				questions[i].modifiedText = moment(questions[i].modified).fromNow();
 				questions[i].modifiedFullText = moment(questions[i].modified).format('MMMM Do, YYYY h:mm:ss a');
 			}
-			console.log("questions are",questions)
-			let answ = await Question.find({ tags: { $all: tagdata },"answers.text": new RegExp(searchstring,'i')}).lean();
+			const quesid =_.pluck(questions,'_id');
+			
+			let answ = await Question.find({ tags: { $all: tagdata },"answers.text": new RegExp(searchstring,'i'),_id:{$nin:quesid}}).lean();
 			console.log("initial answ",answ);
 			const regex = new RegExp(searchstring,'i')
 			for (let j = 0;   j< answ.length; j++) {
@@ -346,15 +381,15 @@ console.log('todaydateis',today);
 					if (regex.test(answ[j].answers[k].text ))
 					{
 						if (count <1){
-							answ[j].temp=answ[j].answers[k].created;
+							answ[j].time=answ[j].answers[k].created;
 							answ[j].ansauthor=answ[j].answers[k].author;
 							count=count+1
 							}
 							else
 							{
-								if (answ[j].temp < answ[j].answers[k].created)
+								if (answ[j].time < answ[j].answers[k].created)
 								{
-									answ[j].temp=answ[j].answers[k].created;
+									answ[j].time=answ[j].answers[k].created;
 									answ[j].ansauthor=answ[j].answers[k].author;
 								}
 							}
@@ -365,11 +400,11 @@ console.log('todaydateis',today);
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "temp")
+			if (sortType === "time")
 			{
             consolidated.sort( (a, b) => {
-				let da = new Date(a.temp),
-			db = new Date(b.temp);
+				let da = new Date(a.time),
+			db = new Date(b.time);
 		return db - da;
 			});
 		}
@@ -382,9 +417,57 @@ console.log('todaydateis',today);
 			return callback(null, {
 				success : true,
 			  data : consolidated,
-			  resultscount :consolidated.length
+			  resultscount :consolidated.length,
+			  tagdesc : tagdesc
 		  });
 		}
+		//user_tag search
+		// userid_tag search
+		if(req.query.key === 'user_tag')
+		{
+			const tags =req.query.value;
+			const data = tags.split(" ");
+			const userdata = data[0];
+			let tagdata= data[1];
+			data.shift();
+			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
+				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
+			}
+			const question = await Question.find({$and:[{author : userdata},{tags: { $all: tagdata }}]}).lean()
+			const queryDB = util.promisify(db.query).bind(db);
+			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
+				]);
+			console.log('===> ', tagdesc);
+			question.map(ques=>{
+				if (ques.modified !== ques.created)
+				{
+						 ques.modifies=true
+						 ques.time= ques.modified
+				}
+			else{
+				ques.time= ques.created
+			}})
+			if (sortType === "time")
+			{
+            question.sort( (a, b) => {
+				let da = new Date(a.time),
+			db = new Date(b.time);
+		return db - da;
+			});
+		}
+		if (sortType === "score")
+			{
+            question.sort( (a, b) => b.score - a.score);
+		}
+			//console.log("consolidated data are",consolidated)
+			
+			return callback(null, {
+				success : true,
+			  data : question,
+			  resultscount :question.length,
+			  tagdesc : tagdesc
+		  });
+		} 
 		// exact phrase search
 		else if(req.query.key === 'exactphrase')
 		{
@@ -394,11 +477,11 @@ console.log('todaydateis',today);
                 //Object.assign(questions[i], {type:'question',temp:'temp'})
 				console.log('----->count ', i);
 				questions[i].type="question";
-				questions[i].temp=questions[i].created;			
+				questions[i].time=questions[i].created;			
 			}
-			//console.log("questions are",questions)
+			const quesid =_.pluck(questions,'_id');
 			const regex = new RegExp(req.query.value,'i')
-			const answ = await Question.find({"answers.text": new RegExp(req.query.value,'i')}).lean()
+			const answ = await Question.find({"answers.text": new RegExp(req.query.value,'i'),_id:{$nin:quesid}}).lean()
 			for (let j = 0;   j< answ.length; j++) {
 				let count=0
 				for (let k = 0; k < answ[j].answers.length; k++)
@@ -406,15 +489,15 @@ console.log('todaydateis',today);
 					if (regex.test(answ[j].answers[k].text ))
 					{
 						if (count <1){
-							answ[j].temp=answ[j].answers[k].created;
+							answ[j].time=answ[j].answers[k].created;
 							answ[j].ansauthor=answ[j].answers[k].author;
 							count=count+1
 							}
 							else
 							{
-								if (answ[j].temp < answ[j].answers[k].created)
+								if (answ[j].time < answ[j].answers[k].created)
 								{
-									answ[j].temp=answ[j].answers[k].created;
+									answ[j].time=answ[j].answers[k].created;
 									answ[j].ansauthor=answ[j].answers[k].author;
 								}
 							}
@@ -425,11 +508,11 @@ console.log('todaydateis',today);
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "temp")
+			if (sortType === "time")
 			{
             consolidated.sort( (a, b) => {
-				let da = new Date(a.temp),
-			db = new Date(b.temp);
+				let da = new Date(a.time),
+			db = new Date(b.time);
 		return db - da;
 			});
 		}
@@ -457,7 +540,7 @@ console.log('todaydateis',today);
                 //Object.assign(questions[i], {type:'question',temp:'temp'})
 				//console.log('----->count ', i);
 				questions[i].type="question";
-				questions[i].temp=questions[i].created;			
+				questions[i].time=questions[i].created;			
 			}
 			const regex = new RegExp(searchstring,'i');
 			const answ = await Question.find({$and:[{$or:[{"answers.author" : userdata}]},{$or: [ { "answers.text": new RegExp(searchstring,'i')}]}]}).lean();
@@ -469,15 +552,15 @@ console.log('todaydateis',today);
 					if (answ[j].answers[k].author === userdata && regex.test(answ[j].answers[k].text ))
 					{
 						if (count <1){
-							answ[j].temp=answ[j].answers[k].created;
+							answ[j].time=answ[j].answers[k].created;
 							answ[j].ansauthor=answ[j].answers[k].author;
 							count=count+1
 							}
 							else
 							{
-								if (answ[j].temp < answ[j].answers[k].created)
+								if (answ[j].time < answ[j].answers[k].created)
 								{
-									answ[j].temp=answ[j].answers[k].created;
+									answ[j].time=answ[j].answers[k].created;
 									answ[j].ansauthor=answ[j].answers[k].author;
 								}
 							}
@@ -488,11 +571,11 @@ console.log('todaydateis',today);
 			}
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "temp")
+			if (sortType === "time")
 			{
             consolidated.sort( (a, b) => {
-				let da = new Date(a.temp),
-			db = new Date(b.temp);
+				let da = new Date(a.time),
+			db = new Date(b.time);
 		return db - da;
 			});
 		}
@@ -512,7 +595,7 @@ console.log('todaydateis',today);
 		{
 			const quessearch = req.query.value
 			const questions = await Question.find({$or: [ { "title": new RegExp(quessearch,'i')}, { "text": new RegExp(quessearch,'i') }]}).lean();
-			if (sortType === "temp")
+			if (sortType === "time")
 			{
             questions.sort( (a, b) => {
 				let da = new Date(a.created);
@@ -545,15 +628,15 @@ console.log('todaydateis',today);
 					if (answ[j].answers[k].isbestanswer === true && regex.test(answ[j].answers[k].text ))
 					{
 						if (count <1){
-						answ[j].temp=answ[j].answers[k].created;
+						answ[j].time=answ[j].answers[k].created;
 						answ[j].ansauthor=answ[j].answers[k].author;
 						count=count+1
 						}
 						else
 						{
-							if (answ[j].temp < answ[j].answers[k].created)
+							if (answ[j].time < answ[j].answers[k].created)
 							{
-								answ[j].temp=answ[j].answers[k].created;
+								answ[j].time=answ[j].answers[k].created;
 								answ[j].ansauthor=answ[j].answers[k].author;
 							}
 						}
@@ -561,10 +644,10 @@ console.log('todaydateis',today);
 				}
 				answ[j].type='answer';
 			}
-			if (sortType === "temp") {
+			if (sortType === "time") {
             answ.sort( (a, b) => {
-				let da = new Date(a.temp);
-				db = new Date(b.temp);
+				let da = new Date(a.time);
+				db = new Date(b.time);
 				return db - da;
 			});
 		}
