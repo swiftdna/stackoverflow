@@ -6,14 +6,27 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
 const routes = require('./routes');
-const PORT = process.env.PORT || 5000;
-
+const PORT = process.env.PORT || 3000;
+const mysql = require('mysql')
+const sqlDB = require('./config/sqlConnect')
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 
 const config = require('config');
 connectDB();
+
+// SQL Connection
+sqlDB.connect((err) => {
+    if (err) {
+        console.error(err.stack)
+        return
+    }
+    console.log('Connected To DB ' + sqlDB.threadId)
+})
+
+
+
 //For BodyParser
 app.use(bodyParser.urlencoded({
     extended: true
@@ -51,7 +64,7 @@ app.post('/logout', (req, res) => {
   req.session.destroy(()=>{
     // destroy session data
     req.session = null;
-    res.clearCookie("etsy_token");
+    res.clearCookie("so_token");
     res.json({success: true});
   });
 });

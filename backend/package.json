@@ -1,11 +1,22 @@
 {
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Stack overflow application backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha --timeout 10000"
+  },
+  "license": "ISC",
   "dependencies": {
     "all": "^0.0.0",
     "bcrypt": "^5.0.1",
+    "bcrypt-nodejs": "^0.0.3",
     "bcryptjs": "^2.4.3",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "config": "^3.3.7",
+    "connect": "^3.7.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.3",

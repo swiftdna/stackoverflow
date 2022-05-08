@@ -9,6 +9,8 @@ import Header from './Header';
 import Home from './Home';
 import Question from './Question';
 import AskQuestion from './AskQuestion';
+import Search from './Search';
+import Messages from './Messages';
 // import Header from '../components/header';
 // import Footer from './Footer';
 // import Register from './Register';
@@ -18,6 +20,7 @@ import { checkSession } from '../utils';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { selectAlertFlag, selectToastFlag, selectAlertMessage, selectAlertType, selectIsLoggedIn } from '../selectors/appSelector';
 import { clearToast } from '../actions/app-actions';
+import { loadQuestions } from '../utils';
 
 //Create a Main Component
 export function Main() {
@@ -37,6 +40,7 @@ export function Main() {
     
     useEffect(() => {
         checkSession(dispatch);
+        loadQuestions(dispatch);
     }, []);
 
     return(
@@ -62,6 +66,8 @@ export function Main() {
               <Route path="/" element={<Home />} />
               <Route path="/questions/:questionID" element={<Question />} />
               <Route path="/questions/ask" element={<AskQuestion />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/messages" element={<Messages />} />
             </Routes>
         </>
     )
