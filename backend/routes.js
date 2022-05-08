@@ -159,9 +159,5 @@ router.post('/downvote',(req,res)=>{
 router.get('/badges/getAllbadges/:userID', (req, res) => {
   return kakfafy('getBadgesById', req, res);
 });
-<<<<<<< HEAD
->>>>>>> develop
+
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 6f5328915d1cd8810790f94e0bc5a4d85000b799
