@@ -119,7 +119,7 @@ router.put('/approvequestion/:questionid', (req, res) => {
   })
 
 
-router.get('/ ',(req, res) => {
+router.get('/',(req, res) => {
   return kakfafy('getUserDetails', req, res);
 });
 
@@ -127,51 +127,49 @@ router.get('/userActivity',checkAuth,(req, res) => {
   return kakfafy('userActivity', req, res);
 });
 
-router.get('/topUserPosts',checkAuth,(req, res) => {
-  return kakfafy('topUserPosts', req, res);
-})
-
-
-router.get('/getTopUserReputation',(req, res) => {
-  return kakfafy('getTopUserReputation', req, res);
-})
-router.get('/getLeastUserReputation',(req, res) => {
-  return kakfafy('getLeastUserReputation', req, res);
-})
-
-router.get('/userTagQuestions',checkAuth,(req, res) => {
-  return kakfafy('userTagQuestions', req, res);
-})
-// router.get('/answers', (req, res) => {
-//   return kakfafy('loadAnswers', req, res);
-// });
-
 router.post('/answers/:question',checkAuth, (req, res) => {
-  console.log("1 here")
   return kakfafy('createAnswer', req, res);
 });
 
-// router.delete('/answers/:question/:answer',checkAuth, (req, res) => {
-//   return kakfafy('removeAnswer', req, res);
-// });
+//Getting answers for all questions.
+
+router.get('/getAnswers/:question',checkAuth,(req,res)=>{
+  return kakfafy('getAllAnswersForQuestions',req,res);
+});
+
+//API for getting ALL comments for questions.
+
+router.get('/getComments/:question',checkAuth,(req,res)=>{
+  return kakfafy('getAllComments',req,res);
+});
+
+//API for getting ALL comments for answers.
+
+router.get('/getAnswerComments/:answer',checkAuth,(req,res) => {
+  return kakfafy('getAllAnswerComments',req,res);
+
+});
+
+//Creating comment for the answer.
 
 router.post('/comments/:question/:answer',checkAuth, (req, res) => {
   return kakfafy('createComment', req, res);
 });
 
+//Creating comments for question.
+
 router.post('/comments/:question',checkAuth,(req,res) => {
   return kakfafy('createquestioncomment',req,res);
 })
-router.get('/comments', (req, res) => {
-  return kakfafy('loadComments', req, res);
+
+// Upvoting and Downvoting the Question.
+router.post('/votes/vote/:question',checkAuth,(req,res)=>{
+  return kakfafy('voteQuestion',req,res);
 });
 
-// router.delete('/deletecomment',checkAuth, (req, res) => {
-//   return kakfafy('removeComment', req, res);
-// });
-
-router.get('/votes/upvote/:question/:answer',(req,res)=>{
-  return kakfafy('upvote',req,res);
+//Upvoting and Downvoting the answer.
+router.post('/votes/vote/:question/:answer',checkAuth,(req,res)=>{
+  return kakfafy('voteAnswer',req,res);
 });
 
 router.get('/v1/questions', (req, res) => {
