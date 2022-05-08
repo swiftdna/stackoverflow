@@ -4,8 +4,8 @@
   "description": "Stack overflow application backend",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha --timeout 10000"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "license": "ISC",
   "dependencies": {
@@ -16,6 +16,7 @@
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "config": "^3.3.7",
+    "connect": "^3.7.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.3",
@@ -29,10 +30,8 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "react-js-pagination": "^3.0.3"
-  },
-  "scripts": {
-    "dev": "nodemon server.js"
+    "react-js-pagination": "^3.0.3",
+    "redis": "^4.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

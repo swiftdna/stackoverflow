@@ -8,7 +8,8 @@ function make_request(queue_name, msg_payload, callback) {
     if (error) {
       callback(error, null);
     } else {
-      console.log("response", response);
+      // console.log("response", response);
+      console.log('got make_request response from kafka!');
       callback(null, response);
     }
   });

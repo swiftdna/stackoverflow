@@ -11,6 +11,7 @@ const initialState = {
   loading: false,
   loading_answer: false,
   data: {},
+  activities: [],
   answers: [],
   error: false,
   errorMessage: ''
@@ -19,10 +20,12 @@ const initialState = {
 export default function questionDetailsReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_QUESTION_DETAILS: {
+      const {data, activityresult} = action.payload;
       return {
         ...state,
         loading: false,
-        data: action.payload
+        data,
+        activities: activityresult
       }
     }
     case LOADING_QUESTION_DETAILS: {
@@ -34,7 +37,8 @@ export default function questionDetailsReducer(state = initialState, action) {
     case CLEAR_QUESTION_DETAILS:
       return {
         ...state,
-        data: {}
+        data: {},
+        activities: []
       }
     case ADD_ANSWER_DETAILS: {
       return {
