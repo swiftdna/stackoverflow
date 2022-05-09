@@ -151,6 +151,13 @@ router.get("/getAnswers/:question", checkAuth, (req, res) => {
   return kakfafy("getAllAnswersForQuestions", req, res);
 });
 
+//API for getting best answer.
+
+router.get('/getBestAnswer/:question/:answer',checkAuth,(req,res)=>{
+  return kakfafy('getbestAnswer',req,res);
+}
+);
+
 //API for getting ALL comments for questions.
 
 router.get("/getComments/:question", checkAuth, (req, res) => {
