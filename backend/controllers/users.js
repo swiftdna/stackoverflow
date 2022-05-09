@@ -100,6 +100,7 @@ const login = async (req, res) => {
           const token = jwt.sign(payload,secret, {
            expiresIn: 10080000
           });
+          console.log("userDetails"+user);
           res.cookie('so_token', token, { httpOnly: true });
           res.status(200).json({token: "JWT " + token, user, success: true});
         }

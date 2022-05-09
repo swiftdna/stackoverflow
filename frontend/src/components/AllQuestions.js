@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import gLogo from "./Images/g.png";
+import { useNavigate } from 'react-router-dom';
+import Output from 'editorjs-react-renderer';
+import UserCard from './UserCard';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from "axios";
 
-
-function AllQuestions()
+function AllQuestions({data})
 {
+  const navigate = useNavigate();
+  const [questionAuthorDetails, SetQuestionAuthorDetails] = useState("");
+
+  useEffect(() => {
+    axios.get(`/api/questions/${data._id}`)
+    .then(response => {
+      SetQuestionAuthorDetails(response.data.data)
+    })
+    .catch(err => {
+        console.log(err.message);
+    });
+}, []);
+
+  const openQuestion = (id) => {
+    navigate(`/questions/${id}`);
+  }
     return(
         <AllQuestionContainer>
         <div> 
@@ -15,48 +34,48 @@ function AllQuestions()
         <div className="all-questions-left">
           <div className="all-options">
             <div className="all-option">
-              <p>0</p>
+              <p>{data.score}</p>
               <span>votes</span>
             </div>
-            <div className="all-option">
-              <p>20</p>
+            <div className="all-option" style={{borderStyle:"solid", 
+                                        color:"white",backgroundColor: "var(--green-600)",
+                                        padding: "4px"}}>
+              <p>{data.answers.length}</p>
+              
               <span>answers</span>
             </div>
             <div className="all-option">
-              <small>2 views</small>
+              <small>{data.views} views</small>
             </div>
           </div>
         </div>
 
         <div className="question-answer">
-          <Link to={""}>There are many variations of passages of Lorem Ipsum available, 
-                        but the majority have suffered alteration in some form</Link>
+
+         <a href onClick={() => openQuestion(data._id)} title={data.title} 
+                 style={{fontWeight:"bold"}}className="question-hyperlink">{data.title}</a>
 
           <div
             style={{
               maxWidth: "90%",
             }}
           >
-            <div>hi, this is sunny hith reddy.. im from nizamabad, telangana, india...im studing masters in sjsu</div>
+            
+            <div>{data.text}</div>
           </div>
           <div
             style={{
               display: "flex",
             }}
           >
-           <span className="question-tags"> react </span>
-           <span className="question-tags"> java </span>
-           <span className="question-tags"> python </span>
+           <span onClick={() => openQuestion(data._id)} className="question-tags"> react </span>
+           <span onClick={() => openQuestion(data._id)}  className="question-tags"> java </span>
+           <span onClick={() => openQuestion(data._id)}  className="question-tags"> python </span>
 
           </div>
           <div className="author">
-            <small>asked 4 years ago</small>
-            <div className="auth-details">
-             <img src={gLogo} width={20} height={20}/>
-              <p>
-              sunny
-              </p>
-            </div>
+          <UserCard owner={true} data={{...questionAuthorDetails.author, 
+                                            modified: questionAuthorDetails.modifiedFullText}} />
           </div>
         </div>
       </div>
@@ -80,6 +99,11 @@ const AllQuestionContainer = styled.footer`
 {
     margin-left: 250px;
     margin-right: 400px;
+}
+
+a:hover
+{
+   font-weight: bold;
 }
 
 .all-questions {
@@ -151,6 +175,8 @@ const AllQuestionContainer = styled.footer`
     display: flex;
     flex-direction: column;
     margin-left: 600px;
+    margin-top: -30px;
+    font-size: 10px;
   }
   
   .author > small {

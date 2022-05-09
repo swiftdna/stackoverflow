@@ -6,7 +6,9 @@ import {
   SET_ALERT,
   CLEAR_ALERT,
   SET_TOAST,
-  CLEAR_TOAST
+  CLEAR_TOAST,
+  ALL_QUESTIONS_SUCCESS,
+  ALL_QUESTIONS_FAILURE
 } from '../constants/actionTypes';
 
 function loginSuccess(data) {
@@ -16,9 +18,23 @@ function loginSuccess(data) {
    }
 }
 
+function allQuestionsSuccess(data) {
+   return {
+      type: ALL_QUESTIONS_SUCCESS,
+      payload: data
+   }
+}
+
 function loginFailure(data) {
    return {
       type: LOGIN_FAILURE,
+      payload: data
+   }
+}
+
+function allQuestionsFailure(data) {
+   return {
+      type: ALL_QUESTIONS_FAILURE,
       payload: data
    }
 }
@@ -47,7 +63,22 @@ export function handleLoginResponse(response) {
    }
 }
 
-export function handleLogoutResponse(response) {
+export function handleAllQuestionsResponse(response) {
+   const {data} = response;
+   console.log("----------------------");
+   console.log(data.success);
+   console.log("----------------------");
+
+   if (data.success) {
+      return allQuestionsSuccess(data);
+   } else {
+      return allQuestionsFailure({
+         message: ""
+      });
+   }
+}
+
+export function handleLogoutResponse(response)  {
    const {data} = response;
    if (data.success) {
       return logoutSuccess();
