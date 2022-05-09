@@ -12,9 +12,22 @@ export default function UserCard({owner, data}) {
                 </div>
                 <div className="user-details">
                     <a href>{data.username}</a>
-                    <div className="-flair">
-                        <span className="reputation-score" title="reputation score 29,910" dir="ltr">29.9k</span><span title="21 gold badges" aria-hidden="true"><span className="badge1"></span><span className="badgecount">21</span></span><span className="v-visible-sr">21 gold badges</span><span title="99 silver badges" aria-hidden="true"><span className="badge2"></span><span className="badgecount">99</span></span><span className="v-visible-sr">99 silver badges</span><span title="124 bronze badges" aria-hidden="true"><span className="badge3"></span><span className="badgecount">124</span></span><span className="v-visible-sr">124 bronze badges</span>
-                    </div>
+                    {data.badgecount ? 
+                        <div className="-flair">
+                            <span className="reputation-score" title="reputation score 29,910" dir="ltr">{data.Reputation}</span>
+                            <span title="21 gold badges" aria-hidden="true">
+                            <span className="badge1"></span>
+                            <span className="badgecount">{data.badgecount.Gold}</span>
+                            </span><span className="v-visible-sr">{data.badgecount.Gold} gold badges</span>
+                            <span title="99 silver badges" aria-hidden="true">
+                            <span className="badge2">
+                            </span><span className="badgecount">{data.badgecount.Silver}</span></span>
+                            <span className="v-visible-sr">{data.badgecount.Silver} silver badges</span>
+                            <span title="124 bronze badges" aria-hidden="true">
+                            <span className="badge3">
+                            </span><span className="badgecount">{data.badgecount.Bronze}</span></span>
+                            <span className="v-visible-sr">{data.badgecount.Bronze} bronze badges</span>
+                        </div> : ''}
                 </div>
             </div>
         </div>

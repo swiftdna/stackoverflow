@@ -1,5 +1,6 @@
 const Question = require('../models/question');
 const User = require('../models/User');
+const {getBadgesById} = require('../controllers/badgeController')
 const { body, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const helper = require('./helper');
@@ -163,6 +164,11 @@ const createQuestion = async (req, callback ) => {
 			author:ans.author,
 			created:ans.created,
 		}) 
+		if (ans.text && helper.isJsonString(ans.text)) {
+			const tmp = JSON.parse(ans.text);
+			ans.text = tmp;
+			ans.isMultiMedia = true;
+		}
 		ans.comments.map(anscomment=>{
 			activity.push({
 				type:'answer_comment',
