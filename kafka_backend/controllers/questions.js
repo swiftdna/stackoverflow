@@ -124,7 +124,9 @@ const createQuestion = async (req, callback ) => {
 	}
 	const getBadgesByIdFn = util.promisify(getBadgesById);
 	let badgecount= await getBadgesByIdFn(req1);
+	if (badgecount && badgecount.badgescount){
 	question.author.badgecount = badgecount.badgescount;
+	}
 		  if (question.created === question.modified)
 		  {
 		  activity.push({
@@ -153,7 +155,9 @@ const createQuestion = async (req, callback ) => {
 		}
         //const getBadgesByIdFn = util.promisify(getBadgesById);
 	  const badgecount= await getBadgesByIdFn(req1);
+	  if (badgecount && badgecount.badgescount){
 	  ans.author.badgecount = badgecount.badgescount;
+	  }
 		activity.push({
 			type:'answer',
 			author:ans.author,

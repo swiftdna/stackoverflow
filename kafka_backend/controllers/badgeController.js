@@ -14,7 +14,7 @@ const getBadgesById = async (req, callback ) => {
     let questionsLen = question.length
     console.log(questionsLen)
     var badges = []
-    for (const property in user.tags_score) {
+    for (const property in user && user.tags_score) {
         var temp = `${user.tags_score[property]}`
         var badgeStringValue
         if (temp <= 10) {
@@ -55,7 +55,7 @@ const getBadgesById = async (req, callback ) => {
     // ------------------------
     // Popular: Based on the reputation
     customBadge = 'Popular'
-    var reputation = user.Reputation
+    var reputation = user && user.Reputation
     console.log(reputation)
     if (reputation <= 10) {
         customBadgeValue = 'Bronze'
@@ -197,7 +197,7 @@ const getBadgesById = async (req, callback ) => {
         return callback(null, {
             success:true,
             data:[],
-            badgescount :{}
+          
         });
     } catch (error) {
         return callback(error, {
