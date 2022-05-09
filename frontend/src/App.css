@@ -198,3 +198,16 @@
 .bookmark_ctrl.bookmarked {
   color: hsl(47,76%,46%);
 }
+
+.accept_ans_ctrl {
+  color: var(--bs-gray-500);
+  display: block;
+  font-size: 30px;
+  margin-left: 12px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.accept_ans_ctrl.accepted {
+  color: var(--bs-success);
+}

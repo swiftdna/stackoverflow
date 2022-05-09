@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
-import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory } from 'react-icons/fa';
+import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory, FaCheck } from 'react-icons/fa';
 import UserCard from './UserCard';
 import { addQuestionComment, addAnswerComment, voteQuestion, voteAnswer, addBookmark, removeBookmark } from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
@@ -113,6 +113,9 @@ export default function ContentCard({ data, type, questionID}) {
                 <p className="bookmark_counter">{data.bookmarks.length}</p></>}
                 {
                     type==='question' && <FaHistory className="history_ctrl" onClick={() => viewHistory()} />
+                }
+                {
+                    type==='answer' && <FaCheck className="accept_ans_ctrl" title="Accept this answer" />
                 }
             </Col>
             <Col xs={11}>
