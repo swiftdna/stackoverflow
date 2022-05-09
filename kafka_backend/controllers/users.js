@@ -33,6 +33,12 @@ const userTagQuestions = async (req, callback) => {
     const users = await Question.find({
       $and: [{ author: req.body.id }, { tags: { $all: req.body.tag } }],
     }).lean();
+=======
+}
+else{
+    const users = await User.find({}).sort({Reputation : -1});
+    console.log("sunny" + users);
+>>>>>>> d1c29cb... new changes
     return callback(null, {
       data: users,
     });

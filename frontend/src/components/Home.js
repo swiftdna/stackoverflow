@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,14 +9,34 @@ import AllQuestions from './AllQuestions';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import RightSidebar from "./RightSideBar";
+import { selectAllQuestions } from '../selectors/appSelector';
+import { handleAllQuestionsResponse } from "../actions/app-actions";
 
 //create the Navbar Component
-function Home() {
+function Home()
+{
+
+  const [questionsResponse, SetQuestionsResponse] = useState("");
+  const dispatch = useDispatch();
+  const params={};
+  params.tab = 'views';
+
+  useEffect(() => {
+    axios.get("/api/questions", { params }).then((response) => 
+    {
+      SetQuestionsResponse(response.data.data);
+      console.log(response.data.data)
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+      })
+    ;
+  }, []);
+  
+  
+  console.log( questionsResponse );
     const isAuthenticated = useSelector(selectIsLoggedIn);
     const navigate = useNavigate();
-    const questions = useSelector(state => state.questions.data);
-
-    console.log('sunny' + isAuthenticated);
 
     return(
       <>
@@ -61,7 +81,7 @@ function Home() {
                     <button className="filterBtn">Unanswered</button>
                   </div> */ }
                   <div className="d-flex s-btn-group js-filter-btn" style={{marginTop: '10px'}}>
-                    <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=xyz" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
+                    <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
                         Hot</a>
                     <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
                         Score</a>
@@ -69,13 +89,11 @@ function Home() {
                         Unanswered</a>
                   </div>
                   <hr style={{marginTop: '70px'}} />
+                  
                   <div>
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
+
+                  {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} />)}
+                  
                   </div>
 
                   {/* <div>

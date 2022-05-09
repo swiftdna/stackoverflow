@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Popover, Button, Row, Col } from 'react-bootstrap';
 import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch } from 'react-icons/fa';
 import { selectIsLoggedIn } from '../selectors/appSelector';
+import { selectUser } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
+import { Link } from "react-router-dom";
 
 //create the Navbar Component
 function Navbar() {
     const isAuthenticated = useSelector(selectIsLoggedIn);
+    const userDetails = useSelector(selectUser);
+    
     const [searchText, setSearchText] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -32,26 +36,6 @@ function Navbar() {
         setSearchText('');
         navigate('/');
     }
-
-    // const favourites = () => {
-    //     navigate('/favourites');
-    // }
-
-    // const profile = () => {
-    //     navigate('/profile');
-    // }
-
-    // const cart = () => {
-    //     navigate('/cart');
-    // }
-
-    // const purchases = () => {
-    //     navigate('./purchases');
-    // };
-
-    // const shop = () => {
-    //     navigate('./shop');
-    // }
 
     const logout = () => {
         axios.post('/logout')
@@ -147,11 +131,13 @@ function Navbar() {
                 <div className="search-btn">
                     <i className="fas fa-search"></i>
                 </div>
-
-
+                
+                {isAuthenticated && <Link to={'/userProfile'}>{userDetails.email}</Link> }
+            
               {
                 isAuthenticated ? 
                     <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button> : 
+                    
                     <>
                         <button type="button" className="btn btn-login" title="Log In" onClick={() => login()}>login</button>
                         <button type="button" className="btn btn-register" title="Log In" onClick={() => register()}>register</button>

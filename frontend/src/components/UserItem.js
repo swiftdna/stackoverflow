@@ -4,7 +4,7 @@ import gLogo from "./Images/user4.png";
 import { Link } from "react-router-dom";
 
 
-export function UserItem()
+export function UserItem({data})
 {
      return(
          <UserContainer>
@@ -12,23 +12,23 @@ export function UserItem()
            <div className="user-item-container">
 
             <div className="user-image">
-               <img src={gLogo} width={60} height={60}/>     
+               <img src={data.profilePhoto} width={60} height={60}/>     
             </div>
 
         <div className="user-info">
             
             <div className="user-name">
                  <Link to="">
-                    Sunny 
+                    {data.username} 
                 </Link>
             </div>
 
             <div>
-                5100
+                {data.Reputation}
             </div>
 
             <div>
-                Hyderabad, Telangana
+                {data.location}
             </div>
 
         </div>

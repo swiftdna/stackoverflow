@@ -6,7 +6,9 @@ import {
   SET_ALERT,
   CLEAR_ALERT,
   SET_TOAST,
-  CLEAR_TOAST
+  CLEAR_TOAST,
+  ALL_QUESTIONS_SUCCESS,
+  ALL_QUESTIONS_FAILURE
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -44,6 +46,24 @@ export default function appReducer(state = initialState, action) {
         user: action.payload.user
       }
     }
+
+    case ALL_QUESTIONS_SUCCESS: {
+      return {
+        ...state,
+        ...resetAlert,
+        user: action.payload.data
+      }
+    }
+
+    case ALL_QUESTIONS_FAILURE: {
+      const { message } = action.payload;
+      return {
+        ...state,
+        alert: true,
+        alertMessage: message
+      }
+    }
+
     case LOGIN_FAILURE: {
       const { message } = action.payload;
       return {
