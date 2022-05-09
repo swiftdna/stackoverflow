@@ -14,7 +14,7 @@ export default function UserCard({owner, data}) {
                     <a href>{data.username}</a>
                     {data.badgecount ? 
                         <div className="-flair">
-                            <span className="reputation-score" title="reputation score 29,910" dir="ltr">29.9k</span>
+                            <span className="reputation-score" title="reputation score 29,910" dir="ltr">{data.Reputation}</span>
                             <span title="21 gold badges" aria-hidden="true">
                             <span className="badge1"></span>
                             <span className="badgecount">{data.badgecount.Gold}</span>

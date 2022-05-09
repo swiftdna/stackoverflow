@@ -123,7 +123,7 @@ export default function ContentCard({ data, type, questionID}) {
                 <Row className="share_author_panel">
                     <Col xs={6}>
                         <span className="other_ctrls">Share</span>
-                        <span className="other_ctrls">Improve this question</span>
+                        <span className="other_ctrls">Edit</span>
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
