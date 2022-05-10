@@ -81,6 +81,10 @@ const createQuestion = async (req, callback ) => {
 			} else {
 				ques.time= ques.created
 			}
+			ques[i].createdText = moment(ques[i].created).fromNow();
+				ques[i].createdFullText = moment(ques[i].created).format('MMMM Do, YYYY at h:mm:ss a');
+				ques[i].modifiedText = moment(ques[i].modified).fromNow();
+				ques[i].modifiedFullText = moment(ques[i].modified).format('MMMM Do, YYYY h:mm:ss a');
 		});
         if (sortType === "time") {
             	question.sort( (a, b) => {
