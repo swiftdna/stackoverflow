@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const Question = require('./../models/question')
 const mongoose = require('mongoose');
+const question = require('./../models/question');
 
 const createAnswer = async (req, callback) => {
     
@@ -41,7 +42,22 @@ const getAllAnswersForQuestions = async(req,callback) => {
         });
     }
 };
-
+const getbestAnswer = async(req,callback)=>{
+    try {
+        const answers = await Question.update(
+            { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": mongoose.Types.ObjectId(req.params.answer)}, 
+            { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
+        )
+        return callback(null, {
+            data: answers
+        });
+    } catch {
+        return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+    }
+};
 
 
 const answerValidate = [
@@ -62,5 +78,6 @@ const answerValidate = [
 module.exports = {
     createAnswer,
     answerValidate,
-    getAllAnswersForQuestions
+    getAllAnswersForQuestions,
+    getbestAnswer
 };
