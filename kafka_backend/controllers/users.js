@@ -33,12 +33,6 @@ const userTagQuestions = async (req, callback) => {
     const users = await Question.find({
       $and: [{ author: req.body.id }, { tags: { $all: req.body.tag } }],
     }).lean();
-=======
-}
-else{
-    const users = await User.find({}).sort({Reputation : -1});
-    console.log("sunny" + users);
->>>>>>> d1c29cb... new changes
     return callback(null, {
       data: users,
     });
@@ -436,8 +430,11 @@ const userActivity = async (req, callback) => {
       }
     }
     if (req.query.tab === "bookmarks") {
+
+      console.log("sunny hith reddy kommula");
+      
       const user = await Question.find({
-        "bookmarks.user": mongoose.Types.ObjectId(req.user.id),
+        "bookmarks.user": mongoose.Types.ObjectId(req.body.id),
       });
       return callback(null, { data: user });
     }

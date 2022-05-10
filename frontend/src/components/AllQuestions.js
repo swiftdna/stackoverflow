@@ -7,13 +7,13 @@ import UserCard from './UserCard';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios";
 
-function AllQuestions({data})
+function AllQuestions({data, isAuthorRequired, questionId})
 {
   const navigate = useNavigate();
   const [questionAuthorDetails, SetQuestionAuthorDetails] = useState("");
 
   useEffect(() => {
-    axios.get(`/api/questions/${data._id}`)
+    axios.get(`/api/questions/${questionId}`)
     .then(response => {
       SetQuestionAuthorDetails(response.data.data)
     })
@@ -52,7 +52,7 @@ function AllQuestions({data})
 
         <div className="question-answer">
 
-         <a href onClick={() => openQuestion(data._id)} title={data.title} 
+         <a href onClick={() => openQuestion(questionId)} title={data.title} 
                  style={{fontWeight:"bold"}}className="question-hyperlink">{data.title}</a>
 
           <div
@@ -70,13 +70,14 @@ function AllQuestions({data})
           >
 
           {data.tags.map((_tag) => (
-           <span onClick={() => openQuestion(data._id)} className="question-tags"> {_tag} </span>
+           <span onClick={() => openQuestion(questionId)} className="question-tags"> {_tag} </span>
             ))}
 
           </div>
           <div className="author">
-          <UserCard owner={true} data={{...questionAuthorDetails.author, 
-                                            modified: questionAuthorDetails.modifiedFullText}} />
+
+          {isAuthorRequired && <UserCard owner={true} data={{...questionAuthorDetails.author, 
+                                            modified: questionAuthorDetails.modifiedFullText}} />}
           </div>
         </div>
       </div>
@@ -246,7 +247,7 @@ a:hover
   .question-tags:hover
   {
     color: blue;
-    border-radius: 3px;
+    border-radius:3px;
   }
 
 `;

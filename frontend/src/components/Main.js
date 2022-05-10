@@ -76,7 +76,7 @@ export function Main() {
               <Route path="/register" element={<Register />} />
               <Route path="/tags" element={<Tags />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/userProfile" element={<UserProfile />} />
+              <Route path="/userProfile/:id" element={<UserProfile />} />
 
             </Routes>
         </>

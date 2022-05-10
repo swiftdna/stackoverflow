@@ -92,7 +92,8 @@ function Home()
                   
                   <div>
 
-                  {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} />)}
+                  {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} 
+                                             isAuthorRequired={true} questionId={questionItem._id}/>)}
                   
                   </div>
 

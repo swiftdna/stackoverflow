@@ -102,7 +102,6 @@ const login = async (req, res) => {
     //const passwordValid = await verifyPassword(password, user.password);
     bcrypt.compare(password, user.password, function (err, isMatch) {
       if (err) {
-<<<<<<< HEAD
         throw err;
       } else if (!isMatch) {
         res.status(403).json({
@@ -118,25 +117,6 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-=======
-          throw err
-        } else if (!isMatch) {
-          res.status(403).json({
-            message: 'password did not match'
-          });
-        } else {
-          const payload = {id : user.id,email : user.email};
-          const token = jwt.sign(payload,secret, {
-           expiresIn: 10080000
-          });
-          console.log("userDetails"+user);
-          res.cookie('so_token', token, { httpOnly: true });
-          res.status(200).json({token: "JWT " + token, user, success: true});
-        }
-      });
-    }  
- catch (error) {
->>>>>>> d1c29cb... new changes
     return res.status(500).json({
       message: "Something went wrong.",
     });

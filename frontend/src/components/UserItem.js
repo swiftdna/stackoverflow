@@ -2,10 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import gLogo from "./Images/user4.png";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 
 export function UserItem({data})
 {
+    const navigate = useNavigate();
+
+    const openUser = (id) => {
+        navigate(`/userProfile/${id}`);
+      }
+
      return(
          <UserContainer>
 
@@ -18,9 +24,9 @@ export function UserItem({data})
         <div className="user-info">
             
             <div className="user-name">
-                 <Link to="">
-                    {data.username} 
-                </Link>
+                
+                <a href onClick={() => openUser(data.id)} 
+                    style={{fontWeight:"bold", color:"hsl(206deg 100% 40%)"}} >{data.username}</a>
             </div>
 
             <div>

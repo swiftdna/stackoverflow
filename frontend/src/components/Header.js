@@ -42,6 +42,7 @@ function Navbar() {
             .then(response => {
                 dispatch(handleLogoutResponse(response));
             });
+            navigate('/');
     }
 
     const _handleKeyDown = (e) => {
