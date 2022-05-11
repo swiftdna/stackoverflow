@@ -12,9 +12,6 @@ import QuestionTimeline from './QuestionTimeline';
 import AskQuestion from './AskQuestion';
 import Search from './Search';
 import Messages from './Messages';
-// import Header from '../components/header';
-// import Footer from './Footer';
-// import Register from './Register';
 import "../Main.css";
 import { useLocation } from 'react-router-dom';
 import { checkSession } from '../utils';
@@ -79,7 +76,7 @@ export function Main() {
               <Route path="/register" element={<Register />} />
               <Route path="/tags" element={<Tags />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/userProfile" element={<UserProfile />} />
+              <Route path="/userProfile/:id" element={<UserProfile />} />
 
             </Routes>
         </>

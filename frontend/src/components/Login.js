@@ -53,7 +53,6 @@ export function Login() {
 
     axios.post("/api/login", data).then((response) => 
     {
-      alert(response.data.data);
       dispatch(handleLoginResponse(response));
     })
     .catch((error) => {
@@ -189,7 +188,7 @@ export function Login() {
               style={{ backgroundColor: "rgb(10, 149, 255)", width: "100%" }}
               onClick={(e) => {submitLogin(e)}}
             >
-              Sign up
+              Login
             </button>
           </form>
         </div>

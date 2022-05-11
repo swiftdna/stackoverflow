@@ -4,7 +4,8 @@ const Question = require('../models/question')
 
 
 
-const getBadgesById = async (req, callback ) => {
+const getBadgesById = async (req, callback ) => 
+{    
     const userID = req.params.userID
 
     const user = await User.findOne({ _id: userID })

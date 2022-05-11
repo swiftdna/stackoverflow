@@ -1,112 +1,173 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import gLogo from "./Images/user4.png";
 import UserProfileTab from "./UserProfileTab";
 import ActivityTab from "./ActivityTab";
+import axios from "axios";
 
 function UserProfile() {
-  const [toggleState, setToggleState] = useState(1);
-
+  const urlParams = useParams();
+  const { id } = urlParams;
   const toggleTab = (index) => {
     setToggleState(index);
   };
-
   const navigate = useNavigate();
+  const [userProfile, SetUserProfile] = useState();
+  const [userBadges, SetBadges] = useState([]);
+
+  const data = {
+    id: id,
+  };
+
+  useEffect(() => 
+  {
+    axios
+      .post(`/api/getUserStats`, data)
+      .then((response) => {
+        SetUserProfile(response.data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  let bronzeBages = [];
+  let silverBadges = [];
+  let goldBadges = [];
+
+  useEffect(() => 
+  {
+    axios.get(`/api/badges/getAllbadges/${id}`)
+      .then((response) =>{
+        SetBadges(response.data.data)
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  for(let i = 0; i < userBadges.length; i++) 
+  {      
+    if( userBadges[i].badgeValue == "Bronze" )
+    {
+       bronzeBages.push(userBadges[i].badgeName );
+    }
+    else if( userBadges[i].badgeValue == "Silver" )
+    {
+       silverBadges.push(userBadges[i].badgeName);
+    }
+    else
+    {
+       goldBadges.push(userBadges[i].badgeName);
+    }
+
+  }
+
+  const [toggleState, setToggleState] = useState(1);
 
   return (
-      <>
-        <div
+    <>
+      <div
         className="container"
         style={{ marginTop: "80px", border: "1px solid red;" }}
-        >
+      >
         <h4>Welcome home!</h4>
 
-        <p onClick={() => navigate("/questions/315135")}>click here</p>
         <p onClick={() => navigate("/questions/ask")}>Ask Question</p>
         <h4 onClick={() => navigate("/")}>All Questions</h4>
         <h4 onClick={() => navigate("/tags")}>Tags</h4>
         <h4 onClick={() => navigate("/Users")}>Users</h4>
       </div>
 
-    <UserProfileContainer>
-
-    <div className="user-image">
-          <img style={{borderRadius: "5px;"}}src={gLogo} width={150} height={150}/>           
-    </div>
-
-    <div className="user-join-details">
-    <div className="user-name">
-        <p>Sunnyhithreddy k</p>
-    </div>
-        <p> Member for 8 months</p>
-        <p> Last seen this week</p>
-    </div>
-
-    <div>
-    </div>
-
-    <div className="user-location">
-        <p> Hyderabad, India</p>
-    </div>
-
-    <div className="container">
-      <div className="bloc-tabs">
-        <button
-          className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
-          onClick={() => toggleTab(1)}>
-          Profile
-        </button>
-
-        <button
-          className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
-          onClick={() => toggleTab(2)}>
-          Activity
-        </button>
-
-
-        <button
-          className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
-          onClick={() => toggleTab(3)}
-        >
-         Edit
-        </button>
-       
-      </div>
-
-      <div className="content-tabs">
-       
-        <div
-          className={toggleState === 1 ? "content  active-content" : "content"}
-        >
-
-          <UserProfileTab/>
-
+      <UserProfileContainer>
+        <div className="user-image">
+          <img
+            style={{ borderRadius: "5px;" }}
+            src={gLogo}
+            width={150}
+            height={150}
+          />
         </div>
 
-        <div
-          className={toggleState === 2 ? "content  active-content" : "content"}
-        >
-            <ActivityTab/>
-
+        <div className="user-join-details">
+          <div className="user-name">
+            <p>Sunnyhithreddy k</p>
+          </div>
+          <p> Member 8 months</p>
+          <p> Last seen this week</p>
         </div>
 
-        <div
-          className={toggleState === 3 ? "content  active-content" : "content"}
-        >
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos sed
-            nostrum rerum laudantium totam unde adipisci incidunt modi alias!
-            Accusamus in quia odit aspernatur provident et ad vel distinctio
-            recusandae totam quidem repudiandae omnis veritatis nostrum
-            laboriosam architecto optio rem, dignissimos voluptatum beatae
-            aperiam voluptatem atque. Beatae rerum dolores sunt.
-          </p>
+        <div></div>
+
+        <div className="user-location">
+          <p> Hyderabad, India</p>
         </div>
 
-      </div>
-    </div>
-    </UserProfileContainer>
+        <div className="container">
+          <div className="bloc-tabs">
+            <button
+              className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
+              onClick={() => toggleTab(1)}
+            >
+              Profile
+            </button>
+
+            <button
+              className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
+              onClick={() => toggleTab(2)}
+            >
+              Activity
+            </button>
+
+            <button
+              className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
+              onClick={() => toggleTab(3)}
+            >
+              Edit
+            </button>
+          </div>
+
+          <div className="content-tabs">
+            {userProfile ? (
+              <div
+                className={
+                  toggleState === 1 ? "content  active-content" : "content"
+                }
+              >
+                <UserProfileTab data={userProfile}  bronze={bronzeBages} 
+                                silver={silverBadges} gold={goldBadges} />
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div
+              className={
+                toggleState === 2 ? "content  active-content" : "content"
+              }
+            >
+              <ActivityTab userId={id}/>
+            </div>
+
+            <div
+              className={
+                toggleState === 3 ? "content  active-content" : "content"
+              }
+            >
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos
+                sed nostrum rerum laudantium totam unde adipisci incidunt modi
+                alias! Accusamus in quia odit aspernatur provident et ad vel
+                distinctio recusandae totam quidem repudiandae omnis veritatis
+                nostrum laboriosam architecto optio rem, dignissimos voluptatum
+                beatae aperiam voluptatem atque. Beatae rerum dolores sunt.
+              </p>
+            </div>
+          </div>
+        </div>
+      </UserProfileContainer>
     </>
   );
 }
@@ -114,10 +175,12 @@ function UserProfile() {
 export default UserProfile;
 
 const UserProfileContainer = styled.footer`
-*, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     box-sizing: border-box;
   }
-  
+
   .container {
     display: flex;
     flex-direction: column;
@@ -127,13 +190,12 @@ const UserProfileContainer = styled.footer`
     margin-top: 40px;
     font-size: 13px;
   }
-  
-  .bloc-tabs{
+
+  .bloc-tabs {
     display: flex;
   }
 
   .tabs {
-  
     padding: 8px;
     border-radius: 20px;
     text-align: center;
@@ -143,12 +205,12 @@ const UserProfileContainer = styled.footer`
     outline: none;
     margin-left: 5px;
   }
-  
-  .active-tabs  {
+
+  .active-tabs {
     background: var(--theme-primary-color);
     color: white;
   }
-  
+
   .active-tabs::before {
     content: "";
     display: block;
@@ -158,7 +220,7 @@ const UserProfileContainer = styled.footer`
     width: calc(100% + 2px);
     height: 5px;
   }
-  
+
   button {
     border: none;
     background-color: white;
@@ -168,13 +230,12 @@ const UserProfileContainer = styled.footer`
     margin-left: -19px;
   }
 
-  button:hover
-  {
-    background-color: 	#E0E0E0;
+  button:hover {
+    background-color: #e0e0e0;
   }
 
   .content-tabs {
-    flex-grow : 1;
+    flex-grow: 1;
   }
   .content {
     background: white;
@@ -183,7 +244,7 @@ const UserProfileContainer = styled.footer`
     height: 100%;
     display: none;
   }
-  
+
   .content p {
     width: 100%;
     height: 100%;
@@ -192,30 +253,26 @@ const UserProfileContainer = styled.footer`
     display: block;
   }
 
-  .user-image
-  {
+  .user-image {
     margin-left: 250px;
     margin-top: -140px;
   }
 
-  .user-join-details
-  {
-      margin-left: 450px;
-      margin-top: -150px;
-      font-size: 12px;
-      color: #888888;
+  .user-join-details {
+    margin-left: 450px;
+    margin-top: -150px;
+    font-size: 12px;
+    color: #888888;
   }
-  .user-location
-  {
+  .user-location {
     margin-left: 450px;
     font-size: 12px;
     color: #888888;
   }
 
-  .user-name
-  {
-      font-size: 40px;
-      margin-left: 0px;
-      color: black
+  .user-name {
+    font-size: 40px;
+    margin-left: 0px;
+    color: black;
   }
 `;
