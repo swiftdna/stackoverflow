@@ -74,20 +74,22 @@ const createQuestion = async (req, callback ) => {
 	  }
 	  else {
 		let question = await Question.find({},{}, {lean: true}).sort(sort);
-		question && question.map(ques=>{
-			if (ques.modified !== ques.created)
-			{
+		question && question.map((ques) => {
+			if (ques.modified !== ques.created) {
                      ques.modifies=true
 					 ques.time= ques.modified
-			}
-			else
-			{
+			} else {
 				ques.time= ques.created
 			}
-			ques[i].createdText = moment(ques[i].created).fromNow();
-				ques[i].createdFullText = moment(ques[i].created).format('MMMM Do, YYYY at h:mm:ss a');
-				ques[i].modifiedText = moment(ques[i].modified).fromNow();
-				ques[i].modifiedFullText = moment(ques[i].modified).format('MMMM Do, YYYY h:mm:ss a');
+			if (ques.text && helper.isJsonString(ques.text)) {
+				const tmp = JSON.parse(ques.text);
+				ques.text = tmp.blocks;
+				ques.isMultiMedia = true;
+			}
+			ques.createdText = moment(ques.created).fromNow();
+			ques.createdFullText = moment(ques.created).format('MMMM Do, YYYY at h:mm:ss a');
+			ques.modifiedText = moment(ques.modified).fromNow();
+			ques.modifiedFullText = moment(ques.modified).format('MMMM Do, YYYY h:mm:ss a');
 		});
         if (sortType === "time") {
             	question.sort( (a, b) => {

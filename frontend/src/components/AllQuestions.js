@@ -61,7 +61,7 @@ function AllQuestions({data, isAuthorRequired, questionId})
             }}
           >
             
-            <div>{data.text}</div>
+            <div>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
           </div>
           <div
             style={{
