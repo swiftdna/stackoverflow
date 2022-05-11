@@ -130,6 +130,10 @@ export default function ContentCard({ data, type, questionID}) {
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
+                        {console.log("-----sunny k--------")}
+                        {console.log(data.author)}
+                        {console.log("date-modified"+data.modifiedFullText)}
+                        {console.log("-----sunny k--------")}
                         <UserCard owner={true} data={{...data.author, modified: data.modifiedFullText}} />
                     </Col>
                 </Row>

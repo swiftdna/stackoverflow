@@ -80,7 +80,8 @@ const { body, validationResult } = require('express-validator');
 			data : question
 		});
 	  }
-	  else {
+	  else
+	  {
 		let question = await Question.find().sort(sort);
 		console.log('got data - ', question.length);
 		return callback(null, {

@@ -1,12 +1,23 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import search from "./Images/search.png";
 import { useNavigate } from "react-router-dom";
 import { UserItem } from './UserItem';
-
+import axios from 'axios';
 
 export function Users() {
+
+    const [usersResponse, SetUsersResponse] = useState("");
     const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`/api/getUserDetails?search=`)
+    .then(response => {
+        SetUsersResponse(response.data.data);
+    })
+    .catch(err => {
+    });
+}, []);
 
     return(
         <>
@@ -21,6 +32,7 @@ export function Users() {
         <h4 onClick={() => navigate("/")}>All Questions</h4>
         <h4 onClick={() => navigate("/tags")}>Tags</h4>
         <h4 onClick={() => navigate("/Users")}>Users</h4>
+
       </div>
 
     <UsersContainer>
@@ -37,15 +49,7 @@ export function Users() {
        </div>
 
        <div className="tags-container">
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-            <UserItem/>
-
+       {usersResponse && usersResponse.map(userItem => <UserItem data={userItem} />)}
        </div>
 
     </UsersContainer>
