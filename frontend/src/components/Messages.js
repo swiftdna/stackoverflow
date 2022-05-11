@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
+import NewMessage from './NewMessage';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaUndoAlt, FaRefresh } from 'react-icons/fa';
+import { FaUndoAlt, FaRefresh, FaPencilAlt } from 'react-icons/fa';
 import { Button, Row, Col } from 'react-bootstrap';
 import Loader from './Loader';
 import { selectIsLoggedIn, selectUser } from '../selectors/appSelector';
@@ -18,6 +19,7 @@ function Messages() {
     const dispatch = useDispatch();
     const [currentRecipientID, setCurrentRecipientID] = useState('');
     const [message, setMessage] = useState('');
+    const [showNewMessage, setShowNewMessage] = useState(false);
     const recipients = useSelector(state => state.messages.recipients);
     const messages = useSelector(state => state.messages.data);
     const loading = useSelector(state => state.messages.loading);
@@ -67,18 +69,46 @@ function Messages() {
 
     const isThreadActive = (id) => {
         return currentRecipientID === id;
-    };
+    }
+
+    const toggleNewText = () => {
+        setShowNewMessage(!showNewMessage);
+    }
+
+    const handleNewMessageClose = (msg) => {
+        toggleNewText();
+    }
+
+    const getUsername = (recipient) => {
+        const {username} = recipient;
+        // console.log(recipient);
+        if (recipient.username) {
+            return recipient.username;
+        } else {
+            return `${recipient.id}`;
+        }
+    }
+
+    const getMsgPanelUsername = (msg) => {
+        const {recipient} = msg;
+        console.log(msg);
+        if (recipient && recipient.username) {
+            return recipient.username;
+        } else {
+            return `${recipient._id}`;
+        }
+    }
 
     return(
         <div className="container" style={{marginTop: '80px'}}>
             <Row>
-                <h2>Messages</h2>
+                <h2>Messages <span className="new_msg" onClick={() => toggleNewText()}><FaPencilAlt /> new</span></h2>
                 <Col xs={3} className="messages_panel">
                     <ul className="messages_list" style={{marginLeft: 0, paddingLeft: 0}}>
                         {
                             recipients.map((recipient, i) => 
                                 <li onClick={() => fetchMessages(recipient.id)} className={isThreadActive(recipient.id) ? 'active' : ''}>
-                                    <p className="heading">{recipient.username}</p>
+                                    <p className="heading">{getUsername(recipient)}</p>
                                 </li>
                             )
                         }
@@ -96,7 +126,7 @@ function Messages() {
                                     currentRecipientID && messages && messages[currentRecipientID] && messages[currentRecipientID].length ?
                                         messages[currentRecipientID].map((msg, i) => 
                                             <div className={msg.sender ? 'sender' : 'receiver'}>
-                                                <p className="u_name">{msg.recipient ? msg.recipient.username : getSender()}</p>
+                                                <p className="u_name">{msg.recipient ? getMsgPanelUsername(msg) : getSender()}</p>
                                                 <p>{msg.content}</p>
                                             </div>
                                         ) : 'No conversation found'
@@ -109,7 +139,7 @@ function Messages() {
                     }
                 </Col>
             </Row>
-            
+            <NewMessage showFlag={showNewMessage} fn={{handleNewMessageClose}} />
         </div>
     )
 }

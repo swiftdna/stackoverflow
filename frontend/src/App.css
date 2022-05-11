@@ -223,3 +223,9 @@
   outline: none;
   border-bottom: 1px dotted #808080;
 }
+.new_msg {
+  font-size: 12px;
+  color:  #0070BA;
+  margin-left: 10px;
+  cursor: pointer;
+}
