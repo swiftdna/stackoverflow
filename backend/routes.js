@@ -70,9 +70,9 @@ const kakfafy = async (rid, req, res) => {
 //router.get('/badges/getAllbadges/:userID', getBadgesById)
 
 // Messages Routes
-router.post('/messages/addMessage', addMessage)
-router.get('/messages/getallRecipients/:sender_ID', getallRecipients)
-router.get('/messages/getMessages/:sender_ID/:recepient_ID', getallmessages)
+router.post('/messages', checkAuth, addMessage)
+router.get('/messages/threads', checkAuth, getallRecipients)
+router.get('/messages/:recepient_ID', checkAuth, getallmessages)
 
 router.post("/questions", questionValidate, checkAuth, (req, res) => {
   return kakfafy("createQuestion", req, res);
@@ -162,7 +162,7 @@ router.get("/getAnswers/:question", checkAuth, (req, res) => {
 
 //API for getting best answer.
 
-router.get('/getBestAnswer/:question/:answer',checkAuth,(req,res)=>{
+router.post('/markBestAnswer/:question/:answer',checkAuth,(req,res)=>{
   return kakfafy('getbestAnswer',req,res);
 }
 );

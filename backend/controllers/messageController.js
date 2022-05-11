@@ -2,36 +2,49 @@ const messages = require('../models/messages')
 const User = require('../models/user')
 
 const getallmessages = async (req, res) => {
-  const s_ID = req.params.sender_ID
-  const r_ID = req.params.recepient_ID
+  const {id: s_ID} = req.user;
+  const r_ID = req.params.recepient_ID;
 
   const messagesfromUser = await messages.find({
     $and: [{ sender_ID: s_ID }, { recepient_ID: r_ID }],
-  })
+  }, {}, {lean: true});
 
   const messagestoUser = await messages.find({
     $and: [{ sender_ID: r_ID }, { recepient_ID: s_ID }],
-  })
+  }, {}, {lean: true});
+
+  const recipientDetails = await User.findOne({ _id: r_ID }, {}, {lean: true});
 
   //console.log(messagestoUser)
   //messagesfromUser.push(messagestoUser)
   for (let i = 0; i < messagestoUser.length; i++) {
-    messagesfromUser.push(messagestoUser[i])
+    messagesfromUser.push(messagestoUser[i]);
   }
 
   messagesfromUser.sort(function (a, b) {
     return a.createdAt - b.createdAt
-  })
-  console.log(messagesfromUser)
+  });
+
+  messagesfromUser.map(user => {
+    if (user && user.sender_ID) {
+      const userIDFromDB = user.sender_ID.toString();
+      if (userIDFromDB === s_ID) {
+        user.sender = true;
+      } else {
+        user.sender = false;
+        user.recipient = recipientDetails;
+      }
+    }
+  });
 
   try {
     if (messagesfromUser || messagestoUser) {
-      res.status(201).json({
+      res.json({
         success: true,
         data: messagesfromUser,
       })
     } else {
-      res.status(201).json({
+      res.json({
         success: false,
         message: 'No Recipients found',
       })
@@ -42,19 +55,20 @@ const getallmessages = async (req, res) => {
 }
 
 const getallRecipients = async (req, res) => {
-  const s_ID = req.params.sender_ID
+  // const s_ID = req.params.sender_ID;
+  const {id: s_ID} = req.user;
+  console.log('checking for user => ', s_ID);
   //const r_ID = req.params.recepient_ID
   const messagesfromUser = await messages.find({ sender_ID: s_ID })
   const messagestoUser = await messages.find({ recepient_ID: s_ID })
 
-  var result = []
-  const recipientSet = new Set()
+  const result = [];
+  const recipientSet = new Set();
 
   try {
     if (messagesfromUser || messagestoUser) {
       for (let i = 0; i < messagesfromUser.length; i++) {
-        var rec_id = messagesfromUser[i].recepient_ID.valueOf()
-
+        var rec_id = messagesfromUser[i].recepient_ID.valueOf();
         recipientSet.add(rec_id)
       }
       for (let i = 0; i < messagestoUser.length; i++) {
@@ -64,14 +78,14 @@ const getallRecipients = async (req, res) => {
       for (let item of recipientSet) {
         console.log(item)
         var user = await User.findOne({ _id: item })
-        result.push(user.username)
+        result.push({username: user.username, id: user._id});
       }
       res.status(200).json({
         success: true,
         data: result,
       })
     } else {
-      res.status(201).json({
+      res.json({
         success: false,
         message: 'No Recipients found',
       })
@@ -82,9 +96,10 @@ const getallRecipients = async (req, res) => {
 }
 
 const addMessage = async (req, res) => {
-  const sid = req.body.sender_ID
-  const rid = req.body.recepient_ID
-  const content = req.body.content
+  // const sid = req.body.sender_ID
+  const {id: sid} = req.user;
+  const rid = req.body.recipientID;
+  const content = req.body.content;
 
   try {
     const newMessage = new messages({

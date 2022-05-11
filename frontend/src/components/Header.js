@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Popover, Button, Row, Col } from 'react-bootstrap';
-import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch } from 'react-icons/fa';
+import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch, FaEnvelope } from 'react-icons/fa';
 import { selectIsLoggedIn } from '../selectors/appSelector';
 import { selectUser } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
@@ -133,12 +133,14 @@ function Navbar() {
                     <i className="fas fa-search"></i>
                 </div>
                 
-                {isAuthenticated && <Link to={'/userProfile'}>{userDetails.email}</Link> }
+                {isAuthenticated && <Link to={'/userProfile'}><FaUserAlt className="nav-icons" title={userDetails.email} /></Link> }
             
               {
                 isAuthenticated ? 
-                    <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button> : 
-                    
+                    <>
+                        <Link to={'/messages'}><FaEnvelope className="nav-icons msg" /></Link>
+                        <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button>
+                    </> : 
                     <>
                         <button type="button" className="btn btn-login" title="Log In" onClick={() => login()}>login</button>
                         <button type="button" className="btn btn-register" title="Log In" onClick={() => register()}>register</button>

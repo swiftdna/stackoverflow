@@ -2,6 +2,7 @@ import { handleLoginResponse, setToast, handleCountriesResponse } from './action
 import { questionDetailsLoading, handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
 import { questionsLoading, handleQuestionsResponse } from './actions/questions-actions';
 import { questionSearchLoading, handleQuesSearchResponse } from './actions/questions-search-actions';
+import { handleRecipientsResponse, handleMessagesResponse, messagesLoading, recipientsLoading } from './actions/messages-actions';
 // import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
@@ -276,4 +277,62 @@ export function removeBookmark(dispatch, questionID) {
         .catch(err => {
             console.log(err.message);
         });
+}
+
+export function markAnswerAccepted(dispatch, questionID, answerID) {
+    axios.post(`/api/markBestAnswer/${questionID}/${answerID}`).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Answer marked as accepted!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+
+export function getMessageThreads(dispatch) {
+    dispatch(recipientsLoading());
+    axios.get(`/api/messages/threads`)
+        .then(response => {
+            dispatch(handleRecipientsResponse(response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function getMessages(dispatch, id) {
+    dispatch(messagesLoading());
+    axios.get(`/api/messages/${id}`)
+        .then(response => {
+            dispatch(handleMessagesResponse(id, response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function sendMessage(dispatch, data, callback) {
+    const {recipient, message} = data;
+    dispatch(messagesLoading());
+    axios.post(`/api/messages`, {
+        recipientID: recipient, content: message
+    }).then(response => {
+        const {data} = response;
+        if (data.success) {
+            // refresh content
+            return callback(null, true);
+        }
+        return callback(false);
+    })
+    .catch(err => {
+        console.log(err.message);
+    });
 }

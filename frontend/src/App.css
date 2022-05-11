@@ -211,3 +211,15 @@
 .accept_ans_ctrl.accepted {
   color: var(--bs-success);
 }
+
+.nav-icons {
+  font-size: 15px;
+}
+.nav-icons.msg {
+  margin: 0px 10px;
+}
+.messages_send > input{
+  border: none;
+  outline: none;
+  border-bottom: 1px dotted #808080;
+}

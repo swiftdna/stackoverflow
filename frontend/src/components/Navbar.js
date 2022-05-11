@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { FaList, FaUserAlt, FaHeart, FaStore } from 'react-icons/fa';
+import { FaList, FaUserAlt, FaEnvelope } from 'react-icons/fa';
 import { selectIsLoggedIn } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
 
@@ -81,6 +81,7 @@ function Navbar() {
                     {
                         isAuthenticated && (
                             <>
+                                <FaEnvelope className="nav-buttons" title="Messages" size="3em" />
                                 <FaUserAlt className="nav-buttons" title="Profile" size="3em" />
                             </>)
                     }
