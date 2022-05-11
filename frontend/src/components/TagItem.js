@@ -13,7 +13,7 @@ export function TagItem()
             </div>
 
             <div>
-               <p className="tags-desc"> 
+               <p className="tags-desc truncate"> 
                Java is a high-level object oriented programming language. 
                Use this tag when you&#39;re having problems using or understanding the language itself. 
                This tag is frequently used alongside other...
@@ -37,20 +37,19 @@ export default TagItem;
 const TagsContainer = styled.footer`
 .tag-item-container
 {
-    border-style: solid;
-    border-color: grey;
+    border: 1px solid #DEDEDE;
     width: 310px;
     height: 160px;
     float:left;
     margin :5px 0px 5px 10px; 
-    border-radius: 5px
+    border-radius: 5px;
+    padding: 10px
 }
 
 .tags-name
 {
     color: #4e8bed;
     background-color: var(--powder-100);
-    margin-left: -140px;
     padding: 7px;
     font-size: 12px;
     margin-top: 5px;
@@ -60,22 +59,27 @@ const TagsContainer = styled.footer`
 
 .tags-desc
 {
-    margin-left: -140px;
     font-size: 12px;
     margin-top: 8px;
     color: black;
     margin-right: 2px;
 }
 
+.truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .tags-qstns
 {
-    margin-left: -140px;
     color: #505050;
 }
 
 .tags-time-stamp
 {
-    margin-left: 120px;
+    float: right;
     color: #505050;
 }
 
