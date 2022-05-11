@@ -2245,13 +2245,17 @@ nav {
   padding-left: 0;
   margin-left: 0;
 }
+.messages_list > li.active {
+  background-color: #f3feff;
+}
 .messages_list > li {
-  height: 70px;
+  height: 50px;
   font-size: 14px;
   border-bottom: 1px solid #DEDEDE;
   padding: 5px;
   color: var(--fc-light);
   cursor: pointer;
+  padding: 10px;
 }
 .messages_list > li > p {
   margin: 0;
@@ -2271,6 +2275,7 @@ nav {
   margin: 10px;
   max-height: 600px;
   overflow: scroll;
+  width: 100%;
 }
 .sender > p, .receiver > p {
   margin: 0;
@@ -2282,12 +2287,18 @@ nav {
   margin-bottom: 10px;
 }
 .sender {
-  background-color: #E9FBFF;
+  border: 1px dotted var(--black-600);
   text-align: right;
   font-size: 13px;
 }
+.sender > .u_name {
+  color: var(--black-600)
+}
 .receiver {
-  background-color: #F1F1F1;
+  /*background-color: #F1F1F1;*/
+}
+.receiver > .u_name {
+  color: var(--orange)
 }
 .u_name {
   font-weight: bold;

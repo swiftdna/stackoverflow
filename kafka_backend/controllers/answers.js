@@ -49,6 +49,7 @@ const getbestAnswer = async(req,callback)=>{
             { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
         )
         return callback(null, {
+            success: true,
             data: answers
         });
     } catch {
