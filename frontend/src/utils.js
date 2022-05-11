@@ -1,4 +1,4 @@
-import { handleLoginResponse, setToast, handleCountriesResponse } from './actions/app-actions';
+import { handleLoginResponse, setToast } from './actions/app-actions';
 import { questionDetailsLoading, handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
 import { questionsLoading, handleQuestionsResponse } from './actions/questions-actions';
 import { questionSearchLoading, handleQuesSearchResponse } from './actions/questions-search-actions';
@@ -321,7 +321,6 @@ export function getMessages(dispatch, id) {
 
 export function sendMessage(dispatch, data, callback) {
     const {recipient, message} = data;
-    dispatch(messagesLoading());
     axios.post(`/api/messages`, {
         recipientID: recipient, content: message
     }).then(response => {
@@ -335,4 +334,10 @@ export function sendMessage(dispatch, data, callback) {
     .catch(err => {
         console.log(err.message);
     });
+}
+
+export async function fetchUsers() {
+    const results = await axios.get(`/api/getUserDetails`);
+    // console.log(results.data/);
+    return results.data.data;
 }
