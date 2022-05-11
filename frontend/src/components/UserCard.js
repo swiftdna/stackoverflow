@@ -1,11 +1,27 @@
 // import { Row } from 'react-bootstrap';
+import {isEmpty} from 'underscore';
 
-export default function UserCard({owner, data}) {
+export default function UserCard({owner, data, source}) {
+    if (isEmpty(data)) {
+        return <></>
+    }
+
+    const getOuterClassName = () => {
+        let base = "post-signature flex--item";
+        if (owner) {
+            base += " owner";
+        }
+        if (source === 'list') {
+            base += " list";
+        }
+        return base;
+    }
+
 	return (
-		<div className={owner ? "post-signature owner flex--item" : "post-signature flex--item"}>
+		<div className={getOuterClassName()}>
             <div className="user-info user-hover">
                 <div className="user-action-time">
-                    <a href title="show all edits to this post" className="js-gps-track" data-gps-track="post.click({ item: 4, priv: 0, post_type: 1 })">{owner ? 'asked' : 'edited'} <span title={data.modified} className="relativetime">{data.modified}</span></a>
+                    <div className="js-gps-track">{owner ? 'asked' : 'edited'} <span title={data.modified} className="relativetime">{data.modified}</span></div>
                 </div>
                 <div className="user-gravatar32">
                     <a href><div className="gravatar-wrapper-32"><img src={data.profilePhoto} alt="user avatar" width="32" height="32" className="bar-sm" /></div></a>

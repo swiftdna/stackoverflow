@@ -1,6 +1,8 @@
 import { Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Output from 'editorjs-react-renderer';
+import UserCard from './UserCard';
+import { formatShortDate } from '../utils';
 
 export default function QuestionSummaryCard({data}) {
     const navigate = useNavigate();
@@ -23,6 +25,7 @@ export default function QuestionSummaryCard({data}) {
                         <div className="status answered-accepted">
                             {data.answers && <><strong>{data.answers.length}</strong>answers</>}
                         </div>
+                        <p className="views">{data.views} views</p>
                     </div>
                 </div>
             </Col>
@@ -40,7 +43,8 @@ export default function QuestionSummaryCard({data}) {
                         <a href="/questions/tagged/java" className="post-tag flex--item" title="" rel="tag">java</a> <a href="/questions/tagged/string" className="post-tag flex--item" title="" rel="tag">string</a> <a href="/questions/tagged/random" className="post-tag flex--item" title="" rel="tag">random</a> 
                     </div>
                     <div className="started float-right">
-        asked <span title={data.modifiedFullText} className="relativetime">{data.modifiedFullText}</span> by {data.author && data.author.username}</div>
+                        {data.author ? <UserCard source="list" data={{ ...data.author, modified: formatShortDate(data.modified) }} owner={true} /> : ''}
+                    </div>
                 </div>
             </Col>
             <hr style={{ backgroundColor: 'rgb(188 188 188)', height: '1px'}} />
