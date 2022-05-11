@@ -40,7 +40,7 @@ function Home()
 
     return(
       <>
-        <div className="container" style={{marginTop: '50px'}}>
+        <div className="container" style={{marginTop: '60px'}}>
             <Row>
                 <Sidebar />
                 <Col xs={10} style={{paddingLeft: '20px'}}>
