@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Popover, Button, Row, Col } from 'react-bootstrap';
-import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch, FaEnvelope } from 'react-icons/fa';
+import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch, FaEnvelope, FaColumns } from 'react-icons/fa';
 import { selectIsLoggedIn } from '../selectors/appSelector';
 import { selectUser } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
@@ -50,6 +50,10 @@ function Navbar() {
           const searchKeyword = e.target.value;
           navigate(`/search?q=${searchKeyword}`);
         }
+    }
+
+    const isAdmin = () => {
+        return userDetails && userDetails.role === 'admin';
     }
 
     const popover = (
@@ -132,13 +136,13 @@ function Navbar() {
                 <div className="search-btn">
                     <i className="fas fa-search"></i>
                 </div>
-                
-                {isAuthenticated && <Link to={'/userProfile'}><FaUserAlt className="nav-icons" title={userDetails.email} /></Link> }
             
               {
                 isAuthenticated ? 
                     <>
+                        { isAdmin() ? <Link to={'/stats'}><FaColumns className="nav-icons" /></Link> : ''}
                         <Link to={'/messages'}><FaEnvelope className="nav-icons msg" /></Link>
+                        <Link to={'/userProfile'}><FaUserAlt className="nav-icons last" title={userDetails.email} /></Link>
                         <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button>
                     </> : 
                     <>

@@ -341,3 +341,25 @@ export async function fetchUsers() {
     // console.log(results.data/);
     return results.data.data;
 }
+
+export async function mostViewedQuestions() {
+    const results = await axios.get(`/api/mostViewedQuestions`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchPopularTags() {
+    const results = await axios.get(`/api/tags/getPopularTags`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchTopUserReputation() {
+    const results = await axios.get(`/api/getTopUserReputation`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchLeastUserReputation() {
+    const results = await axios.get(`/api/getLeastUserReputation`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+
