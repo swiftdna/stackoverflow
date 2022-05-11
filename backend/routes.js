@@ -23,6 +23,10 @@ const {
   getPopularTags,
   getSearchTags,
 } = require("./controllers/tagController");
+const {
+  addMessage, getallRecipients, getallmessages
+} = require("./controllers/messageController");
+
 
 const { getBadgesById } = require("./controllers/badgeController");
 auth();
@@ -64,6 +68,11 @@ const kakfafy = async (rid, req, res) => {
 
 // Badges Routes
 //router.get('/badges/getAllbadges/:userID', getBadgesById)
+
+// Messages Routes
+router.post('/messages/addMessage', addMessage)
+router.get('/messages/getallRecipients/:sender_ID', getallRecipients)
+router.get('/messages/getMessages/:sender_ID/:recepient_ID', getallmessages)
 
 router.post("/questions", questionValidate, checkAuth, (req, res) => {
   return kakfafy("createQuestion", req, res);
