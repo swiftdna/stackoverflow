@@ -60,13 +60,11 @@ const UserContainer = styled.footer`
 
 .user-image
 {
-    margin-left: -140px;
-    margin-top: 15px;
 }
 
 .user-info
 {
-    margin-left: -70px;
+    margin-left: 60px;
     margin-top: -60px;
     font-weight: bold;
     color: #505050;
