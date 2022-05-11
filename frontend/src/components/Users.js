@@ -27,7 +27,7 @@ export function Users() {
             <Row>
                 <Sidebar />
                 <Col xs={10} style={{paddingLeft: '20px'}}>
-                    <UsersContainer>
+                <UsersContainer>
                     <h1>Users</h1>
                    <div>
                      <div className="search-container" style={{width: '250px'}}>
