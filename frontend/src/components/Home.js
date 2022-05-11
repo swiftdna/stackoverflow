@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Col } from 'react-bootstrap';
 import { selectIsLoggedIn } from '../selectors/appSelector';
-import AllQuestions from './AllQuestions';
+// import AllQuestions from './AllQuestions';
+import QuestionSummaryCard from './QuestionSummaryCard';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import RightSidebar from "./RightSideBar";
@@ -89,13 +90,14 @@ function Home()
                         Unanswered</a>
                   </div>
                   <hr style={{marginTop: '70px'}} />
-                  
-                  <div>
+                  {questionsResponse && questionsResponse.map(questionItem => 
+                      <QuestionSummaryCard data={questionItem} />)}
+                  {/* <div>
 
                   {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} 
                                              isAuthorRequired={true} questionId={questionItem._id}/>)}
                   
-                  </div>
+                  </div>*/}
 
                   {/* <div>
                     <RightSidebar />

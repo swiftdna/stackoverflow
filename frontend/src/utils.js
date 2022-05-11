@@ -3,10 +3,20 @@ import { questionDetailsLoading, handleQuestionDetailsResponse, handleAnswerResp
 import { questionsLoading, handleQuestionsResponse } from './actions/questions-actions';
 import { questionSearchLoading, handleQuesSearchResponse } from './actions/questions-search-actions';
 import { handleRecipientsResponse, handleMessagesResponse, messagesLoading, recipientsLoading } from './actions/messages-actions';
+import moment from 'moment';
 // import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 
+export function formatDate(date) {
+    return moment(date).format('MMMM Do, YYYY h:mm:ss a');
+}
+export function formatShortDate(date) {
+    return moment(date).format('Do MMM, YYYY');
+}
+export function formatEasyDate(date) {
+    return moment(date).fromNow();
+}
 export function isJsonString(str) {
     try {
         JSON.parse(str);

@@ -2017,6 +2017,11 @@ nav {
     text-align: left;
     vertical-align: top;
     width: 200px;
+    min-height: 72px;
+    margin-bottom: 5px;
+}
+.post-signature.list {
+  margin-top: -10px;
 }
 .user-info {
     box-sizing: border-box;
@@ -2144,6 +2149,10 @@ nav {
   margin-left: 8px;
   color: var(--black-500);
   font-size: var(--fs-fine);
+}
+.statscontainer .views {
+  font-size: 10px;
+  text-align: center;
 }
 .question-summary .stats, .question-summary .stats+.views {
     margin-left: 0;
