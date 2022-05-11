@@ -1,0 +1,24 @@
+/** --------------------------------
+ -- Statistics
+-------------------------------- */
+.statistics {
+	color: var(--dk-gray-200);
+}
+
+.statistics .box {
+	background-color: var(--dk-dark-bg);
+}
+
+.statistics .box i {
+	width: 60px;
+	height: 60px;
+	line-height: 60px;
+}
+
+.statistics .box p {
+	color: var(--dk-gray-400);
+}
+
+.statistics .rounded-2 {
+    border-radius: 0.25rem!important;
+}

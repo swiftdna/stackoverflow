@@ -218,6 +218,9 @@
 .nav-icons.msg {
   margin: 0px 10px;
 }
+.nav-icons.last {
+  margin-right: 10px;
+}
 .messages_send > input{
   border: none;
   outline: none;
