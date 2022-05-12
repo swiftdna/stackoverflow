@@ -38,7 +38,7 @@ function Question() {
                                 answers && <div style={{marginLeft: '14px', marginTop: '20px'}}>
                                 <h3>{answers.length} Answers</h3>
                                 {
-                                    answers.map(answer => <ContentCard type="answer" questionID={qdetails._id} data={answer} />)
+                                    answers.map(answer => <ContentCard type="answer" questionID={qdetails._id} qQuthor={qdetails.author} data={answer} />)
                                 }
                                 </div>
                             }

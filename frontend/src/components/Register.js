@@ -29,7 +29,6 @@ const submitSignup = (e) => {
     axios.post("/api/signup", data).then((response) => 
 	{
 	    alert('user is successfully created, please login !!! ');
-		alert(success.response.data.message);
     })
 	.catch((error) => {
 		alert(error.response.data.message);

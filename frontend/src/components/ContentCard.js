@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaCaretUp, FaCaretDown, FaRegBookmark, FaHistory, FaCheck } from 'react-icons/fa';
 import UserCard from './UserCard';
-import { addQuestionComment, addAnswerComment, voteQuestion, voteAnswer, addBookmark, removeBookmark } from '../utils';
+import { addQuestionComment, addAnswerComment, voteQuestion, voteAnswer, addBookmark, removeBookmark, markAnswerAccepted } from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { pluck } from 'underscore';
 import Output from 'editorjs-react-renderer';
 
-export default function ContentCard({ data, type, questionID}) {
+export default function ContentCard({ data, type, questionID, qQuthor}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userDetails = useSelector(state => state.app.user);
@@ -83,6 +83,32 @@ export default function ContentCard({ data, type, questionID}) {
         }
     }
 
+    const isViewerAuthor = () => {
+        const {_id} = qQuthor;
+        return _id === userDetails.id;
+    }
+
+    const acceptAnswer = () => {
+        const elType = type === 'question' ? type : 'answer';
+        const elementID = data._id;
+        const qID = questionID ? questionID : data._id;
+        if (elType === 'question') {
+            return;
+        }
+        markAnswerAccepted(dispatch, qID, elementID);
+    }
+
+    const isAnswerAccepted = () => {
+        return data.isbestanswer === true;
+    }
+
+    const getAnswerAcceptedStyle = () => {
+        if (data.isbestanswer) {
+            return 'accept_ans_ctrl accepted';
+        }
+        return 'accept_ans_ctrl';
+    }
+
 	return (
 		<>
 		<Row>
@@ -115,7 +141,7 @@ export default function ContentCard({ data, type, questionID}) {
                     type==='question' && <FaHistory className="history_ctrl" onClick={() => viewHistory()} />
                 }
                 {
-                    type==='answer' && <FaCheck className="accept_ans_ctrl" title="Accept this answer" />
+                    type==='answer' && (isAnswerAccepted() || isViewerAuthor()) && <FaCheck onClick={() => acceptAnswer()} className={getAnswerAcceptedStyle()} title="Accept this answer" />
                 }
             </Col>
             <Col xs={11}>
@@ -146,6 +172,7 @@ export default function ContentCard({ data, type, questionID}) {
                     <input className="comment_input" value={comment} placeholder="Add a comment.." onChange={handleComment} onKeyDown={_handleKeyDown} />
                 </div>
             </Col>
+            <hr style={{margin: '20px 0', borderStyle: 'none none dotted'}} />
         </Row>
         </>
 	);

@@ -1,26 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Row, Button, Col } from 'react-bootstrap';
 import { selectIsLoggedIn } from '../selectors/appSelector';
-import AllQuestions from './AllQuestions';
+// import AllQuestions from './AllQuestions';
+import QuestionSummaryCard from './QuestionSummaryCard';
+import Loader from './Loader';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import RightSidebar from "./RightSideBar";
+import { selectAllQuestions } from '../selectors/appSelector';
+import { handleAllQuestionsResponse } from "../actions/app-actions";
 
 //create the Navbar Component
 function Home() {
+  const [questionsResponse, SetQuestionsResponse] = useState("");
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const params={};
+  params.tab = 'views';
+
+  useEffect(() => {
+    setLoading(true);
+    axios.get("/api/questions", { params }).then((response) => {
+      SetQuestionsResponse(response.data.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+      })
+    ;
+  }, []);
+  
+  
+  console.log( questionsResponse );
     const isAuthenticated = useSelector(selectIsLoggedIn);
     const navigate = useNavigate();
-    const questions = useSelector(state => state.questions.data);
-
-    console.log('sunny' + isAuthenticated);
 
     return(
       <>
-        <div className="container" style={{marginTop: '50px'}}>
+        <div className="container" style={{marginTop: '60px'}}>
             <Row>
                 <Sidebar />
                 <Col xs={10} style={{paddingLeft: '20px'}}>
@@ -45,43 +66,44 @@ function Home() {
                 }
                 
                 <p onClick={() => navigate('/messages')}>messages</p>*/}
-                <HomeContainer>
-                  <Row>
-                      <Col xs={9}>
-                          <h1>Top Questions</h1>
-                      </Col>
-                      <Col xs={3}>
-                          <button className="btn btn-register" style={{float: 'right'}} onClick={() => navigate('/questions/ask')}>Ask Question</button>
-                      </Col>
-                  </Row>
+                {loading ? <Loader /> :
+                  <HomeContainer>
+                    <Row>
+                        <Col xs={9}>
+                            <h1>Top Questions</h1>
+                        </Col>
+                        <Col xs={3}>
+                            <button className="btn btn-register" style={{float: 'right'}} onClick={() => navigate('/questions/ask')}>Ask Question</button>
+                        </Col>
+                    </Row>
 
-                  {/* <div className="filterBtnDiv">
-                    <button className="filterBtn">Hot</button>
-                    <button className="filterBtn">Score</button>
-                    <button className="filterBtn">Unanswered</button>
-                  </div> */ }
-                  <div className="d-flex s-btn-group js-filter-btn" style={{marginTop: '10px'}}>
-                    <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=xyz" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
-                        Hot</a>
-                    <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
-                        Score</a>
-                    <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
-                        Unanswered</a>
-                  </div>
-                  <hr style={{marginTop: '70px'}} />
-                  <div>
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                    <AllQuestions />
-                  </div>
+                    {/* <div className="filterBtnDiv">
+                      <button className="filterBtn">Hot</button>
+                      <button className="filterBtn">Score</button>
+                      <button className="filterBtn">Unanswered</button>
+                    </div> */ }
+                    <div className="d-flex s-btn-group js-filter-btn" style={{marginTop: '10px'}}>
+                      <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
+                          Hot</a>
+                      <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
+                          Score</a>
+                      <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
+                          Unanswered</a>
+                    </div>
+                    <hr style={{marginTop: '70px'}} />
+                    {questionsResponse && questionsResponse.map(questionItem => 
+                        <QuestionSummaryCard data={questionItem} />)}
+                    {/* <div>
 
-                  {/* <div>
-                    <RightSidebar />
-                  </div> */}
-                </HomeContainer>
+                    {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} 
+                                               isAuthorRequired={true} questionId={questionItem._id}/>)}
+                    
+                    </div>*/}
+
+                    {/* <div>
+                      <RightSidebar />
+                    </div> */}
+                  </HomeContainer>}
                 </Col>
             </Row>
             </div>

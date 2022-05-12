@@ -68,6 +68,7 @@ const getbestAnswer = async(req,callback)=>{
         await User.update({"_id":answer.author},
                 {"$set":{$inc: { Reputation : 15}}});
         return callback(null, {
+            success: true,
             data: answers
         });
     } catch {

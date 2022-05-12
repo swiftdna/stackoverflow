@@ -12,9 +12,7 @@ const {addTag, getALLtags, getPopularTags, getSearchTags} = require('../controll
 const routeHandler = {
     createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
     editQuestion,approvequestion,searchQuestion,mostViewedQuestions,
-    createAnswer,createComment,createquestioncomment,voteQuestion,voteAnswer,
-    createQuestion,loadQuestions,questiondetail,addbookmark,deletebookmark,
-    editQuestion,approvequestion,searchQuestion,mostViewedQuestions,questionPostedCount,
+    createAnswer,createComment,createquestioncomment,voteQuestion,voteAnswer, questionPostedCount,
     getUserDetails,getUserStats,editUserDetails,userActivity,
     removeAnswer,removeComment,upvote,downvote,unvote,
     getBadgesById,topUserTags,topUserPosts,getLeastUserReputation,

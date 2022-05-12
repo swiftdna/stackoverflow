@@ -1,11 +1,22 @@
-import { handleLoginResponse, setToast, handleCountriesResponse } from './actions/app-actions';
+import { handleLoginResponse, setToast } from './actions/app-actions';
 import { questionDetailsLoading, handleQuestionDetailsResponse, handleAnswerResponse } from './actions/question-details-actions';
 import { questionsLoading, handleQuestionsResponse } from './actions/questions-actions';
 import { questionSearchLoading, handleQuesSearchResponse } from './actions/questions-search-actions';
+import { handleRecipientsResponse, handleMessagesResponse, messagesLoading, recipientsLoading } from './actions/messages-actions';
+import moment from 'moment';
 // import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 
+export function formatDate(date) {
+    return moment(date).format('MMMM Do, YYYY h:mm:ss a');
+}
+export function formatShortDate(date) {
+    return moment(date).format('Do MMM, YYYY');
+}
+export function formatEasyDate(date) {
+    return moment(date).fromNow();
+}
 export function isJsonString(str) {
     try {
         JSON.parse(str);
@@ -276,4 +287,93 @@ export function removeBookmark(dispatch, questionID) {
         .catch(err => {
             console.log(err.message);
         });
+}
+
+export function markAnswerAccepted(dispatch, questionID, answerID) {
+    axios.post(`/api/markBestAnswer/${questionID}/${answerID}`).then(response => {
+            const {data} = response;
+            if (data.success) {
+                // refresh content
+                dispatch(setToast({
+                    type: 'success',
+                    message: 'Answer marked as accepted!'
+                }));
+                getQuestionDetails(dispatch, questionID);
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+
+export function getMessageThreads(dispatch) {
+    dispatch(recipientsLoading());
+    axios.get(`/api/messages/threads`)
+        .then(response => {
+            dispatch(handleRecipientsResponse(response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function getMessages(dispatch, id) {
+    dispatch(messagesLoading());
+    axios.get(`/api/messages/${id}`)
+        .then(response => {
+            dispatch(handleMessagesResponse(id, response));
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+}
+
+export function sendMessage(dispatch, data, callback) {
+    const {recipient, message} = data;
+    axios.post(`/api/messages`, {
+        recipientID: recipient, content: message
+    }).then(response => {
+        const {data} = response;
+        if (data.success) {
+            // refresh content
+            return callback(null, true);
+        }
+        return callback(false);
+    })
+    .catch(err => {
+        console.log(err.message);
+    });
+}
+
+export async function fetchUsers() {
+    const results = await axios.get(`/api/getUserDetails`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+
+export async function mostViewedQuestions() {
+    const results = await axios.get(`/api/mostViewedQuestions`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchPopularTags() {
+    const results = await axios.get(`/api/tags/getPopularTags`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchTopUserReputation() {
+    const results = await axios.get(`/api/getTopUserReputation`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchLeastUserReputation() {
+    const results = await axios.get(`/api/getLeastUserReputation`);
+    // console.log(results.data/);
+    return results.data.data;
+}
+export async function fetchQuestionsPostedToday() {
+    const results = await axios.get(`/api/questionPostedCount`);
+    // console.log(results.data/);
+    return results.data.data;
 }

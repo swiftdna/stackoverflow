@@ -1,8 +1,10 @@
  import React from "react";
  import styled from "styled-components";
- import gLogo from "./Images/user4.png";
+ import goldImage from  "./Images/gold.png"
+ import silverImage from "./Images/silver.png";
+ import bronzeImage from "./Images/bronze.png";
 
-function UserProfileTab()
+function UserProfileTab({data, bronze, silver, gold})
  {
     return(
         <UserProfileTabContainer>
@@ -12,22 +14,22 @@ function UserProfileTab()
                <h2>Stats</h2>
                 <div className="stats-tab">
                     <div className="user-reputation">
-                        <p>1</p>
+                        <p>{data.reputationcount}</p>
                         <p>reputation</p>
                     </div>
 
                     <div className="user-reached">
-                        <p>0</p>
+                        <p>{data.viewscount}</p>
                         <p>reached</p>
                     </div>
 
                     <div className="user-answers">
-                        <p>0</p>
+                        <p>{data.answerscount}</p>
                         <p>answers</p>
                     </div>
 
                     <div className="user-questions">
-                        <p>0</p>
+                        <p>{data.questionscount}</p>
                         <p>questions</p>
                     </div>
                   
@@ -46,16 +48,73 @@ function UserProfileTab()
            < div className="badges-tab">
                <h2>Badges</h2>
                <div className="badges-inner-tab">
-                 <div className="badges-gold-tab">
+
+                    <div className="badges-gold-tab">
+                     <div style={{display:"flex"}}>
+                        <img src={goldImage} width={55} height={55} style={{marginLeft: "10px", marginTop: "5px"}}/>
+                        <p style={{marginLeft:"10px", marginTop: "20px"}}>
+                            <span style={{fontWeight: "bold", fontSize:"23px"}}>{gold.length}</span> Badges</p>
+                    </div>
+
+                    <div>
                     
+                    {
+                      gold.map(function(element){
+                          return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
+                                               marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
+                                               height:"20px", borderRadius: "5px"}}>
+                                  {element}
+                                 </div>
+                    })}
+
+                    </div>
+
                  </div>
 
                  <div className="badges-silver-tab">
                     
+                    <div style={{display:"flex"}}>
+                        <img src={silverImage} width={55} height={55} style={{marginLeft: "10px", marginTop: "5px"}}/>
+                        <p style={{marginLeft:"10px", marginTop: "20px"}}>
+                            <span style={{fontWeight: "bold", fontSize:"23px"}}>{silver.length}</span> Badges</p>
+                    </div>
+
+                    <div>
+                    
+                    {
+                      silver.map(function(element){
+                          return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
+                                               marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
+                                               height:"20px", borderRadius: "5px"}}>
+                                 {element}
+                                 </div>
+                    })}
+
+                    </div>
+
                  </div>
 
                  <div className="badges-bronze-tab">
+
+                    <div style={{display:"flex"}}>
+                        <img src={bronzeImage} width={55} height={55} style={{marginLeft: "10px", marginTop: "5px"}}/>
+                        <p style={{marginLeft:"10px", marginTop: "20px"}}>
+                            <span style={{fontWeight: "bold", fontSize:"23px"}}>{bronze.length}</span> Badges</p>
+                    </div>
+
+                    <div>
                     
+                    {
+                      bronze.map(function(element){
+                          return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
+                                               marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
+                                               height:"20px", borderRadius:"5px"}}>
+                                  {element}
+                                 </div>
+                    })}
+
+                    </div>
+
                  </div>
              </div>
             </div>
@@ -123,7 +182,7 @@ function UserProfileTab()
 .badges-bronze-tab
 {
     width: 270px;
-    height: 162px;
+    height: 250px;
     border-style: solid;
     border-color: #888888;
     border-radius: 10px;

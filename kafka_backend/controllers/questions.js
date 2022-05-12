@@ -73,14 +73,23 @@ const createQuestion = async (req, callback ) => {
 		});
 	  }
 	  else {
-		let question = await Question.find({}, {lean: true}).sort(sort);
-		question && question.map(ques=>{
+		let question = await Question.find({},{}, {lean: true}).sort(sort);
+		question && question.map((ques) => {
 			if (ques.modified !== ques.created) {
                      ques.modifies=true
 					 ques.time= ques.modified
 			} else {
 				ques.time= ques.created
 			}
+			if (ques.text && helper.isJsonString(ques.text)) {
+				const tmp = JSON.parse(ques.text);
+				ques.text = tmp.blocks;
+				ques.isMultiMedia = true;
+			}
+			ques.createdText = moment(ques.created).fromNow();
+			ques.createdFullText = moment(ques.created).format('MMMM Do, YYYY at h:mm:ss a');
+			ques.modifiedText = moment(ques.modified).fromNow();
+			ques.modifiedFullText = moment(ques.modified).format('MMMM Do, YYYY h:mm:ss a');
 		});
         if (sortType === "time") {
             	question.sort( (a, b) => {
@@ -344,7 +353,7 @@ console.log('todaydateis',today);
 		//console.log(questions)
 	  return callback(null, {
 		  success : true,
-		questionpostedcount : count
+		  data : count
 	});
 	} catch (error) {
 		return callback(error,{
