@@ -41,14 +41,7 @@ export function Tags() {
                     </div>
 
                    <div className="tags-container">
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
+                        {allTags && allTags.map( tagItem => <TagItem data={tagItem} />)}
                    </div>
 
                 </TagsContainer>

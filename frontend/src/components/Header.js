@@ -142,7 +142,7 @@ function Navbar() {
                     <>
                         { isAdmin() ? <Link to={'/stats'}><FaColumns className="nav-icons" /></Link> : ''}
                         <Link to={'/messages'}><FaEnvelope className="nav-icons msg" /></Link>
-                        <Link to={'/userProfile'}><FaUserAlt className="nav-icons last" title={userDetails.email} /></Link>
+                        <Link to={`/userProfile/${userDetails.id}/${userDetails.email}`}><FaUserAlt className="nav-icons last" /></Link>
                         <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button>
                     </> : 
                     <>

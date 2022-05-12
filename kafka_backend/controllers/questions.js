@@ -407,14 +407,19 @@ console.log('todaydateis',today);
             
             sort[sortType] = -1
         }
-		if(req.query.key === 'tag') {
+		if(req.query.key === 'tag') 
+		{
 			const tags =req.query.value;
 			const data = tags.split(" ");
 			let tagdata= data[0];
+			
 			data.shift();
+
 			const queryDB = util.promisify(sqldb.query).bind(sqldb);
+
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
+
 			console.log('===> ', tagdesc);
 			const searchstring = data.join(' ');
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {

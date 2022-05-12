@@ -24,6 +24,8 @@ import Register from './Register';
 import Tags from './Tags';
 import Users from './Users';
 import UserProfile from './UserProfile';
+import AdminReview from './AdminReview';
+import QuestionTag from './QuestionTag';
 
 //Create a Main Component
 export function Main() {
@@ -79,6 +81,8 @@ export function Main() {
               <Route path="/users" element={<Users />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/userProfile/:id/:email" element={<UserProfile />} />
+              <Route path="/adminReview" element={<AdminReview />} />
+              <Route path="/questionTag/:tag" element={<QuestionTag />} />
 
             </Routes>
         </>

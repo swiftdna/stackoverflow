@@ -101,31 +101,29 @@ function UserProfileTab({data, bronze, silver, gold, topTags})
                             <span style={{fontWeight: "bold", fontSize:"23px"}}>{bronze.length}</span> Badges</p>
                     </div>
 
-                    <div>
-                    
+                <div>    
                     {
-                      bronze.map(function(element){
+                      bronze.map(function(element)
+                      {
                           return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
                                                marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
                                                height:"20px", borderRadius:"5px"}}>
                                   {element}
                                  </div>
-                    })}
-
+                     })
+                    }
                     </div>
-
                  </div>
                  
                  <div className="top-tags">
                  <h2>Top Tags</h2>                       
 
                  <div className="top-tags-innertab">
-                     
-        
                  {
-         topTags.map(item => 
+                   topTags.map(item => 
+
            <div>
-               
+
                <p style={{display:"flex", marginLeft:"20px", marginTop:"15px"}}> 
                   <div style={{width:"50px"}}> 
                       <span className="question-tags"> { item[0]}  </span>
@@ -135,21 +133,14 @@ function UserProfileTab({data, bronze, silver, gold, topTags})
                       <span style={{fontWeight:"bold", fontSize:"23px"}}>{ item[1]}</span>  score
                   </div> 
 
-
                   <div style={{marginLeft:"30px"}}> 
-                  <span style={{fontWeight:"bold", fontSize:"23px"}}>{ item[2]}</span>  posts
+                      <span style={{fontWeight:"bold", fontSize:"23px"}}>{ item[2]}</span>  posts
                   </div> 
-
-                   </p>
+               </p>
 
               <hr></hr>
-
             </div>
-
         )}
-
-
-
                  </div>
                  </div>
 

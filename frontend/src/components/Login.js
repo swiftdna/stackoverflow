@@ -147,7 +147,7 @@ export function Login() {
               </label>
               <div class="input-group flex-nowrap">
                 <input
-                  type="text"
+                  type="password"
                   class="form-control"
                   placeholder="Password"
                   aria-label="Username"

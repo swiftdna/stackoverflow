@@ -1,15 +1,22 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 export function TagItem({data})
 {
+    const navigate = useNavigate();
+
+    const openTagQuestions = (tag) => {
+        navigate(`/questionTag/${tag}`);
+      }
+
      return(
          <TagsContainer>
 
            <div className="tag-item-container">
 
             <div>
-               <span className="tags-name"> {data.tagName} </span>       
+               <span  onClick={() => openTagQuestions(data.tagName)} className="tags-name"> {data.tagName} </span>       
             </div>
 
             <div>
