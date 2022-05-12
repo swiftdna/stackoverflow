@@ -353,7 +353,7 @@ console.log('todaydateis',today);
 		//console.log(questions)
 	  return callback(null, {
 		  success : true,
-		questionpostedcount : count
+		  data : count
 	});
 	} catch (error) {
 		return callback(error,{

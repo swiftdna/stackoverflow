@@ -372,4 +372,8 @@ export async function fetchLeastUserReputation() {
     // console.log(results.data/);
     return results.data.data;
 }
-
+export async function fetchQuestionsPostedToday() {
+    const results = await axios.get(`/api/questionPostedCount`);
+    // console.log(results.data/);
+    return results.data.data;
+}
