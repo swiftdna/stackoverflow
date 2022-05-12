@@ -1,27 +1,32 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
-export function TagItem()
+export function TagItem({data})
 {
+    const navigate = useNavigate();
+
+    const openTagQuestions = (tag) => {
+        navigate(`/questionTag/${tag}`);
+      }
+
      return(
          <TagsContainer>
 
            <div className="tag-item-container">
 
             <div>
-               <span className="tags-name"> react </span>       
+               <span  onClick={() => openTagQuestions(data.tagName)} className="tags-name"> {data.tagName} </span>       
             </div>
 
             <div>
-               <p className="tags-desc truncate"> 
-               Java is a high-level object oriented programming language. 
-               Use this tag when you&#39;re having problems using or understanding the language itself. 
-               This tag is frequently used alongside other...
+               <p className="tags-desc"> 
+                  {data.tagDescription}
               </p>       
             </div>
 
             <div>
-               <span className="tags-qstns"> 3 questions </span>
+               <span className="tags-qstns"> {data.tagQuestionsAsked} questions </span>
                <span className="tags-time-stamp">asked 2 months ago</span>
 
             </div>
@@ -39,7 +44,7 @@ const TagsContainer = styled.footer`
 {
     border: 1px solid #DEDEDE;
     width: 310px;
-    height: 160px;
+    height: 150px;
     float:left;
     margin :5px 0px 5px 10px; 
     border-radius: 5px;

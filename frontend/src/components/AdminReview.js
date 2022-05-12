@@ -7,58 +7,37 @@ import UserCard from './UserCard';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios";
 
-function AllQuestions({data, isAuthorRequired, questionId})
+function AdminReview()
 {
   const navigate = useNavigate();
-  const [questionAuthorDetails, SetQuestionAuthorDetails] = useState("");
-
-  useEffect(() => {
-    axios.get(`/api/questions/${questionId}`)
-    .then(response => {
-      SetQuestionAuthorDetails(response.data.data)
-    })
-    .catch(err => {
-        console.log(err.message);
-    });
-}, []);
-
-  const openQuestion = (id) => {
-    navigate(`/questions/${id}`);
-  }
-
-  const openTagQuestions = (tag) => {
-    navigate(`/questionTag/${tag}`);
-  }
+   const suntags =["java", "c++", "c", "react"];
 
     return(
-        <AllQuestionContainer>
+        <AdminReviewContainer>
         <div> 
 
     <div className="all-questions">
       <div className="all-questions-container">
         <div className="all-questions-left">
-          <div className="all-options">
-            <div className="all-option">
-              <p>{data.score}</p>
-              <span>votes</span>
+
+           <div className="all-option" style={{borderStyle:"solid ", 
+                                        color:"white"}}>              
+              <span style={{}}> 
+                   <button style={{ color:"white", padding:"5px", borderRadius:"10px",
+                               backgroundColor: "#009933" }}> accept</button> 
+              </span><br/>
+              <span> <button style={{ color:"white", padding:"5px", borderRadius:"10px",
+                               backgroundColor: "red" }}>decline</button> </span>
             </div>
-            <div className="all-option" style={{borderStyle:"solid", 
-                                        color:"white",backgroundColor: "var(--green-600)",
-                                        padding: "4px"}}>
-              <p>{data.answers.length}</p>
-              
-              <span>answers</span>
-            </div>
-            <div className="all-option">
-              <small>{data.views} views</small>
-            </div>
-          </div>
+
         </div>
 
         <div className="question-answer">
 
-         <a href onClick={() => openQuestion(questionId)} title={data.title} 
-                 style={{fontWeight:"bold"}}className="question-hyperlink">{data.title}</a>
+         <a href 
+                 style={{fontWeight:"bold"}}className="question-hyperlink">
+                     CSS animations default to slow fade in-out, is there a way to change that?
+                 </a>
 
           <div
             style={{
@@ -66,7 +45,10 @@ function AllQuestions({data, isAuthorRequired, questionId})
             }}
           >
             
-            <div>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
+            <div>
+            New to using CSS animations. Created an animation with 8 pictures for a total
+             animation-duration 100sec. 
+            </div>
           </div>
           <div
             style={{
@@ -74,15 +56,14 @@ function AllQuestions({data, isAuthorRequired, questionId})
             }}
           >
 
-          {data.tags.map((_tag) => (
-           <span onClick={() => openTagQuestions(_tag)} className="question-tags"> {_tag} </span>
+          {suntags.map((_tag) => (
+           <span  className="question-tags"> {_tag} </span>
             ))}
 
           </div>
           <div className="author">
 
-          {isAuthorRequired && <UserCard owner={true} data={{...questionAuthorDetails.author, 
-                                            modified: questionAuthorDetails.modifiedFullText}} />}
+        
           </div>
         </div>
       </div>
@@ -94,13 +75,13 @@ function AllQuestions({data, isAuthorRequired, questionId})
           <hr/>
         </div>
 
-        </AllQuestionContainer>
+        </AdminReviewContainer>
     ); 
 }
 
-export default AllQuestions;
+export default AdminReview;
 
-const AllQuestionContainer = styled.footer`
+const AdminReviewContainer = styled.footer`
 
 .horizontalLine
 {
@@ -120,6 +101,8 @@ a:hover
     padding: 20px 0px;
     width: 100%;
     font-size: 15px;
+    margin-top: 100px;
+    margin-left: 300px;
   }
   
   .all-questions-container {

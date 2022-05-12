@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import search from "./Images/search.png";
 import { useNavigate } from "react-router-dom";
@@ -6,9 +6,23 @@ import { TagItem } from './TagItem';
 import Sidebar from './Sidebar';
 import { FaSearch } from 'react-icons/fa';
 import { Row, Col } from 'react-bootstrap';
+import axios from 'axios';
 
 export function Tags() {
     const navigate = useNavigate();
+    const [allTags, SetAllTags] = useState([]);
+    const [length, SetLength] = useState(0);
+
+    useEffect(() => {
+       axios.get(`/api/tags/getAllTags`)
+       .then(response => 
+        {
+           SetAllTags(response.data.data);
+           SetLength(response.data.data.length);
+        })
+       .catch(err => {
+      });
+     }, []);
 
     return(
         <div className="container" style={{marginTop: '80px'}}>
@@ -27,14 +41,7 @@ export function Tags() {
                     </div>
 
                    <div className="tags-container">
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
-                        <TagItem/>
+                        {allTags && allTags.map( tagItem => <TagItem data={tagItem} />)}
                    </div>
 
                 </TagsContainer>

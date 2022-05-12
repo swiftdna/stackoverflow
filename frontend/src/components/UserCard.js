@@ -1,7 +1,10 @@
 // import { Row } from 'react-bootstrap';
 import {isEmpty} from 'underscore';
-
+import { useNavigate } from 'react-router-dom';
 export default function UserCard({owner, data, source}) {
+
+    const navigate = useNavigate();
+
     if (isEmpty(data)) {
         return <></>
     }
@@ -17,6 +20,9 @@ export default function UserCard({owner, data, source}) {
         return base;
     }
 
+    const openUser = () => {
+        navigate(`/userProfile/${data._id}/${data.email}`);      }
+
 	return (
 		<div className={getOuterClassName()}>
             <div className="user-info user-hover">
@@ -27,7 +33,7 @@ export default function UserCard({owner, data, source}) {
                     <a href><div className="gravatar-wrapper-32"><img src={data.profilePhoto} alt="user avatar" width="32" height="32" className="bar-sm" /></div></a>
                 </div>
                 <div className="user-details">
-                    <a href>{data.username}</a>
+                    <a href  onClick={() => openUser()}>{data.username}</a>
                     {data.badgecount ? 
                         <div className="-flair">
                             <span className="reputation-score" title="reputation score 29,910" dir="ltr">{data.Reputation}</span>

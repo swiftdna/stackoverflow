@@ -29,8 +29,6 @@ function UserQuestionTab({userId})
       }, []);
 
 
-      console.log("sunny"+ questionsResponse )
-
     return( <div className="questionTab">
     <UserQuestionTabContainer>
     <div className="questionTabSize">

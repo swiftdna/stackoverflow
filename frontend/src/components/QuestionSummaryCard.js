@@ -11,6 +11,10 @@ export default function QuestionSummaryCard({data}) {
         navigate(`/questions/${id}`);
     }
 
+    const openTagQuestions = (tag) => {
+        navigate(`/questionTag/${tag}`);
+      }
+
 	return (
 		<Row>
             <Col xs={1}>
@@ -40,7 +44,10 @@ export default function QuestionSummaryCard({data}) {
                         {data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}
                     </div>
                     <div className="tags d-flex gs4 fw-wrap mt2 t-java t-string t-random">
-                        <a href="/questions/tagged/java" className="post-tag flex--item" title="" rel="tag">java</a> <a href="/questions/tagged/string" className="post-tag flex--item" title="" rel="tag">string</a> <a href="/questions/tagged/random" className="post-tag flex--item" title="" rel="tag">random</a> 
+
+              {data.tags.map((_tag) => (                       
+                       <a href onClick={() => openTagQuestions(_tag)} className="post-tag flex--item" title="" rel="tag">{_tag}</a> 
+            ))}
                     </div>
                     <div className="started float-right">
                         {data.author ? <UserCard source="list" data={{ ...data.author, modified: formatShortDate(data.modified) }} owner={true} /> : ''}

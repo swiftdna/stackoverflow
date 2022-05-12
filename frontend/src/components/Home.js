@@ -18,9 +18,12 @@ import { handleAllQuestionsResponse } from "../actions/app-actions";
 function Home() {
   const [questionsResponse, SetQuestionsResponse] = useState("");
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const [filterValue, SetFilterValue] = useState('views');
+  let activeButtonClasss ="js-sort-preference-change is-selected flex--item s-btn s-btn__muted s-btn__outlined";
+  let inactiveButtonClass ="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined";
+
   const params={};
-  params.tab = 'views';
+  params.tab = filterValue;
 
   useEffect(() => {
     setLoading(true);
@@ -32,7 +35,7 @@ function Home() {
       alert(error.response.data.message);
       })
     ;
-  }, []);
+  }, [filterValue]);
   
   
   console.log( questionsResponse );
@@ -83,11 +86,14 @@ function Home() {
                       <button className="filterBtn">Unanswered</button>
                     </div> */ }
                     <div className="d-flex s-btn-group js-filter-btn" style={{marginTop: '10px'}}>
-                      <a className="js-sort-preference-change youarehere is-selected flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=relevance&amp;q=" data-nav-xhref="" title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
+                      <a className={ filterValue === 'views' ? activeButtonClasss : inactiveButtonClass }
+                       href  onClick={() => SetFilterValue('views')} title="Search results with best match to search terms" data-value="relevance" data-shortcut="">
                           Hot</a>
-                      <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
+                      <a className={ filterValue === 'score' ? activeButtonClasss : inactiveButtonClass } 
+                         href onClick={() => SetFilterValue('score')} data-nav-xhref=""  title="Newest search results" data-value="newest" data-shortcut="">
                           Score</a>
-                      <a className="js-sort-preference-change flex--item s-btn s-btn__muted s-btn__outlined" href="/search?tab=newest&amp;q=xyz" data-nav-xhref="" title="Newest search results" data-value="newest" data-shortcut="">
+                      <a className={ filterValue === 'Unanswered' ? activeButtonClasss : inactiveButtonClass }
+                         href onClick={() => SetFilterValue('Unanswered')} data-nav-xhref=""  title="Newest search results" data-value="newest" data-shortcut="">
                           Unanswered</a>
                     </div>
                     <hr style={{marginTop: '70px'}} />

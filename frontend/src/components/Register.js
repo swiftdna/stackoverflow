@@ -15,13 +15,14 @@ import axios from "axios";
 export default function Register() {
 
 const dispatch = useDispatch();
-const [userName, setUserName] = useState("");
+const [username, setUserName] = useState("");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 
 const submitSignup = (e) => {
 	e.preventDefault();
     const data = {
+		username,
 	  email,
       password,
     };
@@ -197,7 +198,7 @@ const submitSignup = (e) => {
 						  <div class="input-group flex-nowrap">
 					
 							<input
-							  type="text"
+							  type="password"
 							  class="form-control"
 							  placeholder="Password"
 							  aria-label="Username"
