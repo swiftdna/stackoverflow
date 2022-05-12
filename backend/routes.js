@@ -234,6 +234,12 @@ router.get("/tags/searchTags/:searchQuery", (req, res) => {
   return kakfafy("getSearchTags", req, res);
 });
 
+router.get("/rejectQuestion/:questionid", (req, res) => {
+  return kakfafy("rejectQuestion", req, res);
+});
+router.get("/getPendingQuestion", (req, res) => {
+  return kakfafy("getPendingQuestion", req, res);
+});
 router.get("/session", checkAuth, async (req, res, next) => {
   if (req.user) {
     const { user } = req;
