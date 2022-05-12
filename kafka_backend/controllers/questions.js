@@ -313,6 +313,41 @@ const createQuestion = async (req, callback ) => {
 	}
   };
   
+  const rejectQuestion = async (req, callback) => {
+	console.log('callback ->', callback);
+	try {
+	 const id = req.params.questionid;
+	  console.log(id);
+	  const question = await Question.deleteOne({_id:id},{lean:true});
+	  return callback(null, {
+		  success : true,
+	});
+	} catch (error) {
+		console.log(error);
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
+
+  const getPendingQuestion = async (req, callback) => {
+	
+	try {
+	 // const id = req.params.questionid;
+	  //console.log(id);
+	  const question = await Question.find({status:'pending'},{},{lean:true});
+	  return callback(null, {
+		  success : true,
+		data : question
+	});
+	} catch (error) {
+		return callback(error,{
+            success: false,
+	    	message: error.message
+        });
+	}
+  };
   const mostViewedQuestions = async (req, callback) => {
 	
 	try {
@@ -381,7 +416,7 @@ console.log('todaydateis',today);
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log('===> ', tagdesc);
-			const searchstring = data.join('');
+			const searchstring = data.join(' ');
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
 			}
@@ -429,7 +464,7 @@ console.log('todaydateis',today);
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "time")
+			if (sortType === "temp")
 			{
             consolidated.sort( (a, b) => {
 				let da = new Date(a.time),
@@ -456,7 +491,8 @@ console.log('todaydateis',today);
 		{
 			const tags =req.query.value;
 			const data = tags.split(" ");
-			const userdata = data[0];
+			const userdata1 = data[0].split(":");
+			const userdata = userdata1[1];
 			let tagdata= data[1];
 			data.shift();
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
@@ -476,7 +512,7 @@ console.log('todaydateis',today);
 			else{
 				ques.time= ques.created
 			}})
-			if (sortType === "time")
+			if (sortType === "temp")
 			{
             question.sort( (a, b) => {
 				let da = new Date(a.time),
@@ -500,17 +536,27 @@ console.log('todaydateis',today);
 		// exact phrase search
 		else if(req.query.key === 'exactphrase')
 		{
-			const questions = await Question.find({$or: [ { "title": new RegExp(req.query.value,'i')}, { "text": new RegExp(req.query.value,'i') }]}).lean();
+			const data = req.query.value.split('"');
+			console.log(data);
+			if (data.length === 1)
+			{
+				var searchstring = data[0]
+			} 
+			else {
+				var searchstring = data[1]
+				
+			}
+			
+			const questions = await Question.find({$or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}).lean();
 			//{"answers.text": new RegExp(req.query.value,'i')}]}).sort(sort)
 			for (let i = 0; i < questions.length; i++) {
                 //Object.assign(questions[i], {type:'question',temp:'temp'})
-				console.log('----->count ', i);
 				questions[i].type="question";
 				questions[i].time=questions[i].created;			
 			}
 			const quesid =_.pluck(questions,'_id');
-			const regex = new RegExp(req.query.value,'i')
-			const answ = await Question.find({"answers.text": new RegExp(req.query.value,'i'),_id:{$nin:quesid}}).lean()
+			const regex = new RegExp(searchstring,'i')
+			const answ = await Question.find({"answers.text": new RegExp(searchstring,'i'),_id:{$nin:quesid}}).lean()
 			for (let j = 0;   j< answ.length; j++) {
 				let count=0
 				for (let k = 0; k < answ[j].answers.length; k++)
@@ -537,7 +583,7 @@ console.log('todaydateis',today);
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "time")
+			if (sortType === "temp")
 			{
             consolidated.sort( (a, b) => {
 				let da = new Date(a.time),
@@ -561,26 +607,31 @@ console.log('todaydateis',today);
 		{
 			const users = req.query.value
 			const data = users.split(" ");
-			const userdata= data[0];
+			const userdata1 = data[0].split(":");
+			const userdata= userdata1[1];
+			console.log(userdata1);
 			data.shift();
-			const searchstring = data.join('');
+			const searchstring = data.join(' ');
+			console.log(searchstring);
 			const questions = await Question.find({$and:[{$or:[{author : userdata}]},{$or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}]}).lean();
 			for (let i = 0; i < questions.length; i++) {
                 //Object.assign(questions[i], {type:'question',temp:'temp'})
 				//console.log('----->count ', i);
-				questions[i].type="question";
+				questions[i].type="question";	
 				questions[i].time=questions[i].created;			
 			}
 			const regex = new RegExp(searchstring,'i');
 			const answ = await Question.find({$and:[{$or:[{"answers.author" : userdata}]},{$or: [ { "answers.text": new RegExp(searchstring,'i')}]}]}).lean();
-			console.log('-------> answer are',answ);
 			for (let j = 0;   j< answ.length; j++) {
 				let count =0
 				for (let k = 0; k < answ[j].answers.length; k++)
 				{
-					if (answ[j].answers[k].author === userdata && regex.test(answ[j].answers[k].text ))
+				
+					if ((answ[j].answers[k].author && answ[j].answers[k].author._id && answ[j].answers[k].author._id.toString() === userdata) && (regex.test(answ[j].answers[k].text) ))
 					{
+						
 						if (count <1){
+							
 							answ[j].time=answ[j].answers[k].created;
 							answ[j].ansauthor=answ[j].answers[k].author;
 							count=count+1
@@ -600,8 +651,9 @@ console.log('todaydateis',today);
 			}
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
-			if (sortType === "time")
+			if (req.query.tab === "temp")
 			{
+				console.log("sortinng")
             consolidated.sort( (a, b) => {
 				let da = new Date(a.time),
 			db = new Date(b.time);
@@ -612,7 +664,7 @@ console.log('todaydateis',today);
 			{
             consolidated.sort( (a, b) => b.score - a.score);
 		}
-			//console.log("consolidated data are",consolidated)
+			
 			
 			return callback(null, {
 				success : true,
@@ -622,9 +674,13 @@ console.log('todaydateis',today);
 		}
 		else if(req.query.key === 'question')
 		{
-			const quessearch = req.query.value
+			
+			const question = req.query.value
+			const data = question.split(" ");
+			data.shift();
+			const quessearch = data.join(' ');
 			const questions = await Question.find({$or: [ { "title": new RegExp(quessearch,'i')}, { "text": new RegExp(quessearch,'i') }]}).lean();
-			if (sortType === "time")
+			if (sortType === "temp")
 			{
             questions.sort( (a, b) => {
 				let da = new Date(a.created);
@@ -646,7 +702,10 @@ console.log('todaydateis',today);
 		}
 		else if(req.query.key === 'answer')
 		{
-			const anssearch = req.query.value
+			const question = req.query.value
+			const data = question.split(" ");
+			data.shift();
+			const anssearch = data.join(" ")
 			const answ = await Question.find({'answers.isbestanswer': true, "answers.text": new RegExp(anssearch,'i')}).lean();
 			const regex = new RegExp(anssearch,'i');
 			//let count=0
@@ -673,7 +732,7 @@ console.log('todaydateis',today);
 				}
 				answ[j].type='answer';
 			}
-			if (sortType === "time") {
+			if (sortType === "temp") {
             answ.sort( (a, b) => {
 				let da = new Date(a.time);
 				db = new Date(b.time);
@@ -715,5 +774,5 @@ module.exports = {
 	editQuestion,
 	approvequestion,
 	searchQuestion,
-	mostViewedQuestions,questionPostedCount
+	mostViewedQuestions,questionPostedCount,getPendingQuestion,rejectQuestion
 };
