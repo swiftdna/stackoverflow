@@ -9,7 +9,7 @@ export function UserItem({data})
     const navigate = useNavigate();
 
     const openUser = (id) => {
-        navigate(`/userProfile/${id}`);
+        navigate(`/userProfile/${id}/${data.email}`);
       }
 
      return(

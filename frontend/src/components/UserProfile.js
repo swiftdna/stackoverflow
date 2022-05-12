@@ -5,20 +5,49 @@ import gLogo from "./Images/user4.png";
 import UserProfileTab from "./UserProfileTab";
 import ActivityTab from "./ActivityTab";
 import axios from "axios";
+import UserEditProfile from "./UserEditProfile";
 
 function UserProfile() {
+
   const urlParams = useParams();
-  const { id } = urlParams;
+  
+  const { id, email } = urlParams;
+
   const toggleTab = (index) => {
     setToggleState(index);
   };
+
   const navigate = useNavigate();
   const [userProfile, SetUserProfile] = useState();
   const [userBadges, SetBadges] = useState([]);
+  const [userTopTag, SetUserTopTag] = useState([]);
+  const [userPersonalDetails, SetUserPersonalDetails] = useState({});
 
   const data = {
     id: id,
   };
+
+  useEffect(() => {
+    axios.get(`/api/getUserDetails?search=${email}`)
+    .then(response => 
+      {
+        SetUserPersonalDetails(response.data.data[0]);
+      })
+    .catch(err => {
+    });
+}, []);
+
+  useEffect(() => 
+  {
+    axios
+      .post(`/api/getUserStats`, data)
+      .then((response) => {
+        SetUserProfile(response.data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   useEffect(() => 
   {
@@ -47,6 +76,18 @@ function UserProfile() {
       });
   }, []);
 
+  useEffect(() => 
+  {
+    axios
+      .post(`/api/topUserTags`, data)
+      .then((response) => 
+      {
+        SetUserTopTag( response.data.data )
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   for(let i = 0; i < userBadges.length; i++) 
   {      
@@ -64,6 +105,7 @@ function UserProfile() {
     }
 
   }
+
 
   const [toggleState, setToggleState] = useState(1);
 
@@ -93,16 +135,16 @@ function UserProfile() {
 
         <div className="user-join-details">
           <div className="user-name">
-            <p>Sunnyhithreddy k</p>
+            <p>{userPersonalDetails.username}</p>
           </div>
-          <p> Member 8 months</p>
-          <p> Last seen this week</p>
+          <p> Member since {userPersonalDetails.created}</p>
+          <p> last seen at {userPersonalDetails.lastseen}</p>
         </div>
 
         <div></div>
 
         <div className="user-location">
-          <p> Hyderabad, India</p>
+          <p> {userPersonalDetails.location}</p>
         </div>
 
         <div className="container">
@@ -137,7 +179,8 @@ function UserProfile() {
                 }
               >
                 <UserProfileTab data={userProfile}  bronze={bronzeBages} 
-                                silver={silverBadges} gold={goldBadges} />
+                                silver={silverBadges} gold={goldBadges} 
+                                topTags={userTopTag}/>
               </div>
             ) : (
               ""
@@ -156,14 +199,7 @@ function UserProfile() {
                 toggleState === 3 ? "content  active-content" : "content"
               }
             >
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos
-                sed nostrum rerum laudantium totam unde adipisci incidunt modi
-                alias! Accusamus in quia odit aspernatur provident et ad vel
-                distinctio recusandae totam quidem repudiandae omnis veritatis
-                nostrum laboriosam architecto optio rem, dignissimos voluptatum
-                beatae aperiam voluptatem atque. Beatae rerum dolores sunt.
-              </p>
+             <UserEditProfile/>
             </div>
           </div>
         </div>

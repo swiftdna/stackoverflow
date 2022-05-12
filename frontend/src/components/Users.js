@@ -12,6 +12,7 @@ export function Users() {
 
     const [usersResponse, SetUsersResponse] = useState("");
     const navigate = useNavigate();
+    const [searchTitle, setSearchTitle] = useState("");
 
   useEffect(() => {
     axios.get(`/api/getUserDetails?search=`)
@@ -43,7 +44,6 @@ export function Users() {
             </Col>
             </Row>
         </div>
-
     )
 }
 export default Users;
