@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 
 const getUserDetails = async (req, callback ) => {
 	try {
+
        
       if (req.query.search){
 	  const users = await User.find({ email: { $regex: req.query.search, $options: 'i' }}).sort({Reputation : -1}).limit(5);

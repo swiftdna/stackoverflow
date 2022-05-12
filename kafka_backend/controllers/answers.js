@@ -48,6 +48,25 @@ const getbestAnswer = async(req,callback)=>{
             { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": mongoose.Types.ObjectId(req.params.answer)}, 
             { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
         )
+        const answer = await question.aggregate([ {
+            $match :
+                         { "answers._id" : mongoose.Types.ObjectId(req.params.answer) }
+                },
+         {
+            $project : {
+                answers : {
+                   $filter: {
+                      input : "$answers",
+                      as : "answer",
+                      cond : 
+                            { "$eq" : [ "$$answer._id", mongoose.Types.ObjectId(req.params.answer) ] },
+                   }
+                }
+            }
+         }
+         ])
+        await User.update({"_id":answer.author},
+                {"$set":{$inc: { Reputation : 15}}});
         return callback(null, {
             data: answers
         });
