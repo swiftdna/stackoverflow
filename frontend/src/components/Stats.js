@@ -1,9 +1,9 @@
 import React, { useEffect, useState, PureComponent } from 'react';
 import './Stats.css';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Card } from 'react-bootstrap';
 import Loader from './Loader';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { mostViewedQuestions, fetchPopularTags, fetchTopUserReputation, fetchLeastUserReputation } from '../utils';
+import { mostViewedQuestions, fetchPopularTags, fetchTopUserReputation, fetchLeastUserReputation, fetchQuestionsPostedToday } from '../utils';
 
 export default function Stats() {
 
@@ -12,6 +12,7 @@ export default function Stats() {
 	const [ptData, setPTData] = useState([]);
 	const [turData, setTURData] = useState([]);
 	const [lurData, setLURData] = useState([]);
+	const [qPostedToday, setQPostedToday] = useState(0);
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
@@ -19,10 +20,13 @@ export default function Stats() {
             const popularTags = await fetchPopularTags();
             const topUsersRep = await fetchTopUserReputation();
             const leastUsersRep = await fetchLeastUserReputation();
+            const questionsPostedToday = await fetchQuestionsPostedToday();
+            console.log(questionsPostedToday);
             setMVData(mostViewedQ);
 			setPTData(popularTags);
 			setTURData(topUsersRep);
 			setLURData(leastUsersRep);
+			setQPostedToday(questionsPostedToday);
 			setLoading(false);
             // setUsers(usersData);
         }
@@ -34,6 +38,15 @@ export default function Stats() {
 			<h3>Platform Analytics</h3>
 			{loading ? <Loader /> : 
 			<Row className="statistics">
+				<Row>
+					<Card className="dashboard-cards ds2">
+			          <Card.Body>
+			            <Card.Text>
+			              {qPostedToday} questions posted today
+			            </Card.Text>
+			          </Card.Body>
+			        </Card>
+				</Row>
 				<Row style={{marginTop: '20px'}}>
 					<Col xs={6}>
 						<h4>Top 10 most viewed questions</h4>

@@ -32,26 +32,6 @@ function Navbar() {
         navigate('/');
     }
 
-    // const favourites = () => {
-    //     navigate('/favourites');
-    // }
-
-    // const profile = () => {
-    //     navigate('/profile');
-    // }
-
-    // const cart = () => {
-    //     navigate('/cart');
-    // }
-
-    // const purchases = () => {
-    //     navigate('./purchases');
-    // };
-
-    // const shop = () => {
-    //     navigate('./shop');
-    // }
-
     const logout = () => {
         axios.post('/logout')
             .then(response => {
