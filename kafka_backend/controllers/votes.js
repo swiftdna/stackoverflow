@@ -99,7 +99,7 @@ const voteAnswer = async(req, callback) => {
              ])
 console.log("answers is---->",answer && answer[0]);
             if(vote>0){
-                await User.updateOne({"_id":  answer && answer[0].answers.author},
+                await User.updateOne({"_id":  answer && answer[0].answers[0].author},
             { $inc: { "Reputation": 5 } }
                 )
             } else {
