@@ -11,8 +11,11 @@ function UserBadgesTab({userId})
     {
       axios.get(`/api/badges/getAllbadges/${userId}`)
         .then((response) =>{
+          if(response.data.data)
+          {
           SetBadges(response.data.data)
           SetLength(response.data.data.length)
+          }
         })
         .catch((err) => {
           console.log(err.message);
@@ -27,7 +30,7 @@ function UserBadgesTab({userId})
         
         <div style={{display:"flex",  flexFlow: "row wrap"}}>             
         {
-                      userBadges.map(function(element){
+            (userBadges)&&  userBadges.map(function(element){
                           return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
                                                marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
                                                height:"35px", borderRadius: "5px",paddingTop: "8px"}}>
