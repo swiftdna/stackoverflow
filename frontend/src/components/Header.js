@@ -30,6 +30,9 @@ function Navbar() {
     useEffect(() => {
         async function getData() {
             const {id} = userDetails;
+            if (!id) {
+                return;
+            }
             const badgeDetails = await getBadges(id);
             setBadges(badgeDetails);
             // console.log('badgeDetails -> ', badgeDetails);
