@@ -285,6 +285,7 @@ const createQuestion = async (req, callback ) => {
 	  const question = await Question.findByIdAndUpdate(id,{title:title,tags:tags,text:text,modified:Date.now()},{new:true});
 	  
 	  return callback(null, {
+		success: true,
 		data : question
 	});
 	} catch (error) {

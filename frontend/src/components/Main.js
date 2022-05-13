@@ -9,6 +9,7 @@ import QuestionTimeline from "./QuestionTimeline";
 import AskQuestion from "./AskQuestion";
 import Search from "./Search";
 import Messages from "./Messages";
+import Test from "./Test";
 import Stats from "./Stats";
 import "../Main.css";
 import { useLocation } from "react-router-dom";
@@ -101,6 +102,7 @@ export function Main() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tags" element={<Tags />} />
+        <Route path="/test" element={<Test />} />
         <Route path="/users" element={<Users />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/userProfile/:id/:email" element={<UserProfile />} />
