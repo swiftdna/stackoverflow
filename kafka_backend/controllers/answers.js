@@ -66,6 +66,10 @@ const getbestAnswer = async(req,callback)=>{
                     { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": mongoose.Types.ObjectId(req.params.answer)}, 
                     { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
                 )
+                await Question.findByIdAndUpdate(
+                    { _id:mongoose.Types.ObjectId(req.params.question)}, 
+                    {bestanswer: true},{upsert:true,lean:true}
+                ) 
                 await User.updateOne({"_id":answ.author},
                 { $inc: { "Reputation": 15 } });
             }
