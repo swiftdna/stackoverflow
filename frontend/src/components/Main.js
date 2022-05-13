@@ -74,7 +74,7 @@ export function Main() {
       <ToastContainer
         className="p-3"
         position={"bottom-end"}
-        style={{ zIndex: 10 }}
+        style={{ zIndex: 10, fontSize: '15px !important' }}
       >
         <Toast
           onClose={() => dispatch(clearToast())}
