@@ -95,7 +95,7 @@ const login = async (req, res) => {
     else {
 
     //const passwordValid = await verifyPassword(password, user.password);
-    bcrypt.compare(password, user.password, function (err, isMatch) {
+    bcrypt.compare(password, user.password, async function (err, isMatch) {
       if (err) {
         throw err;
       } else if (!isMatch) {
