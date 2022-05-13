@@ -116,7 +116,7 @@ const getUserStats = async (req, callback) => {
     const data = {
       questionscount: questionscount,
       answerscount: answers && answers.length && answers[0].count,
-      viewscount: viewed && viewed && viewed[0].totalCount,
+      viewscount: viewed && viewed.length && viewed[0].totalCount,
       reputationcount: reputationcount[0].Reputation,
     };
     return callback(null, { data });
