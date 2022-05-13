@@ -23,6 +23,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "process": "^0.11.10",
     "underscore": "^1.13.3"
   },
   "devDependencies": {
