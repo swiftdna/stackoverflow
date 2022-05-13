@@ -2,9 +2,11 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon ./server.js localhost 5000",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.7",
