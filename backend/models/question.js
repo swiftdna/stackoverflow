@@ -22,7 +22,8 @@ const questionSchema = new Schema({
   created: { type: Date, default: Date.now },
   views: { type: Number, default: 0 },
   modified : {type: Date,default: Date.now},
-  status :{type:String}
+  status :{type:String},
+  bestanswer : {type: Boolean,default : false}
 });
 
 questionSchema.set('toJSON', { getters: true });
