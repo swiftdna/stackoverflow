@@ -296,3 +296,28 @@
 .modal-dialog {
   max-width: 80vw !important;
 }
+.reputation {
+  margin-right: 5px;
+  margin-left: -3px;
+}
+.gold_badge {
+  display: inline-block;
+  position: relative;
+  top: -13px;
+  left: 12px;
+  color: #AF9500;
+}
+.silver_badge {
+  display: inline-block;
+  position: relative;
+  top: 0px;
+  left: -7px;
+  color: #808080;
+}
+.bronze_badge {
+  display: inline-block;
+  position: relative;
+  top: 13px;
+  left: -22px;
+  color: #6A3805;
+}

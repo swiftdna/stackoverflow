@@ -9,6 +9,7 @@ import UserEditProfile from "./UserEditProfile";
 import Sidebar from "./Sidebar";
 import { Row, Col } from 'react-bootstrap';
 import Loader from "./Loader";
+import {formatEasyDate} from '../utils';
 
 function UserProfile() {
   const urlParams = useParams();
@@ -118,8 +119,8 @@ function UserProfile() {
               <div className="user-name">
                 <p>{userPersonalDetails.username}</p>
               </div>
-              <p> Member since {userPersonalDetails.created}</p>
-              <p> last seen at {userPersonalDetails.lastseen}</p>
+              <p style={{margin: 0}}>Member since {formatEasyDate(userPersonalDetails.created)}</p>
+              <p style={{margin: 0}}>Last seen at {formatEasyDate(userPersonalDetails.lastseen)}</p>
             </div>
 
             <div></div>

@@ -394,3 +394,8 @@ export async function editQuestion(id, data) {
     const results = await axios.put(`/api/questions/${id}`, tmpObj);
     return results.data.success;
 }
+export async function getBadges(id) {
+    const results = await axios.get(`/api/badges/getAllbadges/${id}`);
+    // console.log(results.data/);
+    return results.data.badgescount;
+}

@@ -8,6 +8,8 @@ import { selectIsLoggedIn } from '../selectors/appSelector';
 import { selectUser } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
 import { Link } from "react-router-dom";
+import { getBadges } from '../utils';
+
 
 //create the Navbar Component
 function Navbar() {
@@ -15,6 +17,7 @@ function Navbar() {
     const userDetails = useSelector(selectUser);
     
     const [searchText, setSearchText] = useState('');
+    const [badges, setBadges] = useState({});
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -23,6 +26,16 @@ function Navbar() {
     //         navigate('/');
     //     }
     // }, [isAuthenticated])
+
+    useEffect(() => {
+        async function getData() {
+            const {id} = userDetails;
+            const badgeDetails = await getBadges(id);
+            setBadges(badgeDetails);
+            // console.log('badgeDetails -> ', badgeDetails);
+        }
+        getData();
+    })
 
     const login = () => {
         navigate('/login');
@@ -54,6 +67,10 @@ function Navbar() {
 
     const isAdmin = () => {
         return userDetails && userDetails.role === 'admin';
+    }
+
+    const getReputation = () => {
+        return userDetails && userDetails.Reputation;
     }
 
     const popover = (
@@ -143,9 +160,14 @@ function Navbar() {
                         { isAdmin() ? <Link to={'/stats'}><FaColumns className="nav-icons"/></Link> : ''}
                         { isAdmin() ? <Link to={'/adminReview/'}><FaCheckCircle className="nav-icons" style={{marginLeft:"7px"}} /></Link> : ''}
                         { isAdmin() ? <Link to={'/adminAddTag/'}><FaTags className="nav-icons"style={{marginLeft:"7px"}} /></Link> : ''}
-
                         <Link to={'/messages'}><FaEnvelope className="nav-icons msg" /></Link>
                         <Link to={`/userProfile/${userDetails.id}/${userDetails.email}`}><FaUserAlt className="nav-icons last" /></Link>
+                        <span title="reputation" className="reputation">R {getReputation()}</span>
+                        <div style={{marginLeft: '-12px', marginRight: '-13px'}}>
+                        {badges && badges.Gold ? <span title="badges" className="gold_badge">G {badges.Gold}</span> : ''}
+                        {badges && badges.Silver ? <span title="badges" className="silver_badge">S {badges.Silver}</span> : ''}
+                        {badges && badges.Bronze ? <span title="badges" className="bronze_badge">B {badges.Bronze}</span> : ''}
+                        </div>
                         <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button>
                     </> : 
                     <>
