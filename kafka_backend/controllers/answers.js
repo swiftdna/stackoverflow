@@ -2,6 +2,7 @@ const { body, validationResult } = require('express-validator');
 const Question = require('./../models/question')
 const mongoose = require('mongoose');
 const question = require('./../models/question');
+const User = require('./../models/User');
 
 const createAnswer = async (req, callback) => {
     
@@ -44,32 +45,37 @@ const getAllAnswersForQuestions = async(req,callback) => {
 };
 const getbestAnswer = async(req,callback)=>{
     try {
-        const answers = await Question.update(
-            { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": mongoose.Types.ObjectId(req.params.answer)}, 
-            { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
-        )
-        const answer = await question.aggregate([ {
-            $match :
-                         { "answers._id" : mongoose.Types.ObjectId(req.params.answer) }
-                },
-         {
-            $project : {
-                answers : {
-                   $filter: {
-                      input : "$answers",
-                      as : "answer",
-                      cond : 
-                            { "$eq" : [ "$$answer._id", mongoose.Types.ObjectId(req.params.answer) ] },
-                   }
-                }
+        const question = await Question.find({"_id":mongoose.Types.ObjectId(req.params.question)},{},{lean:true})
+
+        await Promise.all(question.map( 
+            dt => {
+        dt.answers.map(
+            async answ =>{
+            if (answ.isbestanswer === true)
+            {
+               await Question.updateOne(
+                    { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": answ._id}, 
+                    { "$set": { "answers.$.isbestanswer": false, isbestanswercreated:Date.now()} }
+                )  
+                await User.updateOne({"_id":answ.author},
+                { $inc: { "Reputation": -15 } });
             }
-         }
-         ])
-        await User.update({"_id":answer.author},
-                {"$set":{$inc: { Reputation : 15}}});
+            if (req.params.answer ===  answ._id.toString())
+            {
+                const answer = await Question.updateOne(
+                    { "_id":mongoose.Types.ObjectId(req.params.question), "answers._id": mongoose.Types.ObjectId(req.params.answer)}, 
+                    { "$set": { "answers.$.isbestanswer": true, isbestanswercreated:Date.now()} }
+                )
+                await Question.findByIdAndUpdate(
+                    { _id:mongoose.Types.ObjectId(req.params.question)}, 
+                    {bestanswer: true},{upsert:true,lean:true}
+                ) 
+                await User.updateOne({"_id":answ.author},
+                { $inc: { "Reputation": 15 } });
+            }
+     }) } ))
         return callback(null, {
-            success: true,
-            data: answers
+            success: true
         });
     } catch {
         return callback(error,{
@@ -78,6 +84,7 @@ const getbestAnswer = async(req,callback)=>{
         });
     }
 };
+
 
 
 const answerValidate = [

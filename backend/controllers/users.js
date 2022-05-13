@@ -79,11 +79,7 @@ const login = async (req, res) => {
   }
   try {
     const { email, password } = req.body;
-    await User.findOneAndUpdate(
-      { email: email },
-      { email: email, lastseen: Date.now() },
-      { upsert: true, new: true }
-    );
+    
     const user = await User.findOne(
       {
         email: email,
@@ -96,9 +92,10 @@ const login = async (req, res) => {
         message: "Wrong username or password.",
       });
     }
+    else {
 
     //const passwordValid = await verifyPassword(password, user.password);
-    bcrypt.compare(password, user.password, function (err, isMatch) {
+    bcrypt.compare(password, user.password, async function (err, isMatch) {
       if (err) {
         throw err;
       } else if (!isMatch) {
@@ -106,6 +103,11 @@ const login = async (req, res) => {
           message: "password did not match",
         });
       } else {
+        await User.findOneAndUpdate(
+          { email: email },
+          { email: email, lastseen: Date.now() },
+          { upsert: true, new: true }
+        );
         const payload = { id: user.id, email: user.email };
         const token = jwt.sign(payload, secret, {
           expiresIn: 10080000,
@@ -114,6 +116,7 @@ const login = async (req, res) => {
         res.status(200).json({ token: "JWT " + token, user, success: true });
       }
     });
+  }
   } catch (error) {
     return res.status(500).json({
       message: "Something went wrong.",
