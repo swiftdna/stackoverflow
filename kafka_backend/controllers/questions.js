@@ -36,14 +36,22 @@ const createQuestion = async (req, callback ) => {
 		text,
 		status
 	  });
-	  await tags.forEach( async (tag) => {   
+	  if (status === 'approve')
+	  {
+	  await Promise.all(tags.forEach( async (tag) => {  
+		await sqldb.query(
+			`UPDATE  tags set tagQuestionsAsked=(tagQuestionsAsked+1) where tagName =?`,
+			[tag] , function (error, results) {
+			  if (error) {
+				res.json({success:false,data:error});
+			  }}) 
 			//const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
 			await User.updateOne(
 				{ '_id': mongoose.Types.ObjectId(req.user.id) },
 				{ $inc: { [`tags_post_count.${tag}`]: 1 } }
 			)
-		});
-
+		}));
+	}
       return callback(null, {
 		success: true,
 		data : question
@@ -70,7 +78,8 @@ const createQuestion = async (req, callback ) => {
 	  {
 		const question = await Question.find({ "answers": { $size: 0 } }).sort({"score" : -1});
 		question && question.map((ques) => {
-			if (ques.modified !== ques.created) {
+			if (Date(ques.modified)!== Date(ques.created)) {
+				console.log('---> modified');
                      ques.modifies=true
 					 ques.time= ques.modified
 			} else {
@@ -85,6 +94,8 @@ const createQuestion = async (req, callback ) => {
 			ques.createdFullText = moment(ques.created).format('MMMM Do, YYYY at h:mm:ss a');
 			ques.modifiedText = moment(ques.modified).fromNow();
 			ques.modifiedFullText = moment(ques.modified).format('MMMM Do, YYYY h:mm:ss a');
+			ques.timeText = moment(ques.time).fromNow();
+			ques.timeFullText = moment(ques.time).format('MMMM Do, YYYY h:mm:ss a');
 		});
         return callback(null, {
 			data : question
@@ -93,7 +104,7 @@ const createQuestion = async (req, callback ) => {
 	  else {
 		let question = await Question.find({},{}, {lean: true}).sort(sort);
 		question && question.map((ques) => {
-			if (ques.modified !== ques.created) {
+			if (Date(ques.modified)!== Date(ques.created)) {
                      ques.modifies=true
 					 ques.time= ques.modified
 			} else {
@@ -108,6 +119,8 @@ const createQuestion = async (req, callback ) => {
 			ques.createdFullText = moment(ques.created).format('MMMM Do, YYYY at h:mm:ss a');
 			ques.modifiedText = moment(ques.modified).fromNow();
 			ques.modifiedFullText = moment(ques.modified).format('MMMM Do, YYYY h:mm:ss a');
+			ques.timeText = moment(ques.time).fromNow();
+			ques.timeFullText = moment(ques.time).format('MMMM Do, YYYY h:mm:ss a');
 		});
         if (sortType === "time") {
             	question.sort( (a, b) => {
@@ -155,7 +168,7 @@ const createQuestion = async (req, callback ) => {
 	if (badgecount && badgecount.badgescount){
 	question.author.badgecount = badgecount.badgescount;
 	}
-		  if (question.created === question.modified)
+		  if (Date(question.created) === Date(question.modified))
 		  {
 		  activity.push({
 		  type:'question',
@@ -320,6 +333,20 @@ const createQuestion = async (req, callback ) => {
 	  console.log("sunny hith reddy"+id);
 	  console.log(id);
 	  const question = await Question.findByIdAndUpdate(id,{status:'approve'},{new:true});
+	  const questions = await Question.findById({_id : id});
+	  await Promise.all(questions.tags.forEach( async (tag) => {   
+		//const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
+		await sqldb.query(
+			`UPDATE  tags set tagQuestionsAsked=(tagQuestionsAsked+1) where tagName =?`,
+			[tag] , function (error, results) {
+			  if (error) {
+				res.json({success:false,data:error});
+			  }})
+		await User.updateOne(
+			{ '_id': questions.author._id },
+			{ $inc: { [`tags_post_count.${tag}`]: 1 } }
+		)
+	}));
 	  return callback(null, {
 		  success : true,
 		data : question
@@ -434,15 +461,13 @@ console.log('todaydateis',today);
 			
 			data.shift();
 
-		
-
-			console.log('===> ', tagdesc);
+			
 			const searchstring = data.join(' ');
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
 			}
 			const queryDB = util.promisify(sqldb.query).bind(sqldb);
-
+          
 			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
 				]);
 			console.log(tagdata, searchstring);
@@ -451,12 +476,19 @@ console.log('todaydateis',today);
 			console.log("initial questions are",(questions))
     
 			for (let i = 0; i < questions.length; i++) {
+				if (Date(questions[i].modified) !== Date(questions[i].created)) {
+					questions[i].modifies=true
+					questions[i].time=questions[i].modified;
+		   } else {
+			questions[i].time=questions[i].created;
+		   }
 				questions[i].type="question";
-				questions[i].time=questions[i].created;
 				questions[i].createdText = moment(questions[i].created).fromNow();
 				questions[i].createdFullText = moment(questions[i].created).format('MMMM Do, YYYY at h:mm:ss a');
 				questions[i].modifiedText = moment(questions[i].modified).fromNow();
 				questions[i].modifiedFullText = moment(questions[i].modified).format('MMMM Do, YYYY h:mm:ss a');
+				questions[i].timeText = moment(questions[i].time).fromNow();
+				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			const quesid =_.pluck(questions,'_id');
 			
@@ -485,6 +517,8 @@ console.log('todaydateis',today);
 					}
 				}
 				answ[j].type='answer';
+				answ[j].timeText = moment(answ[j].time).fromNow();
+				answ[j].timeFullText = moment(answ[j].time).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
@@ -529,14 +563,17 @@ console.log('todaydateis',today);
 				]);
 			console.log('===> ', tagdesc);
 			question.map(ques=>{
-				if (ques.modified !== ques.created)
+				if (Date(ques.modified) !== Date(ques.created))
 				{
 						 ques.modifies=true
 						 ques.time= ques.modified
 				}
 			else{
 				ques.time= ques.created
-			}})
+			}
+			ques.timeText = moment(ques.time).fromNow();
+				ques.timeFullText = moment(ques.time).format('MMMM Do, YYYY h:mm:ss a');
+		})
 			if (sortType === "temp")
 			{
             question.sort( (a, b) => {
@@ -576,8 +613,15 @@ console.log('todaydateis',today);
 			//{"answers.text": new RegExp(req.query.value,'i')}]}).sort(sort)
 			for (let i = 0; i < questions.length; i++) {
                 //Object.assign(questions[i], {type:'question',temp:'temp'})
-				questions[i].type="question";
-				questions[i].time=questions[i].created;			
+				if (Date(questions[i].modified) !== Date(questions[i].created)) {
+					questions[i].modifies=true
+					questions[i].time=questions[i].modified;
+		   } else {
+			questions[i].time=questions[i].created;
+		   }
+				questions[i].type="question";		
+				questions[i].timeText = moment(questions[i].time).fromNow();
+				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');	
 			}
 			const quesid =_.pluck(questions,'_id');
 			const regex = new RegExp(searchstring,'i')
@@ -601,9 +645,12 @@ console.log('todaydateis',today);
 									answ[j].ansauthor=answ[j].answers[k].author;
 								}
 							}
+							
 					}
 				}
 				answ[j].type='answer';
+				answ[j].timeText = moment(answ[j].time).fromNow();
+				answ[j].timeFullText = moment(answ[j].time).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			console.log("answers are",answ)
 			let consolidated = questions.concat(answ);
@@ -640,10 +687,16 @@ console.log('todaydateis',today);
 			console.log(searchstring);
 			const questions = await Question.find({$and:[{$or:[{author : userdata}]},{$or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}]}).lean();
 			for (let i = 0; i < questions.length; i++) {
-                //Object.assign(questions[i], {type:'question',temp:'temp'})
-				//console.log('----->count ', i);
+				if (Date(questions[i].modified) !== Date(questions[i].created)) {
+					questions[i].modifies=true
+					questions[i].time=questions[i].modified;
+		   } else {
+			questions[i].time=questions[i].created;
+		   }
 				questions[i].type="question";	
-				questions[i].time=questions[i].created;			
+				questions[i].timeText = moment(questions[i].time).fromNow();
+				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');
+						
 			}
 			const regex = new RegExp(searchstring,'i');
 			const answ = await Question.find({$and:[{$or:[{"answers.author" : userdata}]},{$or: [ { "answers.text": new RegExp(searchstring,'i')}]}]}).lean();
@@ -673,6 +726,8 @@ console.log('todaydateis',today);
 				}
 				
 				answ[j].type='answer';
+				answ[j].timeText = moment(answ[j].time).fromNow();
+				answ[j].timeFullText = moment(answ[j].time).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			let consolidated = questions.concat(answ);
 			// sorting based on score or newest
@@ -705,11 +760,23 @@ console.log('todaydateis',today);
 			data.shift();
 			const quessearch = data.join(' ');
 			const questions = await Question.find({$or: [ { "title": new RegExp(quessearch,'i')}, { "text": new RegExp(quessearch,'i') }]}).lean();
+			for (let i = 0; i < questions.length; i++) {
+				if (Date(questions[i].modified) !== Date(questions[i].created)) {
+					questions[i].modifies=true
+					questions[i].time=questions[i].modified;
+		   } else {
+			questions[i].time=questions[i].created;
+		   }
+				questions[i].type="question";	
+				questions[i].timeText = moment(questions[i].time).fromNow();
+				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');
+						
+			}
 			if (sortType === "temp")
 			{
             questions.sort( (a, b) => {
-				let da = new Date(a.created);
-			db = new Date(b.created);
+				let da = new Date(a.time);
+			db = new Date(b.time);
 		return db - da;
 			});
 		}
@@ -756,6 +823,8 @@ console.log('todaydateis',today);
 					}
 				}
 				answ[j].type='answer';
+				answ[j].timeText = moment(answ[j].time).fromNow();
+				answ[j].timeFullText = moment(answ[j].time).format('MMMM Do, YYYY h:mm:ss a');
 			}
 			if (sortType === "temp") {
             answ.sort( (a, b) => {
@@ -789,7 +858,6 @@ console.log('todaydateis',today);
         });
 	}
   };
-
 module.exports = {
 	createQuestion,
 	loadQuestions,
