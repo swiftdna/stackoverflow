@@ -30,7 +30,6 @@ sqlDB.connect((err) => {
     }
     console.log('Connected To DB ' + sqlDB.threadId)
 })
-
 //For BodyParser
 app.use(bodyParser.urlencoded({
     extended: true
@@ -39,7 +38,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 app.use(cors());
-
 // For Passport
 app.use(session({
     secret: 'keyboard cat',
@@ -48,11 +46,9 @@ app.use(session({
 })); // session secret
 app.use(passport.initialize());
 // app.use(passport.session()); // persistent login sessions
-
 app.use(express.json());
 // const models = require("./models");
 app.use('/api', routes);
-
 app.post('/logout', (req, res) => {
   // req.logOut();
   req.session.destroy(()=>{
@@ -62,7 +58,6 @@ app.post('/logout', (req, res) => {
     res.json({success: true});
   });
 });
-
 // app.get('*', (req, res) => {
 //   res.sendFile(`${__dirname}/public/index.html`, (err) => {
 //     if (err) {
@@ -71,7 +66,5 @@ app.post('/logout', (req, res) => {
 //     }
 //   });
 // });
-
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
 module.exports = app;

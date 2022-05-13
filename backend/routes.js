@@ -26,11 +26,8 @@ const {
 const {
   addMessage, getallRecipients, getallmessages
 } = require("./controllers/messageController");
-
-
 const { getBadgesById } = require("./controllers/badgeController");
 auth();
-
 const kakfafy = async (rid, req, res) => {
   const kafka = require("./kafka/client");
   const { user, params, query, body } = req;
