@@ -172,7 +172,7 @@ export default function ContentCard({ data, type, questionID, qQuthor, fn}) {
                     <ul>
                     {data.comments && data.comments.map((comment, index) => 
                         <li key={index} className="q_comment">
-                            {comment.body} - <span className="q_comment_author">{data.author.username}</span> <span className="q_comment_time">{comment.created}</span>
+                            {comment.body} - <span className="q_comment_author">{data.author && data.author.username ? data.author.username : 'Unknown'}</span> <span className="q_comment_time">{comment.created}</span>
                             <hr />
                         </li>
                     )}

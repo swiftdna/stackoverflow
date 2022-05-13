@@ -22,6 +22,7 @@ function Question() {
     const qdetails = useSelector(state => state.questiondetails.data);
     const qloading = useSelector(state => state.questiondetails.loading);
     const answers = useSelector(state => state.questiondetails.answers);
+    const userDetails = useSelector(state => state.app.user);
     const [show, setShow] = useState(false);
     const [editData, setEditData] = useState({});
     const [extras, setExtras] = useState({});
