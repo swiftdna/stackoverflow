@@ -12,6 +12,7 @@ export function Tags() {
     const navigate = useNavigate();
     const [allTags, SetAllTags] = useState([]);
     const [length, SetLength] = useState(0);
+    const [searchTitle, setSearchTitle] = useState("");
 
     useEffect(() => {
        axios.get(`/api/tags/getAllTags`)
@@ -37,11 +38,27 @@ export function Tags() {
                     </div>
                     <div className="search-container" style={{width: '250px', marginTop: '10px'}}>
                         <FaSearch style={{fontSize: '14px'}} />
-                        <input type="text" placeholder="Filter by user"/>
+                        <input type="text" placeholder="Filter by tags"
+                                onChange={(e) => setSearchTitle(e.target.value)}
+                        />
+                        
                     </div>
 
                    <div className="tags-container">
-                        {allTags && allTags.map( tagItem => <TagItem data={tagItem} />)}
+
+          {allTags.filter((value) => 
+           {
+             if (searchTitle === "") 
+             {
+               return  value;
+             } 
+             else if (  value.tagName && (value.tagName.toLowerCase().includes(searchTitle.toLowerCase())) )  
+             {
+               return value;
+             }
+           })
+          .map((userItem) => <TagItem data={userItem} />)}
+
                    </div>
 
                 </TagsContainer>

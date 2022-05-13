@@ -41,7 +41,7 @@ export default function Sidebar() {
                 <li className={isActivePath('home', 'ps_relative')} onClick={() => navigate('/')}>Home</li>
                 <ol className="nav-links">
                     <li className="fs-fine heading tt-uppercase ml8 mt16 mb4 fc-light">Public</li>
-                    <li className={isActivePath('questions', 'sub')}>Questions</li>
+                    <li className={isActivePath('questions', 'sub')} onClick={() => navigate('/')}>Questions</li>
                     <li className={isActivePath('tags', 'sub')} onClick={() => navigate('/tags')}>Tags</li>
                     <li className={isActivePath('users', 'sub')} onClick={() => navigate('/users')}>Users</li>
                     <li className={isActivePath('companies', 'sub')}>Companies</li>
