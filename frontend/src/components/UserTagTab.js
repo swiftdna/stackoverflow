@@ -1,14 +1,20 @@
 import React, {useEffect, useState}from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useNavigate, useParams } from 'react-router-dom';
 
 function UserTagsTab({userId})
 {
+    const navigate = useNavigate();
     const [tagsResponse, SetTagResponse] = useState([]);
     const [length, SetLength] = useState(0);
 
     const params={};
     params.tab = 'tags';
+
+    const searchForTag = (name) => {
+        navigate(`/search?q=user:${userId} [${name}]`)
+    }
 
     const data = {
         id: userId,
@@ -41,7 +47,7 @@ function UserTagsTab({userId})
                
                <p style={{display:"flex", marginLeft:"20px", marginTop:"15px"}}> 
                   <div style={{width:"50px"}}> 
-                      <span className="question-tags"> { item[0]}  </span>
+                      <span className="question-tags" onClick={() => searchForTag(item[0])}> { item[0]}  </span>
                   </div> 
 
                   <div style={{marginLeft:"450px", width:"70px"}}> 
