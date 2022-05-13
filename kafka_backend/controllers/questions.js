@@ -43,6 +43,7 @@ const createQuestion = async (req, callback ) => {
 				{ $inc: { [`tags_post_count.${tag}`]: 1 } }
 			)
 		});
+
       return callback(null, {
 		success: true,
 		data : question
@@ -68,6 +69,23 @@ const createQuestion = async (req, callback ) => {
 	  if (sortType === 'Unanswered')
 	  {
 		const question = await Question.find({ "answers": { $size: 0 } }).sort({"score" : -1});
+		question && question.map((ques) => {
+			if (ques.modified !== ques.created) {
+                     ques.modifies=true
+					 ques.time= ques.modified
+			} else {
+				ques.time= ques.created
+			}
+			if (ques.text && helper.isJsonString(ques.text)) {
+				const tmp = JSON.parse(ques.text);
+				ques.text = tmp.blocks;
+				ques.isMultiMedia = true;
+			}
+			ques.createdText = moment(ques.created).fromNow();
+			ques.createdFullText = moment(ques.created).format('MMMM Do, YYYY at h:mm:ss a');
+			ques.modifiedText = moment(ques.modified).fromNow();
+			ques.modifiedFullText = moment(ques.modified).format('MMMM Do, YYYY h:mm:ss a');
+		});
         return callback(null, {
 			data : question
 		});
@@ -416,16 +434,17 @@ console.log('todaydateis',today);
 			
 			data.shift();
 
-			const queryDB = util.promisify(sqldb.query).bind(sqldb);
-
-			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
-				]);
+		
 
 			console.log('===> ', tagdesc);
 			const searchstring = data.join(' ');
 			if (tagdata.indexOf('[') === 0 && tagdata.indexOf(']') !== -1) {
 				tagdata = tags.match(/[^[\]]+(?=])/g)[0]
 			}
+			const queryDB = util.promisify(sqldb.query).bind(sqldb);
+
+			let tagdesc = await queryDB(`SELECT tagDescription FROM tags WHERE tagName =? `,[tagdata
+				]);
 			console.log(tagdata, searchstring);
 			let questions = await Question.find({ tags: { $all: tagdata }, $or: [ { "title": new RegExp(searchstring,'i')}, { "text": new RegExp(searchstring,'i') }]}).lean()
 			
