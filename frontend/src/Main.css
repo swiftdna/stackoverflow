@@ -1946,6 +1946,11 @@ nav {
   /*margin: 0;*/
   color: var(--fc-light);
 }
+
+.ask_question_box > .tagDesc {
+  height: 200px;
+}
+
 .ask_question_box > input {
   width: 100%;
   border: 1px solid var(--black-200);

@@ -37,9 +37,6 @@ const openQuestion = (id) => {
 navigate(`/questions/${id}`);
 }
 
-console.log("sunny hith reddy")
-console.log(questionDetails);
-
 return(
   <>
     <div className="container" style={{marginTop: '60px'}}>
@@ -65,7 +62,7 @@ return(
               </div>
               <hr style={{marginTop: '70px'}} />
               {questionDetails && questionDetails.map(questionItem => 
-                  <QuestionSummaryCard data={questionItem} />)}
+                  <QuestionSummaryCard data={questionItem} isUser={true}/>)}
              
             </Col>
         </Row>

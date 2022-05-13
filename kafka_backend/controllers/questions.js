@@ -295,10 +295,11 @@ const createQuestion = async (req, callback ) => {
 	}
   };
 
-  const approvequestion = async (req, callback) => {
-	
+  const approvequestion = async (req, callback) => 
+  {
 	try {
 	  const id = req.params.questionid;
+	  console.log("sunny hith reddy"+id);
 	  console.log(id);
 	  const question = await Question.findByIdAndUpdate(id,{status:'approve'},{new:true});
 	  return callback(null, {

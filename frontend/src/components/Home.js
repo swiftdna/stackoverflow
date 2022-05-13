@@ -98,7 +98,7 @@ function Home() {
                     </div>
                     <hr style={{marginTop: '70px'}} />
                     {questionsResponse && questionsResponse.map(questionItem => 
-                        <QuestionSummaryCard data={questionItem} />)}
+                        <QuestionSummaryCard data={questionItem} isUser={true}/>)}
                     {/* <div>
 
                     {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} 

@@ -117,7 +117,8 @@ export default function ContentCard({ data, type, questionID, qQuthor}) {
 			</Col>
 			<Col xs={3}>
 				{
-        			type==='question' && <button className="btn btn-register" style={{float: 'right'}}>Ask Question</button>
+        			type==='question' && <button className="btn btn-register" 
+                    onClick={() => navigate('/questions/ask')} style={{float: 'right'}}>Ask Question</button>
         		}
 			</Col>
 		</Row>

@@ -430,8 +430,6 @@ const userActivity = async (req, callback) => {
       }
     }
     if (req.query.tab === "bookmarks") {
-
-      console.log("sunny hith reddy kommula");
       
       const user = await Question.find({
         "bookmarks.user": mongoose.Types.ObjectId(req.body.id),
