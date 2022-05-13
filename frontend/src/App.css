@@ -293,3 +293,6 @@
 .toast-header, .toast-body {
   font-size: 12px;
 }
+.modal-dialog {
+  max-width: 80vw !important;
+}

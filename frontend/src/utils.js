@@ -383,3 +383,14 @@ export async function fetchAllTags() {
     // console.log(results.data/);
     return results.data.data;
 }
+export async function editQuestion(id, data) {
+    const tmpObj = {
+        ...data,
+        text: JSON.stringify({
+            blocks: data.editorData
+        })
+    };
+    delete data.editorData;
+    const results = await axios.put(`/api/questions/${id}`, tmpObj);
+    return results.data.success;
+}

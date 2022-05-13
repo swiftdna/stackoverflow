@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export default function Sidebar() {
     const navigate = useNavigate();
     const loc = useLocation();
-    console.log(loc.pathname);
     const isActivePath = (path, current_class) => {
         switch (path) {
             case 'home':

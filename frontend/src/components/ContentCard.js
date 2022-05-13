@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { pluck } from 'underscore';
 import Output from 'editorjs-react-renderer';
 
-export default function ContentCard({ data, type, questionID, qQuthor}) {
+export default function ContentCard({ data, type, questionID, qQuthor, fn}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userDetails = useSelector(state => state.app.user);
@@ -109,6 +109,13 @@ export default function ContentCard({ data, type, questionID, qQuthor}) {
         return 'accept_ans_ctrl';
     }
 
+    const processClicks = (e, functionName, params) => {
+        e.stopPropagation();
+        if (fn && fn[functionName] && dispatch) {
+            fn[functionName](dispatch, params);
+        }
+    }
+
 	return (
 		<>
 		<Row>
@@ -153,7 +160,7 @@ export default function ContentCard({ data, type, questionID, qQuthor}) {
                 <Row className="share_author_panel">
                     <Col xs={6}>
                         <span className="other_ctrls">Share</span>
-                        <span className="other_ctrls">Edit</span>
+                        <span className="other_ctrls" onClick={(e) => processClicks(e, 'editQuestion', data)}>Edit</span>
                         <span className="other_ctrls">Follow</span>
                     </Col>
                     <Col xs={6} style={{minHeight: '30px', display: 'flex', justifyContent: 'flex-end'}}>
