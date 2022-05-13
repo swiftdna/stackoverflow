@@ -119,7 +119,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
                  <h2>Top Tags</h2>                       
 
                  <div className="top-tags-innertab">
-                 {
+                 {( topTags  ) &&
                    topTags.map(item => 
 
            <div>

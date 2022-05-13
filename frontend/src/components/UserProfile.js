@@ -7,10 +7,9 @@ import ActivityTab from "./ActivityTab";
 import axios from "axios";
 import UserEditProfile from "./UserEditProfile";
 import Sidebar from "./Sidebar";
-import Loader from './Loader';
+import Loader from "./Loader";
 
-function UserProfile() 
-{
+function UserProfile() {
   const urlParams = useParams();
   const { id, email } = urlParams;
   const toggleTab = (index) => {
@@ -18,7 +17,7 @@ function UserProfile()
   };
 
   const navigate = useNavigate();
-  const [userProfile, SetUserProfile] = useState();
+  const [userProfile, SetUserProfile] = useState({});
   const [userBadges, SetBadges] = useState([]);
   const [userTopTag, SetUserTopTag] = useState([]);
   const [userPersonalDetails, SetUserPersonalDetails] = useState({});
@@ -28,23 +27,21 @@ function UserProfile()
     id: id,
   };
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setLoading(true);
-    axios.get(`/api/getUserDetails?search=${email}`)
-    .then(response => 
-      {
-          SetUserPersonalDetails(response.data.data[0]);
-          setLoading(false);
+    axios
+      .get(`/api/getUserDetails?search=${email}`)
+      .then((response) => {
+        SetUserPersonalDetails(response.data.data[0]);
+        setLoading(false);
       })
-    .catch(err => {
-    });
+      .catch((err) => {});
   }, []);
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setLoading(true);
-    axios.post(`/api/getUserStats`, data)
+    axios
+      .post(`/api/getUserStats`, data)
       .then((response) => {
         SetUserProfile(response.data.data);
         setLoading(false);
@@ -58,12 +55,12 @@ function UserProfile()
   let silverBadges = [];
   let goldBadges = [];
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setLoading(true);
-    axios.get(`/api/badges/getAllbadges/${id}`)
-      .then((response) =>{
-        SetBadges(response.data.data)
+    axios
+      .get(`/api/badges/getAllbadges/${id}`)
+      .then((response) => {
+        SetBadges(response.data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -71,14 +68,12 @@ function UserProfile()
       });
   }, []);
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setLoading(true);
     axios
       .post(`/api/topUserTags`, data)
-      .then((response) => 
-      {
-        SetUserTopTag( response.data.data )
+      .then((response) => {
+        SetUserTopTag(response.data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -86,19 +81,13 @@ function UserProfile()
       });
   }, []);
 
-  for(let i = 0; i < userBadges.length; i++) 
-  {      
-    if( userBadges[i].badgeValue == "Bronze" )
-    {
-       bronzeBages.push(userBadges[i].badgeName );
-    }
-    else if( userBadges[i].badgeValue == "Silver" )
-    {
-       silverBadges.push(userBadges[i].badgeName);
-    }
-    else
-    {
-       goldBadges.push(userBadges[i].badgeName);
+  for (let i = 0; i < userBadges.length; i++) {
+    if (userBadges[i].badgeValue == "Bronze") {
+      bronzeBages.push(userBadges[i].badgeName);
+    } else if (userBadges[i].badgeValue == "Silver") {
+      silverBadges.push(userBadges[i].badgeName);
+    } else {
+      goldBadges.push(userBadges[i].badgeName);
     }
   }
 
@@ -106,105 +95,105 @@ function UserProfile()
 
   return (
     <>
-    
-   {
-     loading ? <Loader /> :
-      
-<>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div
+            className="container"
+            style={{ marginTop: "80px", border: "1px solid red;" }}
+          >
+            <Sidebar />
+          </div>
 
-   
-<div
-className="container"
-style={{ marginTop: "80px", border: "1px solid red;" }}
->
- <Sidebar/>
-</div>
+          <UserProfileContainer>
+            <div className="user-image">
+              <img
+                style={{ borderRadius: "5px;" }}
+                src={userPersonalDetails.profilePhoto}
+                width={150}
+                height={150}
+              />
+            </div>
 
-<UserProfileContainer>
+            <div className="user-join-details">
+              <div className="user-name">
+                <p>{userPersonalDetails.username}</p>
+              </div>
+              <p> Member since {userPersonalDetails.created}</p>
+              <p> last seen at {userPersonalDetails.lastseen}</p>
+            </div>
 
-<div className="user-image">
-  <img
-    style={{ borderRadius: "5px;" }}
-    src={userPersonalDetails.profilePhoto}
-    width={150}
-    height={150}
-  />
-</div>
+            <div></div>
 
-<div className="user-join-details">
-  <div className="user-name">
-    <p>{userPersonalDetails.username}</p>
-  </div>
-  <p> Member since {userPersonalDetails.created}</p>
-  <p> last seen at {userPersonalDetails.lastseen}</p>
-</div>
+            <div className="user-location">
+              <p> {userPersonalDetails.location}</p>
+            </div>
 
-<div></div>
+            <div className="container">
+              <div className="bloc-tabs">
+                <button
+                  className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
+                  onClick={() => toggleTab(1)}
+                >
+                  Profile
+                </button>
 
-<div className="user-location">
-  <p> {userPersonalDetails.location}</p>
-</div>
+                <button
+                  className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
+                  onClick={() => toggleTab(2)}
+                >
+                  Activity
+                </button>
 
-<div className="container">
-  <div className="bloc-tabs">
-    <button
-      className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
-      onClick={() => toggleTab(1)}
-    >
-      Profile
-    </button>
+                <button
+                  className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
+                  onClick={() => toggleTab(3)}
+                >
+                  Edit
+                </button>
+              </div>
 
-    <button
-      className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
-      onClick={() => toggleTab(2)}
-    >
-      Activity
-    </button>
+              <div className="content-tabs">
+                {userProfile ? (
+                  <div
+                    className={
+                      toggleState === 1 ? "content  active-content" : "content"
+                    }
+                  >
+                    <UserProfileTab
+                      data={userProfile}
+                      bronze={bronzeBages}
+                      silver={silverBadges}
+                      gold={goldBadges}
+                      topTags={userTopTag}
+                      about={userPersonalDetails.about}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
 
-    <button
-      className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
-      onClick={() => toggleTab(3)}
-    >
-      Edit
-    </button>
-  </div>
+                <div
+                  className={
+                    toggleState === 2 ? "content  active-content" : "content"
+                  }
+                >
+                  <ActivityTab userId={id} />
+                </div>
 
-  <div className="content-tabs">
-    {userProfile ? (
-      <div
-        className={ toggleState === 1 ? "content  active-content" : "content"
-      }>
-        <UserProfileTab data={userProfile}  bronze={bronzeBages} 
-                        silver={silverBadges} gold={goldBadges} 
-                        topTags={userTopTag} about={userPersonalDetails.about}/>
-      </div>
-    ) : (
-      ""
-    )}
-
-    <div
-      className={
-        toggleState === 2 ? "content  active-content" : "content"
-      }
-    >
-      <ActivityTab userId={id}/>
-    </div>
-
-    <div
-      className={
-        toggleState === 3 ? "content  active-content" : "content"
-      }
-    >
-     <UserEditProfile/>
-
-    </div>
-  </div>
-</div>
-</UserProfileContainer>
-
-</>
-  }
-    
+                <div
+                  className={
+                    toggleState === 3 ? "content  active-content" : "content"
+                  }
+                >
+                  <UserEditProfile />
+                </div>
+              </div>
+            </div>
+          </UserProfileContainer>
+        </>
+      )}
     </>
   );
 }
