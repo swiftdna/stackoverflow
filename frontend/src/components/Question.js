@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import { selectIsLoggedIn } from '../selectors/appSelector';
+import { setToast } from '../actions/app-actions';
 import { getQuestionDetails, getAnswers } from '../utils';
 
 //create the Navbar Component
@@ -40,6 +41,21 @@ function Question() {
     }
 
     const editQuestion = (disp, params) => {
+        const {id} = userDetails;
+        let isAllowed = false;
+        console.log('params.author._id -> ', params);
+        console.log('id -> ', id);
+        // const qdetails
+        if (params && params.author && params.author._id && params.author._id && params.author._id === id) {
+            isAllowed = true;
+        }
+        if (!isAllowed) {
+            dispatch(setToast({
+                type: 'Error',
+                message: 'Only author of the question can edit the content!'
+            }));
+            return;
+        }
         const qForm = {
             time: 1556098174501,
             blocks: [],
@@ -74,7 +90,7 @@ function Question() {
                                 answers && <div style={{marginLeft: '14px', marginTop: '20px'}}>
                                 <h3>{answers.length} Answers</h3>
                                 {
-                                    answers.map(answer => <ContentCard type="answer" questionID={qdetails._id} qQuthor={qdetails.author} data={answer} />)
+                                    answers && answers.map(answer => <ContentCard type="answer" questionID={qdetails._id} qQuthor={qdetails.author} data={answer} />)
                                 }
                                 </div>
                             }

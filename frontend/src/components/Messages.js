@@ -106,7 +106,7 @@ function Messages() {
                 <Col xs={3} className="messages_panel">
                     <ul className="messages_list" style={{marginLeft: 0, paddingLeft: 0}}>
                         {
-                            recipients.map((recipient, i) => 
+                            recipients && recipients.map((recipient, i) => 
                                 <li onClick={() => fetchMessages(recipient.id)} className={isThreadActive(recipient.id) ? 'active' : ''}>
                                     <p className="heading">{getUsername(recipient)}</p>
                                 </li>

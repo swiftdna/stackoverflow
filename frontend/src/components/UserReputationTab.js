@@ -43,7 +43,7 @@ function UserReputationTab({userId})
         <hr></hr>
 
         {
-         reputationResponse.map(item => 
+         reputationResponse && reputationResponse.map(item => 
            <div>
                
                <p style={{display:"flex", marginLeft:"10px", marginTop:"15px"}}> 

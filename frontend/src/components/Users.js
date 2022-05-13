@@ -45,7 +45,7 @@ export function Users() {
 
                    <div className="tags-container">
 
-        {usersResponse.filter((value) => 
+        {usersResponse && usersResponse.filter((value) => 
           {
             if (searchTitle === "") 
             {

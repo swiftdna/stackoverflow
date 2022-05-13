@@ -52,7 +52,7 @@ const RightSidebar = () => {
       <div className="card my-3 shadow-sm">
         <div className="card-header" style={{paddingLeft: "0px"}}>
             <h3>Collectives</h3></div>
-        {apps.map((app) => {
+        {apps && apps.map((app) => {
           return (
             <div className="card-body">
               <div className="d-flex justify-content-between">

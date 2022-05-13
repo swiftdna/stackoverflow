@@ -28,7 +28,7 @@ function AllQuestions({data, isAuthorRequired, questionId})
 
   let bestAnswer = false;
 
-  {data.answers.map((answer) => 
+  {data && data.answers && data.answers.map((answer) => 
     {
        if(answer.isbestanswer)
        {
@@ -95,7 +95,7 @@ function AllQuestions({data, isAuthorRequired, questionId})
             }}
           >
 
-          {data.tags.map((_tag) => (
+          {data.tags && data.tags.map((_tag) => (
            <span onClick={() => openQuestion(questionId)} className="question-tags"> {_tag} </span>
             ))}
 

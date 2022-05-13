@@ -42,7 +42,7 @@ function UserTagsTab({userId})
 
         
         {
-         tagsResponse.map(item => 
+         tagsResponse && tagsResponse.map(item => 
            <div>
                
                <p style={{display:"flex", marginLeft:"20px", marginTop:"15px"}}> 
