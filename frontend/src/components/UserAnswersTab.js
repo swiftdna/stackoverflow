@@ -40,7 +40,7 @@ function UserAnswersTab({userId})
     <div>
 
     { answersResponse && answersResponse.map(answerItem => <AllQuestions data={answerItem} 
-                                             isAuthorRequired={false} questionId={answerItem.id}/>)}
+                                             isAuthorRequired={false} questionId={answerItem._id}/>)}
     </div>
     </UserAnswersTabContainer>
     </div>

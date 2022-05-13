@@ -4,7 +4,7 @@
  import silverImage from "./Images/silver.png";
  import bronzeImage from "./Images/bronze.png";
 
-function UserProfileTab({data, bronze, silver, gold, topTags})
+function UserProfileTab({data, bronze, silver, gold, topTags, about})
  {
     return(
         <UserProfileTabContainer>
@@ -38,8 +38,8 @@ function UserProfileTab({data, bronze, silver, gold, topTags})
 
             <div className="aboutMeTab">
                    <h2>About Me</h2>
-                   <div className="aboutMe">
- 
+                   <div className="aboutMe" style={{paddingLeft:"15px", paddingTop:"20px"}}>
+                     {about}
                    </div>
             
             </div>

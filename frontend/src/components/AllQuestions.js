@@ -26,9 +26,16 @@ function AllQuestions({data, isAuthorRequired, questionId})
     navigate(`/questions/${id}`);
   }
 
-  const openTagQuestions = (tag) => {
-    navigate(`/questionTag/${tag}`);
-  }
+  let bestAnswer = false;
+
+  {data.answers.map((answer) => 
+    {
+       if(answer.isbestanswer)
+       {
+           bestAnswer = true;
+       }
+    }
+   )}
 
     return(
         <AllQuestionContainer>
@@ -42,13 +49,38 @@ function AllQuestions({data, isAuthorRequired, questionId})
               <p>{data.score}</p>
               <span>votes</span>
             </div>
+            { 
+
+            bestAnswer ?
+            
             <div className="all-option" style={{borderStyle:"solid", 
-                                        color:"white",backgroundColor: "var(--green-600)",
+                 color:"white",
+                 backgroundColor: (data.status == "pending") ? "red" : "green",
+                 padding: "8px", borderRadius:"10px"}}>
+                  
+                { (data.status=="pending" )?
+                  <div>
+                     <span>pending</span>
+                  </div>
+                   :
+                  <div>
+                     <span>accepted</span>
+                  </div>
+               }
+                 
+
+            </div>
+                :
+
+            <div className="all-option" style={{borderStyle:"solid", 
+                                        color:"black",
                                         padding: "4px"}}>
               <p>{data.answers.length}</p>
               
               <span>answers</span>
             </div>
+            
+            }
             <div className="all-option">
               <small>{data.views} views</small>
             </div>
@@ -75,7 +107,7 @@ function AllQuestions({data, isAuthorRequired, questionId})
           >
 
           {data.tags.map((_tag) => (
-           <span onClick={() => openTagQuestions(_tag)} className="question-tags"> {_tag} </span>
+           <span onClick={() => openQuestion(questionId)} className="question-tags"> {_tag} </span>
             ))}
 
           </div>
@@ -104,8 +136,9 @@ const AllQuestionContainer = styled.footer`
 
 .horizontalLine
 {
-    margin-left: 250px;
+    margin-left: 0px;
     margin-right: 400px;
+    width: 750px;
 }
 
 a:hover
