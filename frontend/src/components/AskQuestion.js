@@ -57,7 +57,11 @@ export function AskQuestion() {
             }));
             return;
         }
-        multiSelections.map(selectedTag => questionForm.tags.push(selectedTag.tagName));
+        multiSelections.map(selectedTag => {
+            if (questionForm.tags && selectedTag.tagName && questionForm.tags.indexOf(selectedTag.tagName) === -1) {
+                questionForm.tags.push(selectedTag.tagName)
+            }
+        });
         questionForm.title = title;
         if (questionForm.text && questionForm.text.blocks && questionForm.text.blocks.blocks && questionForm.text.blocks.blocks.length) {
             const imageContentArr = questionForm.text.blocks.blocks.filter(block => block.type === 'image');

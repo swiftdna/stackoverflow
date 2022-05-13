@@ -11,6 +11,7 @@ import styled from "styled-components";
 import fLogo from "./Images/fb.png";
 import gitLogo from "./Images/git.png";
 import axios from "axios";
+import { Row, Col } from 'react-bootstrap';
 
 export default function Register() {
 
@@ -20,6 +21,7 @@ const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 
 const submitSignup = (e) => {
+		e.preventDefault();
     const data = {
 		username,
 	  email,
@@ -77,43 +79,13 @@ const submitSignup = (e) => {
 	  
 		return (
 		  <RegisterContainer>
-          <button
-            type="submit"
-            className="btn btn-lg btn-block bg-light btn-sm border"
-            style={{ height:"45px", width:"500px",
-            marginLeft: "780px", marginTop:"80px"}}
-          >
-            <img src={gLogo} width={15} height={15}/> 
-            <span style={{marginLeft:"10px"}}>Login in with Google</span>
-          </button>
 
-          <button
-            type="submit"
-            className="btn btn-dark btn-block"
-            style={{ height:"45px", width:"500px",
-            marginLeft: "780px", marginTop:"10px"}}
-          >
-            <img src={gitLogo} width={35} height={20}/> 
-            <span style={{marginLeft:"10px"}}>Login in with GitHub</span>
-          </button>
-
-          <button
-            type="submit"
-            className="btn bt btn-lg btn-block btn-sm text-light"
-            style={{ backgroundColor: "rgb(56, 84, 153)", width:"500px",
-                     marginLeft: "780px", marginTop:"10px" }}
-           >
-         
-		 <img src={fLogo} width={15} height={15}/> 
-            <span style={{marginLeft:"10px"}}>Login in with Facebook</span>
-          </button>
-
-			<div classNameName="loginPage" style={{marginTop:"-100px"}}>
+			<div classNameName="loginPage" style={{marginTop:"100px"}}>
 			  <section className="vh-100">
 				<div className="container py-5">
 				  <div className="row d-flex align-items-center justify-content-center h-100">
 					{/* left Side Stack Overflow community part started*/}
-					<div className="col-md-8 col-lg-7 col-xl-6 ml-3" style={{marginTop:"-200px", fontSize: "15px"}}>
+					<div className="col-md-8 col-lg-7 col-xl-6 ml-3" style={{marginTop:"-100px", fontSize: "15px"}}>
 					  <img src={Logo} alt="" width="150px" />
 					  <h3 className="font-weight-normal my-3">
 						Join the Stack Overflow community
@@ -140,13 +112,12 @@ const submitSignup = (e) => {
 					{/* left Side Stack Overflow community part Ends*/}
 	  
 					{/* Signup form started */}
-					<div className="col-md-7 col-lg-5 col-xl-5 bt-light border p-5 pb-0" style={{marginTop:"30px", 
+					<div className="col-md-7 col-lg-5 col-xl-5 bt-light border p-5 pb-0" style={{marginTop:"-30px", 
 					     fontSize: "15px", height: "420px", width: "500px" }}>
 					  <h2
 						className="text-center"
 						style={{
-						  color: "rgb(242, 116, 13)",
-						  fontFamily: "serif",
+						  color: "rgb(242, 116, 13)"
 						}}
 					  >
 						Sign up

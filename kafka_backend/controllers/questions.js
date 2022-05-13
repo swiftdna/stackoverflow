@@ -36,8 +36,7 @@ const createQuestion = async (req, callback ) => {
 		text,
 		status
 	  });
-	  if (status === 'approve')
-	  {
+	  if (status === 'approved') {
 	  await Promise.all(tags.forEach( async (tag) => {  
 		await sqldb.query(
 			`UPDATE  tags set tagQuestionsAsked=(tagQuestionsAsked+1) where tagName =?`,
@@ -332,7 +331,7 @@ const createQuestion = async (req, callback ) => {
 	  const id = req.params.questionid;
 	  console.log("sunny hith reddy"+id);
 	  console.log(id);
-	  const question = await Question.findByIdAndUpdate(id,{status:'approve'},{new:true});
+	  const question = await Question.findByIdAndUpdate(id,{status:'approved'},{new:true});
 	  const questions = await Question.findById({_id : id});
 	  await Promise.all(questions.tags.forEach( async (tag) => {   
 		//const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
@@ -383,6 +382,13 @@ const createQuestion = async (req, callback ) => {
 	 // const id = req.params.questionid;
 	  //console.log(id);
 	  const question = await Question.find({status:'pending'},{},{lean:true});
+	  question && question.map(ques =>{
+		if (ques.text && helper.isJsonString(ques.text)) {
+		  const tmp = JSON.parse(ques.text);
+		  ques.text = tmp.blocks;
+		  ques.isMultiMedia = true;
+	  	}
+	  });
 	  return callback(null, {
 		  success : true,
 		data : question
@@ -482,6 +488,11 @@ console.log('todaydateis',today);
 		   } else {
 			questions[i].time=questions[i].created;
 		   }
+				if (questions[i].text && helper.isJsonString(questions[i].text)) {
+					const tmp = JSON.parse(questions[i].text);
+					questions[i].text = tmp.blocks;
+					questions[i].isMultiMedia = true;
+				}
 				questions[i].type="question";
 				questions[i].createdText = moment(questions[i].created).fromNow();
 				questions[i].createdFullText = moment(questions[i].created).format('MMMM Do, YYYY at h:mm:ss a');
@@ -495,8 +506,14 @@ console.log('todaydateis',today);
 			let answ = await Question.find({ tags: { $all: tagdata },"answers.text": new RegExp(searchstring,'i'),_id:{$nin:quesid}}).lean();
 			console.log("initial answ",answ);
 			const regex = new RegExp(searchstring,'i')
-			for (let j = 0;   j< answ.length; j++) {
+			for (let j = 0; j< answ.length; j++) {
 				let count =0;
+				// answ[j] - question record
+				if (answ[j].text && helper.isJsonString(answ[j].text)) {
+					const tmp = JSON.parse(answ[j].text);
+					answ[j].text = tmp.blocks;
+					answ[j].isMultiMedia = true;
+				}
 				for (let k = 0; k < answ[j].answers.length; k++)
 				{
 					if (regex.test(answ[j].answers[k].text ))
