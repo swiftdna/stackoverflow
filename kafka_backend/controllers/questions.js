@@ -74,9 +74,8 @@ const createQuestion = async (req, callback ) => {
             
             sort[sortType] = -1
         }
-	  if (sortType === 'Unanswered')
-	  {
-		const question = await Question.find({ "answers": { $size: 0 } }).sort({"score" : -1});
+	  if (sortType === 'Unanswered') {
+		const question = await Question.find({ "answers": { $size: 0 } }, {}, {lean: true}).sort({"score" : -1});
 		question && question.map((ques) => {
 			if (Date(ques.modified)!== Date(ques.created)) {
 				console.log('---> modified');

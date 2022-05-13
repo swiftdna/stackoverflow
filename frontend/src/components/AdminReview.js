@@ -9,15 +9,12 @@ import Sidebar from './Sidebar';
 import { Row, Button, Col } from 'react-bootstrap';
 import QuestionSummaryCard from './QuestionSummaryCard';
 
-function AdminReview()
-{
+function AdminReview() {
   const navigate = useNavigate();
   const [questionsResponse, SetQuestionsResponse] = useState([]);
 
-
-   useEffect(() => 
-   {
-     axios.get(`/api/getPendingQuestion`)
+  const getReviewPendingItems = () => {
+    axios.get(`/api/getPendingQuestion`)
      .then(response => 
        {
             SetQuestionsResponse(response.data.data);
@@ -25,6 +22,10 @@ function AdminReview()
        })
      .catch(err => {
      });
+  }
+
+   useEffect(() => {
+     getReviewPendingItems();
    }, []);
 
     return(    
@@ -35,7 +36,7 @@ function AdminReview()
           <Sidebar />
           <Col xs={10} style={{paddingLeft: '20px'}}>
           {questionsResponse && questionsResponse.map(userItem => <QuestionSummaryCard data={userItem} 
-                                                                   isUser={false} />)}
+                                                                   isUser={false} fn={{getReviewPendingItems}} />)}
           </Col>
       </Row>
   </div>

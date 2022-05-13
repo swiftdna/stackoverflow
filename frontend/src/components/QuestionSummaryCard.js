@@ -7,7 +7,7 @@ import UserCard from './UserCard';
 import { formatShortDate } from '../utils';
 import axios from 'axios';
 
-export default function QuestionSummaryCard({data, isUser}) {
+export default function QuestionSummaryCard({data, isUser, fn}) {
     const navigate = useNavigate();
 
     const openQuestion = (id) => {
@@ -26,22 +26,24 @@ export default function QuestionSummaryCard({data, isUser}) {
             })
             .catch((error) => {
               alert(error.response.data.message);
-              })
-            ;
-          navigate('/adminReview');
+            });
+          // Refresh
+          if (fn && fn.getReviewPendingItems) {
+            fn.getReviewPendingItems();
+          }
       }
 
-    const RejectQuestion = (questionid) =>
-    {
-            axios.get(`/api/rejectQuestion/${questionid}`).then((response) => 
-            {
+    const RejectQuestion = (questionid) => {
+        axios.get(`/api/rejectQuestion/${questionid}`).then((response) => {
 
-            })
-            .catch((error) => {
-              alert(error.response.data.message);
-              })
-            ;
-          navigate('/adminReview');
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+          });
+        // Refresh
+        if (fn && fn.getReviewPendingItems) {
+            fn.getReviewPendingItems();
+        }
     }
 
     return (
@@ -74,16 +76,15 @@ export default function QuestionSummaryCard({data, isUser}) {
 
                   <span style={{}}> 
                      <button onClick={() => AcceptQuestion(data._id)}
-                     style={{ color:"white", padding:"5px", borderRadius:"10px",
-                     backgroundColor: "#009933" }}> accept</button> 
-                   </span><br/><br/>
+                     style={{ color:'white', padding: '5px 12px', borderRadius: '5px', border: 'none',
+                     backgroundColor: "#009933" }}>accept</button> 
+                  </span><br/><br/>
 
                   <span> 
                       <button onClick={() => RejectQuestion(data._id)}
-                      style={{ color:"white", padding:"5px", borderRadius:"10px",
-                      backgroundColor: "red" }}>decline</button> 
-                 </span>
-
+                      style={{ color:'white', padding: '5px 12px', borderRadius: '5px', border: 'none',
+                      backgroundColor: '#D50000' }}>decline</button> 
+                  </span>
               </div>
             } 
             </Col>

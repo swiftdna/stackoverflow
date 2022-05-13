@@ -2349,7 +2349,7 @@ nav {
 /*border-radius: var(--br-sm);*/
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    color: var(--black-700);
+    color: var(--black-500);
 }
 .s-btn__muted.is-selected {
     color: var(--black-700);
@@ -2364,8 +2364,9 @@ nav {
     box-shadow: none;*/
 }
 .s-btn-group .s-btn {
-    margin-bottom: -1px;
-    white-space: nowrap;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  border-color: var(--black-300);
 }
 .s-btn__muted {
     color: var(--black-500);

@@ -17,6 +17,7 @@ function fetchQuesSearchSuccess(data) {
          dt.isMultiMedia = true;
       }
    });
+   data = data.filter(dt => dt.status !== 'pending');
    return {
       type: ADD_QUESTIONS_SEARCH,
       payload: data
