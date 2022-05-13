@@ -7,13 +7,19 @@ function UserEditProfile()
 {
     const [location, SetLocation] = useState("");
     const [about, SetAboutMe] = useState("");
-    const [profilePic, SetProfilePic]=useState("");
+    const [profilePhoto, SetProfilePhoto] = useState("");
 
     const data = {
+      profilePhoto,
       location,
       about
     };
 
+
+    const imageChangeHandler = (e) => {
+      const inputValue = e.target.files[0];
+      SetProfilePhoto(uploadImageToCloud(inputValue));
+    };
 
     const locationChangeHandler = (e) => {
       const inputValue = e.target.value;
@@ -26,21 +32,31 @@ function UserEditProfile()
       SetAboutMe(inputValue);
     };
   
+    function uploadImageToCloud( file)
+    {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('cloud_name', 'dac0hzhv5')
+      formData.append('upload_preset', 'j8gp4zov')
+  
+      return axios.post(
+        'https://api.cloudinary.com/v1_1/dac0hzhv5/image/upload',
+        formData
+      );
+    }
+
+    console.log("-------sunny----------");
+    console.log(profilePhoto);
+    console.log("-----------------------")
 
 const onSubmit=()=>
 {
-
-  alert(data.location);
-  alert(data.about);
-
   axios.put(`/api/editUserDetails`, data)
     .then(response => {
-      console.log(response)
     })
     .catch(err => {
         console.log(err.message);
     });
-
 }
     
     return(
@@ -56,7 +72,11 @@ const onSubmit=()=>
                 <br/>
                 
                 <div style={{marginTop:"8px"}}>
-                <input id="file" type="file" onchange="loadFile(event)"/>
+                <input id="file" type="file" 
+                onChange={ (event) => {
+                  imageChangeHandler(event);
+                 }}
+                 />
                 </div>
 
                  </div>
