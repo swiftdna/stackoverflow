@@ -111,8 +111,7 @@ const getUserStats = async (req, callback) => {
         },
       },
     ]);
-    console.log("answers ----->", answers);
-    console.log("viewed ----->", viewed);
+  
     const data = {
       questionscount: questionscount,
       answerscount: answers && answers.length && answers[0].count,
@@ -151,7 +150,8 @@ const topUserTags = async (req, callback) => {
       { tags_score: 1, tags_post_count: 1 }
     ).lean();
     //console.log(user[0].tags_score);
-
+    if(user.tags_score)
+    {
     let keys = Object.entries(user.tags_score).sort((a, b) => b[1] - a[1]);
     for (var i = 0; i < keys.length; i++) {
       if (user.tags_post_count[keys[i][0]] === undefined) {
@@ -165,6 +165,13 @@ const topUserTags = async (req, callback) => {
       success: true,
       data: keys,
     });
+  }
+  else{
+    return callback(null, {
+      success: true,
+      data: [],
+    });
+  }
   } catch (error) {
     return callback(error, {
       success: false,
@@ -298,7 +305,7 @@ const userActivity = async (req, callback) => {
         { tags_score: 1, tags_post_count: 1 }
       ).lean();
       //console.log(user[0].tags_score);
-
+if(user.tags_score){
       let keys = Object.entries(user.tags_score).sort((a, b) => b[1] - a[1]);
       for (var i = 0; i < keys.length; i++) {
         if (user.tags_post_count[keys[i][0]] === undefined) {
@@ -312,6 +319,13 @@ const userActivity = async (req, callback) => {
         success: true,
         data: keys,
       });
+    }
+    else{
+      return callback(null, {
+        success: true,
+        data: [],
+      });
+    }
     }
     if (req.query.tab === "reputation") {
       try {
