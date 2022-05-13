@@ -10,6 +10,7 @@ import Logo from "./Images/logo2.png";
 import gLogo from "./Images/g.png";
 import fLogo from "./Images/fb.png";
 import gitLogo from "./Images/git.png";
+import { Row, Col } from 'react-bootstrap';
 
 import styled from "styled-components";
 import Header from "./Header";
@@ -39,8 +40,7 @@ export function Login() {
   };
 
   //submit Login handler to send a request to the node backend
-  const submitLogin = (e) => 
-  {
+  const submitLogin = (e) => {
     e.preventDefault();
     const data = {
       email,
@@ -66,56 +66,69 @@ export function Login() {
       <Header />
 
       <LoginContainer>
-        <img
-          src={Logo}
-          alt=""
-          width={80}
-          height={80}
-          style={{ marginLeft: "650px", marginTop: "70px" }}
-        />
-        <br />
-
-        <button
-          type="submit"
-          className="btn btn-lg btn-block bg-light btn-sm border"
-          style={{
-            height: "45px",
-            width: "480px",
-            marginLeft: "480px",
-            marginTop: "10px",
-          }}
-        >
-          <img src={gLogo} width={15} height={15} />
-          <span style={{ marginLeft: "10px" }}>Login in with Google</span>
-        </button>
-
-        <button
-          type="submit"
-          className="btn btn-dark btn-block"
-          style={{
-            height: "45px",
-            width: "480px",
-            marginLeft: "480px",
-            marginTop: "10px",
-          }}
-        >
-          <img src={gitLogo} width={35} height={20} />
-          <span style={{ marginLeft: "10px" }}>Login in with GitHub</span>
-        </button>
-
-        <button
-          type="submit"
-          className="btn bt btn-lg btn-block btn-sm text-light"
-          style={{
-            backgroundColor: "rgb(56, 84, 153)",
-            width: "480px",
-            marginLeft: "480px",
-            marginTop: "10px",
-          }}
-        >
-          <img src={fLogo} width={15} height={15} />
-          <span style={{ marginLeft: "10px" }}>Login in with Facebook</span>
-        </button>
+        <Row style={{marginTop: '70px'}}>
+          <Col xs={4}></Col>
+          <Col xs={4} style={{textAlign: 'center'}}>
+            <img
+              src={Logo}
+              alt=""
+              width={80}
+              height={80}
+            />
+          </Col>
+          <Col xs={4}></Col>
+        </Row>
+        <Row style={{marginTop: '10px'}}>
+          <Col xs={4}></Col>
+          <Col xs={4} style={{textAlign: 'center'}}>
+            <button
+              type="submit"
+              className="btn btn-lg btn-block bg-light btn-sm border"
+              style={{
+                height: "45px",
+                width: "480px"
+              }}
+            >
+              <img src={gLogo} width={15} height={15} />
+              <span style={{ marginLeft: "10px" }}>Login in with Google</span>
+            </button>
+          </Col>
+          <Col xs={4}></Col>
+        </Row>
+        <Row style={{marginTop: '10px'}}>
+          <Col xs={4}></Col>
+          <Col xs={4} style={{textAlign: 'center'}}>
+            <button
+              type="submit"
+              className="btn btn-dark btn-block"
+              style={{
+                height: "45px",
+                width: "480px"
+              }}
+            >
+              <img src={gitLogo} width={35} height={20} />
+              <span style={{ marginLeft: "10px" }}>Login in with GitHub</span>
+            </button>
+          </Col>
+          <Col xs={4}></Col>
+        </Row>
+        <Row style={{marginTop: '10px'}}>
+          <Col xs={4}></Col>
+          <Col xs={4} style={{textAlign: 'center'}}>
+            <button
+              type="submit"
+              className="btn bt btn-lg btn-block btn-sm text-light"
+              style={{
+                backgroundColor: "rgb(56, 84, 153)",
+                width: "480px"
+              }}
+            >
+              <img src={fLogo} width={15} height={15} />
+              <span style={{ marginLeft: "10px" }}>Login in with Facebook</span>
+            </button>
+          </Col>
+          <Col xs={4}></Col>
+        </Row>
 
         <div className="container loginPage">
           <form className="border px-5 pb-5 m-5 loginPage--form">
@@ -204,7 +217,7 @@ const LoginContainer = styled.footer`
     width: 40%;
     margin: auto;
     .loginPage--form {
-      background-color: rgba(185, 185, 183, 0.233);
+      background-color: var(--black-025);
       border-radius: 5px;
       box-shadow: 2px 3px 10px gray;
       align-items: center;

@@ -49,9 +49,7 @@ function AllQuestions({data, isAuthorRequired, questionId})
               <p>{data.score}</p>
               <span>votes</span>
             </div>
-            { 
-
-            bestAnswer ?
+            
             
             <div className="all-option" style={{borderStyle:"solid", 
                  color:"white",
@@ -62,10 +60,12 @@ function AllQuestions({data, isAuthorRequired, questionId})
                   <div>
                      <span>pending</span>
                   </div>
-                   :
-                  <div>
+                   : ''}
+                  { 
+
+            bestAnswer ? <div>
                      <span>accepted</span>
-                  </div>
+                  </div>: ''
                }
                  
 

@@ -46,6 +46,14 @@ export default function QuestionSummaryCard({data, isUser, fn}) {
         }
     }
 
+    const isAnswerAcceptedForQuestion = () => {
+        if (data.bestanswer) {
+            return "status answered-accepted";
+        } else {
+            return "status";
+        }
+    }
+
     return (
 		<Row>
             <Col xs={1}>
@@ -61,7 +69,7 @@ export default function QuestionSummaryCard({data, isUser, fn}) {
                                 <div className="viewcount">votes</div>
                             </div>
                         </div>
-                        <div className="status answered-accepted">
+                        <div className={isAnswerAcceptedForQuestion()}>
                             {data.answers && <><strong>{data.answers.length}</strong>answers</>}
                         </div>
                         <p className="views">{data.views} views</p>
