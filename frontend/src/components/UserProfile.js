@@ -176,7 +176,7 @@ style={{ marginTop: "80px", border: "1px solid red;" }}
       }>
         <UserProfileTab data={userProfile}  bronze={bronzeBages} 
                         silver={silverBadges} gold={goldBadges} 
-                        topTags={userTopTag}/>
+                        topTags={userTopTag} about={userPersonalDetails.about}/>
       </div>
     ) : (
       ""

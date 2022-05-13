@@ -95,10 +95,20 @@ function Home() {
                       <a className={ filterValue === 'Unanswered' ? activeButtonClasss : inactiveButtonClass }
                          href onClick={() => SetFilterValue('Unanswered')} data-nav-xhref=""  title="Newest search results" data-value="newest" data-shortcut="">
                           Unanswered</a>
+
+                      <a className={ filterValue === 'time' ? activeButtonClasss : inactiveButtonClass }
+                         href onClick={() => SetFilterValue('time')} data-nav-xhref=""  title="Newest search results" data-value="newest" data-shortcut="">
+                          Interesting</a>
+
                     </div>
                     <hr style={{marginTop: '70px'}} />
-                    {questionsResponse && questionsResponse.map(questionItem => 
-                        <QuestionSummaryCard data={questionItem} isUser={true}/>)}
+
+                    { questionsResponse && questionsResponse.map(questionItem => 
+                        (questionItem.status == "pending")  ?
+                        "" :
+                        <QuestionSummaryCard data={questionItem} isUser={true}/>)
+                    }
+
                     {/* <div>
 
                     {questionsResponse && questionsResponse.map(questionItem => <AllQuestions data={questionItem} 

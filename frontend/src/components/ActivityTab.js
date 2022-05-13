@@ -5,6 +5,7 @@ import UserQuestionTab from "./UserQuestionTab";
 import UserTagsTab from './UserTagTab';
 import UserBookmarksTab from "./UserBookmarksTab";
 import UserBadgesTab from "./UserBadgesTab";
+import UserReputationTab from "./UserReputationTab";
 
 function ActivityTab({ userId }) {
   const btns = document.querySelectorAll("[data-target-tab]");
@@ -67,7 +68,7 @@ function ActivityTab({ userId }) {
             </div>
 
             <div class="item" id="reputation">
-              <h3>Reputation</h3>
+              <UserReputationTab userId={userId}/>              
             </div>
           </div>
         </div>

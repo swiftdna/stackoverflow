@@ -26,6 +26,7 @@ export function TagItem({data})
             </div>
 
             <div>
+                
                <span className="tags-qstns"> {data.tagQuestionsAsked} questions </span>
                <span className="tags-time-stamp">asked 2 months ago</span>
 
