@@ -34,10 +34,12 @@ export default function Test({ show, mode, data, extras, fn }) {
     }, [data]);
 
     useEffect(() => {
-    	const filteredOptions = options.filter(opt => {
-    		return extras && extras.tags && extras.tags.indexOf(opt.tagName) !== -1
-    	})
-    	setMultiSelections(filteredOptions);
+        if (options) {
+        	const filteredOptions = options.filter(opt => {
+        		return extras && extras.tags && extras.tags.indexOf(opt.tagName) !== -1
+        	})
+        	setMultiSelections(filteredOptions);
+        }
     	if (extras.title) {
     		setTitle(extras.title);
     	}
