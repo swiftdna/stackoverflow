@@ -47,7 +47,7 @@ const getbestAnswer = async(req,callback)=>{
     try {
         const question = await Question.find({"_id":mongoose.Types.ObjectId(req.params.question)},{},{lean:true})
 
-        question.map( 
+        await Promise.all(question.map( 
             dt => {
         dt.answers.map(
             async answ =>{
@@ -69,7 +69,7 @@ const getbestAnswer = async(req,callback)=>{
                 await User.updateOne({"_id":answ.author},
                 { $inc: { "Reputation": 15 } });
             }
-     }) } )
+     }) } ))
         return callback(null, {
             success: true
         });
