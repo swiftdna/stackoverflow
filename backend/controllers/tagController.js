@@ -1,7 +1,7 @@
 const db = require('../config/sqlConnect')
 
 const addTag = async (req, res) => {
-    const tagName = req.body.tagName
+    const tagName = req.body.tagName.toLowerCase()
     const tagDescription = req.body.tagDescription
     const tagQuestionsAsked = req.body.tagQuestionsAsked
     const tagScore = req.body.tagScore
