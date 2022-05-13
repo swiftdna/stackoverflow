@@ -37,7 +37,7 @@ const createQuestion = async (req, callback ) => {
 		status
 	  });
 	  if (status === 'approved') {
-	  await Promise.all(tags.forEach( async (tag) => {  
+	  tags.forEach( async (tag) => {  
 		await sqldb.query(
 			`UPDATE  tags set tagQuestionsAsked=(tagQuestionsAsked+1) where tagName =?`,
 			[tag] , function (error, results) {
@@ -49,7 +49,7 @@ const createQuestion = async (req, callback ) => {
 				{ '_id': mongoose.Types.ObjectId(req.user.id) },
 				{ $inc: { [`tags_post_count.${tag}`]: 1 } }
 			)
-		}));
+		});
 	}
       return callback(null, {
 		success: true,
@@ -333,7 +333,7 @@ const createQuestion = async (req, callback ) => {
 	  console.log(id);
 	  const question = await Question.findByIdAndUpdate(id,{status:'approved'},{new:true});
 	  const questions = await Question.findById({_id : id});
-	  await Promise.all(questions.tags.forEach( async (tag) => {   
+	 questions.tags.forEach( async (tag) => {   
 		//const usertags = await User.findOne({ '_id' : mongoose.Types.ObjectId(req.user.id),"tags_post_count.tag":{$exists:true}}]});
 		await sqldb.query(
 			`UPDATE  tags set tagQuestionsAsked=(tagQuestionsAsked+1) where tagName =?`,
@@ -345,7 +345,7 @@ const createQuestion = async (req, callback ) => {
 			{ '_id': questions.author._id },
 			{ $inc: { [`tags_post_count.${tag}`]: 1 } }
 		)
-	}));
+	});
 	  return callback(null, {
 		  success : true,
 		data : question
@@ -588,6 +588,11 @@ console.log('todaydateis',today);
 			else{
 				ques.time= ques.created
 			}
+			if (ques.text && helper.isJsonString(ques.text)) {
+				const tmp = JSON.parse(ques.text);
+				ques.text = tmp.blocks;
+				ques.isMultiMedia = true;
+			}
 			ques.timeText = moment(ques.time).fromNow();
 				ques.timeFullText = moment(ques.time).format('MMMM Do, YYYY h:mm:ss a');
 		})
@@ -636,6 +641,11 @@ console.log('todaydateis',today);
 		   } else {
 			questions[i].time=questions[i].created;
 		   }
+		   if (questions[i].text && helper.isJsonString(questions[i].text)) {
+			const tmp = JSON.parse(questions[i].text);
+			questions[i].text = tmp.blocks;
+			questions[i].isMultiMedia = true;
+		}
 				questions[i].type="question";		
 				questions[i].timeText = moment(questions[i].time).fromNow();
 				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');	
@@ -645,10 +655,16 @@ console.log('todaydateis',today);
 			const answ = await Question.find({"answers.text": new RegExp(searchstring,'i'),_id:{$nin:quesid}}).lean()
 			for (let j = 0;   j< answ.length; j++) {
 				let count=0
+				if (answ[j].text && helper.isJsonString(answ[j].text)) {
+					const tmp = JSON.parse(answ[j].text);
+					answ[j].text = tmp.blocks;
+					answ[j].isMultiMedia = true;
+				}
 				for (let k = 0; k < answ[j].answers.length; k++)
 				{
 					if (regex.test(answ[j].answers[k].text ))
 					{
+						
 						if (count <1){
 							answ[j].time=answ[j].answers[k].created;
 							answ[j].ansauthor=answ[j].answers[k].author;
@@ -710,6 +726,11 @@ console.log('todaydateis',today);
 		   } else {
 			questions[i].time=questions[i].created;
 		   }
+		   if (questions[i].text && helper.isJsonString(questions[i].text)) {
+			const tmp = JSON.parse(questions[i].text);
+			questions[i].text = tmp.blocks;
+			questions[i].isMultiMedia = true;
+		}
 				questions[i].type="question";	
 				questions[i].timeText = moment(questions[i].time).fromNow();
 				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');
@@ -719,11 +740,18 @@ console.log('todaydateis',today);
 			const answ = await Question.find({$and:[{$or:[{"answers.author" : userdata}]},{$or: [ { "answers.text": new RegExp(searchstring,'i')}]}]}).lean();
 			for (let j = 0;   j< answ.length; j++) {
 				let count =0
+				if (answ[j].text && helper.isJsonString(answ[j].text)) {
+					const tmp = JSON.parse(answ[j].text);
+					answ[j].text = tmp.blocks;
+					answ[j].isMultiMedia = true;
+				}
 				for (let k = 0; k < answ[j].answers.length; k++)
 				{
 				
+				
 					if ((answ[j].answers[k].author && answ[j].answers[k].author._id && answ[j].answers[k].author._id.toString() === userdata) && (regex.test(answ[j].answers[k].text) ))
 					{
+						
 						
 						if (count <1){
 							
@@ -784,6 +812,11 @@ console.log('todaydateis',today);
 		   } else {
 			questions[i].time=questions[i].created;
 		   }
+		   if (questions[i].text && helper.isJsonString(questions[i].text)) {
+			const tmp = JSON.parse(questions[i].text);
+			questions[i].text = tmp.blocks;
+			questions[i].isMultiMedia = true;
+		}
 				questions[i].type="question";	
 				questions[i].timeText = moment(questions[i].time).fromNow();
 				questions[i].timeFullText = moment(questions[i].time).format('MMMM Do, YYYY h:mm:ss a');
@@ -822,8 +855,15 @@ console.log('todaydateis',today);
 				let count=0
 				for (let k = 0; k < answ[j].answers.length; k++)
 				{	
+
+					if (answ[j].text && helper.isJsonString(answ[j].text)) {
+						const tmp = JSON.parse(answ[j].text);
+						answ[j].text = tmp.blocks;
+						answ[j].isMultiMedia = true;
+					}
 					if (answ[j].answers[k].isbestanswer === true && regex.test(answ[j].answers[k].text ))
 					{
+						
 						if (count <1){
 						answ[j].time=answ[j].answers[k].created;
 						answ[j].ansauthor=answ[j].answers[k].author;
