@@ -35,7 +35,7 @@ function Navbar() {
             // console.log('badgeDetails -> ', badgeDetails);
         }
         getData();
-    })
+    }, [])
 
     const login = () => {
         navigate('/login');
