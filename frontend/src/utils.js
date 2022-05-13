@@ -378,3 +378,8 @@ export async function fetchQuestionsPostedToday() {
     // console.log(results.data/);
     return results.data.data;
 }
+export async function fetchAllTags() {
+    const results = await axios.get(`/api/tags/getAllTags`);
+    // console.log(results.data/);
+    return results.data.data;
+}

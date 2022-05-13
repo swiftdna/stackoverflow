@@ -30,7 +30,7 @@ function Search() {
 
     useEffect(() => {
         const newKeyword = searchParams.get('q');
-        setKeyword(newKeyword);
+        setKeyword(decodeURIComponent(newKeyword));
     }, [searchParams]);
 
     const isSortActive = (sortValue, currentClass) => {

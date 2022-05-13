@@ -232,3 +232,64 @@
   margin-left: 10px;
   cursor: pointer;
 }
+.rbt-token {
+    background-color: #e7f4ff;
+    border: 0;
+    border-radius: 0.25rem;
+    color: #007bff;
+    display: inline-flex;
+    line-height: 1em;
+    margin: 1px 3px 2px 0;
+    padding: 8px 7px;
+    position: relative;
+}
+.rbt-token .rbt-token-remove-button {
+    bottom: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: normal;
+    opacity: 1;
+    outline: none;
+    padding: 1px 3px;
+    position: relative;
+    right: -2px;
+    text-shadow: none;
+}
+.rbt-input-multi .rbt-input-wrapper {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: -2px;
+    margin-top: -1px;
+    overflow: hidden;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+.rbt-input-multi.form-control {
+    height: auto;
+}
+.rbt-input-multi {
+    cursor: text;
+    overflow: hidden;
+    position: relative;
+}
+.rbt-input-main {
+  height: 25px;
+}
+.rbt-token-label {
+    top: 1px;
+    position: relative;
+    font-size: 10px;
+}
+.toast-header, .toast-body {
+  font-size: 12px;
+}

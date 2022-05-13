@@ -48,7 +48,7 @@ function Navbar() {
     const _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
           const searchKeyword = e.target.value;
-          navigate(`/search?q=${searchKeyword}`);
+          navigate(`/search?q=${encodeURIComponent(searchKeyword)}`);
         }
     }
 
