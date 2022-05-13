@@ -5,7 +5,7 @@ import AllQuestions from "./AllQuestions";
 
 function UserQuestionTab({userId})
 {
-    const [questionsResponse, SetQuestionsResponse] = useState();
+    const [questionsResponse, SetQuestionsResponse] = useState([]);
     const [length, SetLength] = useState(0);
 
     const params={};

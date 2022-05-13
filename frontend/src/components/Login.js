@@ -41,6 +41,7 @@ export function Login() {
   //submit Login handler to send a request to the node backend
   const submitLogin = (e) => 
   {
+    e.preventDefault();
     const data = {
       email,
       password,

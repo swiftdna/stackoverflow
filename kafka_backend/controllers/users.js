@@ -306,6 +306,10 @@ const userActivity = async (req, callback) => {
       ).lean();
       //console.log(user[0].tags_score);
 if(user.tags_score){
+       console.log("-------sunny-----------")
+       console.log(user.tags_score);
+       console.log("----------------------")
+
       let keys = Object.entries(user.tags_score).sort((a, b) => b[1] - a[1]);
       for (var i = 0; i < keys.length; i++) {
         if (user.tags_post_count[keys[i][0]] === undefined) {
