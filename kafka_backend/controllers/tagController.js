@@ -1,16 +1,10 @@
 const db = require('../config/sqlConnect')
 
 const addTag = async (req, callback) => {
-    const tagName = req.body.tagName
-    const tagDescription = req.body.tagDescription
-    const tagQuestionsAsked = req.body.tagQuestionsAsked
-    const tagScore = req.body.tagScore
-
-
-    console.log("sunnt tag name->" + tagName)
-    console.log("sunnt tag name->" + tagDescription)
-    console.log("sunnt tag name->" + tagQuestionsAsked)
-    console.log("sunnt tag name->" + tagScore)
+    const tagName = req.body.tagName;
+    const tagDescription = req.body.tagDescription;
+    const tagQuestionsAsked = req.body.tagQuestionsAsked;
+    const tagScore = req.body.tagScore;
 
     let sqlInsert =
         'Insert INTO tags (tagName,tagDescription,tagQuestionsAsked,tagScore) VALUES(?,?,?,?)'

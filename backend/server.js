@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
 const routes = require('./routes');
-// const redis = require('./config/redis-connect');
+const redis = require('./config/redis-connect');
 const PORT = process.env.PORT || 3000;
 const mysql = require('mysql')
 const sqlDB = require('./config/sqlConnect')
@@ -20,7 +20,7 @@ connectDB();
 
 COREAPP = {};
 //redis connection
-// redis();
+redis();
 
 // SQL Connection
 sqlDB.connect((err) => {
