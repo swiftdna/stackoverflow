@@ -32,14 +32,31 @@ const kakfafy = async (rid, req, res) => {
   const kafka = require("./kafka/client");
   const { user, params, query, body } = req;
   const modifiedRequest = { rid, user, params, query, body };
-  // // caching layer with redis
-  // const client = COREAPP.rclient;
-  // const cachedResponse = await client.get(rid);
-  // if (query && query.cache && cachedResponse) {
-  //   res.json(JSON.parse(cachedResponse));
-  //   console.log(`Served ${rid} from cache`);
-  //   return;
-  // }
+  const cachedRoutes = ['getALLtags'];
+  const removeKeys = {
+    'addTag': 'getALLtags'
+  }
+  const isRouteWhitelisted = (route_id) => {
+    return cachedRoutes.indexOf(route_id) !== -1;
+  }
+  // caching layer with redis
+  if (isRouteWhitelisted(rid)) {
+    const client = COREAPP.rclient;
+    const cachedResponse = await client.get(rid);
+    if (query && query.cache && cachedResponse) {
+      res.json(JSON.parse(cachedResponse));
+      console.log(`Served ${rid} from cache`);
+      return;
+    }
+  }
+  // Clear existing cache
+  if (rid && removeKeys[rid]) {
+    console.log('====> REMOVING !!!! ========');
+    const client = COREAPP.rclient;
+    const keyToBeRemoved = removeKeys[rid];
+    await client.del(keyToBeRemoved);
+    console.log(`${keyToBeRemoved} data removed successfully from cache`);
+  }
   return kafka.make_request(
     "stackoverflow_backend_processing",
     modifiedRequest,
@@ -48,9 +65,12 @@ const kakfafy = async (rid, req, res) => {
         console.log("Inside err");
         res.json(err);
       } else {
-        // Add data to cache
-        // await client.set(rid, JSON.stringify(results));
-        // console.log(`Saved ${rid} data to cache`);
+        if (isRouteWhitelisted(rid)) {
+          // Add data to cache
+          const client = COREAPP.rclient;
+          await client.set(rid, JSON.stringify(results));
+          console.log(`Saved ${rid} data to cache`);
+        }
         res.json(results);
       }
     }
