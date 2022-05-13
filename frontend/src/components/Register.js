@@ -91,7 +91,7 @@ const submitSignup = (e) => {
 						Join the Stack Overflow community
 					  </h3>
 	  
-					  {info.map((text) => {
+					  {info && info.map((text) => {
 						return (
 						  <div className="my-3">
 							{text.icon}

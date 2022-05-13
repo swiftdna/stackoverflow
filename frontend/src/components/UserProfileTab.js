@@ -68,7 +68,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about}) {
                     <div>
                     
                     {
-                      gold.map(function(element){
+                      gold && gold.map(function(element){
                           return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
                                                marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
                                                height:"20px", borderRadius: "5px"}}>
@@ -91,7 +91,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about}) {
                     <div>
                     
                     {
-                      silver.map(function(element){
+                      silver && silver.map(function(element){
                           return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
                                                marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",
                                                height:"20px", borderRadius: "5px"}}>
@@ -113,7 +113,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about}) {
 
                 <div>    
                     {
-                      bronze.map(function(element)
+                      bronze && bronze.map(function(element)
                       {
                           return <div style={{ marginLeft:"20px", backgroundColor: "black", color: "white",
                                                marginTop: "5px", paddingLeft: "20px", width: "150px", fontSize:"13px",

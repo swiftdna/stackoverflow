@@ -28,7 +28,6 @@ export default function ContentCard({ data, type, questionID, qQuthor, fn}) {
             // Add the comment here
             if (qID === elementID) {
                 // Question comment
-                console.log('q comment');
                 addQuestionComment(dispatch, qID, comment, (err, successFlag) => {
                     setComment('');
                 });

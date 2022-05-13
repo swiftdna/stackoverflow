@@ -108,7 +108,7 @@ export default function QuestionSummaryCard({data, isUser, fn}) {
                     </div>
                     <div className="tags d-flex gs4 fw-wrap mt2 t-java t-string t-random">
 
-              {data.tags.map((_tag) => (                       
+              {data && data.tags && data.tags.map((_tag) => (                       
                        <a href onClick={() => openTagQuestions(_tag)} className="post-tag flex--item" title="" rel="tag">{_tag}</a> 
             ))}
                     </div>

@@ -69,7 +69,9 @@ export default function Test({ show, mode, data, extras, fn }) {
             }));
             return;
         }
-        multiSelections.map(selectedTag => modifiedData.tags.push(selectedTag.tagName));
+        if (multiSelections) {
+            multiSelections.map(selectedTag => modifiedData.tags.push(selectedTag.tagName));
+        }
         console.log('modifiedData -> ', modifiedData);
         const successFlag = await editQuestion(extras._id, modifiedData);
         if (successFlag) {
