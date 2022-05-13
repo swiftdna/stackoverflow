@@ -59,18 +59,17 @@ function AllQuestions({data, isAuthorRequired, questionId})
                 { (data.status=="pending" )?
                   <div>
                      <span>pending</span>
-                  </div>
-                   : ''}
+                  </div> : ""}
                   { 
 
-            bestAnswer ? <div>
+           ( bestAnswer) ? <div>
                      <span>accepted</span>
-                  </div>: ''
+                  </div> : ""
                }
                  
 
             </div>
-                :
+                
 
             <div className="all-option" style={{borderStyle:"solid", 
                                         color:"black",
@@ -80,7 +79,6 @@ function AllQuestions({data, isAuthorRequired, questionId})
               <span>answers</span>
             </div>
             
-            }
             <div className="all-option">
               <small>{data.views} views</small>
             </div>
@@ -91,15 +89,6 @@ function AllQuestions({data, isAuthorRequired, questionId})
 
          <a href onClick={() => openQuestion(questionId)} title={data.title} 
                  style={{fontWeight:"bold"}}className="question-hyperlink">{data.title}</a>
-
-          <div
-            style={{
-              maxWidth: "90%",
-            }}
-          >
-            
-            <div>{data.isMultiMedia ? <Output data={ data.text } /> : <p>{data.text}</p>}</div>
-          </div>
           <div
             style={{
               display: "flex",
