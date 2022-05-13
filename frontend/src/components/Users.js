@@ -10,7 +10,7 @@ import axios from 'axios';
 
 export function Users() {
 
-    const [usersResponse, SetUsersResponse] = useState("");
+    const [usersResponse, SetUsersResponse] = useState([]);
     const navigate = useNavigate();
     const [searchTitle, setSearchTitle] = useState("");
 
@@ -30,15 +30,34 @@ export function Users() {
                 <Col xs={10} style={{paddingLeft: '20px'}}>
                 <UsersContainer>
                     <h1>Users</h1>
+
                    <div>
+                     
                      <div className="search-container" style={{width: '250px'}}>
                         <FaSearch style={{fontSize: '14px'}} />
-                        <input type="text" placeholder="Filter by user"/>
-                    </div>
+                        <input type="text" 
+                               placeholder="Filter by user"
+                               onChange={(e) => setSearchTitle(e.target.value)}
+                        />
+                     </div>
+
                    </div>
 
                    <div className="tags-container">
-                   {usersResponse && usersResponse.map(userItem => <UserItem data={userItem} />)}
+
+        {usersResponse.filter((value) => 
+          {
+            if (searchTitle === "") 
+            {
+              return  value;
+            } 
+            else if (  value.username && (value.username.toLowerCase().includes(searchTitle.toLowerCase())) )  
+            {
+              return value;
+            }
+          })
+          .map((userItem) => <UserItem data={userItem} />)}
+
                    </div>
                 </UsersContainer>
             </Col>

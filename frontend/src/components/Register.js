@@ -20,7 +20,6 @@ const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 
 const submitSignup = (e) => {
-	e.preventDefault();
     const data = {
 		username,
 	  email,
