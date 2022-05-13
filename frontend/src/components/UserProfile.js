@@ -187,7 +187,7 @@ function UserProfile() {
                     toggleState === 3 ? "content  active-content" : "content"
                   }
                 >
-                  <UserEditProfile />
+                  <UserEditProfile pic={userPersonalDetails.profilePhoto}/>
                 </div>
               </div>
             </div>

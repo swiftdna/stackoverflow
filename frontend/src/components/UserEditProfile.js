@@ -3,7 +3,7 @@ import axios from "axios";
 import gLogo from "./Images/user4.png";
 import styled from "styled-components";
 
-function UserEditProfile()
+function UserEditProfile({pic})
 {
     const [location, SetLocation] = useState("");
     const [about, SetAboutMe] = useState("");
@@ -39,18 +39,17 @@ function UserEditProfile()
       formData.append('cloud_name', 'dac0hzhv5')
       formData.append('upload_preset', 'j8gp4zov')
   
-      return axios.post(
+       axios.post(
         'https://api.cloudinary.com/v1_1/dac0hzhv5/image/upload',
-        formData
-      );
+        formData).then((res) => {
+             SetProfilePhoto(res.data.url)
+        })
     }
 
-    console.log("-------sunny----------");
-    console.log(profilePhoto);
-    console.log("-----------------------")
 
 const onSubmit=()=>
 {
+  
   axios.put(`/api/editUserDetails`, data)
     .then(response => {
     })
@@ -68,7 +67,7 @@ const onSubmit=()=>
 
              <div  style={{marginTop:"15px"}}>
              <div className="profile-pic">
-                <img src={gLogo} id="output" width="200" />
+                <img src={pic} id="output" width="200" />
                 <br/>
                 
                 <div style={{marginTop:"8px"}}>
@@ -124,5 +123,6 @@ const onSubmit=()=>
 
 export default UserEditProfile;
 const UserEditContainer = styled.footer`
+
 
 `;

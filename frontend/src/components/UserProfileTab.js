@@ -184,7 +184,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about}) {
  .user-reached
  {
     margin-left: 120px;
-    margin-top: -61px;
+    margin-top: -48px;
  }
 
  .user-answers
