@@ -91,7 +91,6 @@ export function searchQuestions(dispatch, searchQuery, sortBy) {
         if (searchQuery.indexOf('user:') !== -1 && searchQuery.indexOf('[') !== -1 && searchQuery.indexOf(']') !== -1) {
             params.key = 'user_tag';
         } else if (searchQuery.indexOf('[') === 0 && searchQuery.indexOf(']') !== -1) {
-                        alert("sunny");
 
             params.key = 'tag';
         } else if (searchQuery.indexOf('user:') !== -1) {

@@ -1,10 +1,13 @@
+
+import React, { useEffect, useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Output from 'editorjs-react-renderer';
 import UserCard from './UserCard';
 import { formatShortDate } from '../utils';
+import axios from 'axios';
 
-export default function QuestionSummaryCard({data}) {
+export default function QuestionSummaryCard({data, isUser}) {
     const navigate = useNavigate();
 
     const openQuestion = (id) => {
@@ -15,10 +18,40 @@ export default function QuestionSummaryCard({data}) {
         navigate(`/questionTag/${tag}`);
       }
 
-	return (
+    const AcceptQuestion = (questionid) => 
+    {
+            axios.put(`/api/approvequestion/${questionid}`).then((response) => 
+            {
+
+            })
+            .catch((error) => {
+              alert(error.response.data.message);
+              })
+            ;
+          navigate('/adminReview');
+      }
+
+    const RejectQuestion = (questionid) =>
+    {
+            axios.get(`/api/rejectQuestion/${questionid}`).then((response) => 
+            {
+
+            })
+            .catch((error) => {
+              alert(error.response.data.message);
+              })
+            ;
+          navigate('/adminReview');
+    }
+
+    return (
 		<Row>
             <Col xs={1}>
-                <div className="statscontainer">
+             {  
+                isUser ?
+
+                
+                    <div className="statscontainer">
                     <div className="stats">
                         <div className="vote">
                             <div className="votes">
@@ -31,7 +64,28 @@ export default function QuestionSummaryCard({data}) {
                         </div>
                         <p className="views">{data.views} views</p>
                     </div>
-                </div>
+                    </div>
+                 :
+
+
+             <div className="all-option" style={{borderStyle:"solid ",
+                              fontSize:"13px", 
+                              color:"white"}}>     
+
+                  <span style={{}}> 
+                     <button onClick={() => AcceptQuestion(data._id)}
+                     style={{ color:"white", padding:"5px", borderRadius:"10px",
+                     backgroundColor: "#009933" }}> accept</button> 
+                   </span><br/><br/>
+
+                  <span> 
+                      <button onClick={() => RejectQuestion(data._id)}
+                      style={{ color:"white", padding:"5px", borderRadius:"10px",
+                      backgroundColor: "red" }}>decline</button> 
+                 </span>
+
+              </div>
+            } 
             </Col>
             <Col xs={11}>
                 <div className="summary">

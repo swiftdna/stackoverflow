@@ -238,7 +238,6 @@ function UserProfileTab({data, bronze, silver, gold, topTags})
     border-radius: 10px;
     width: 650px;
     height: 162px;
-    background-color: 	#E0E0E0;
 }
 
 .top-tags

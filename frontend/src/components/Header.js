@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { OverlayTrigger, Popover, Button, Row, Col } from 'react-bootstrap';
-import { FaList, FaUserAlt, FaHeart, FaStore, FaSearch, FaEnvelope, FaColumns } from 'react-icons/fa';
+import { FaList, FaTags,FaUserAlt,FaCheckCircle,FaPlus, FaHeart, FaStore, FaSearch, FaEnvelope, FaColumns } from 'react-icons/fa';
 import { selectIsLoggedIn } from '../selectors/appSelector';
 import { selectUser } from '../selectors/appSelector';
 import { handleLogoutResponse } from '../actions/app-actions';
@@ -140,7 +140,10 @@ function Navbar() {
               {
                 isAuthenticated ? 
                     <>
-                        { isAdmin() ? <Link to={'/stats'}><FaColumns className="nav-icons" /></Link> : ''}
+                        { isAdmin() ? <Link to={'/stats'}><FaColumns className="nav-icons"/></Link> : ''}
+                        { isAdmin() ? <Link to={'/adminReview/'}><FaCheckCircle className="nav-icons" style={{marginLeft:"7px"}} /></Link> : ''}
+                        { isAdmin() ? <Link to={'/adminAddTag/'}><FaTags className="nav-icons"style={{marginLeft:"7px"}} /></Link> : ''}
+
                         <Link to={'/messages'}><FaEnvelope className="nav-icons msg" /></Link>
                         <Link to={`/userProfile/${userDetails.id}/${userDetails.email}`}><FaUserAlt className="nav-icons last" /></Link>
                         <button type="button" className="btn btn-login" title="Log out" onClick={() => logout()}>Logout</button>

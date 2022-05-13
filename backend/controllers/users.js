@@ -21,8 +21,6 @@ const signup = async (req, res) => {
       email: email,
     });
 
-    console.log("sunnyk" + existingUsername);
-
     if (existingUsername) {
       res.status(400).json({
         message: "Username already exists.",

@@ -6,6 +6,12 @@ const addTag = async (req, callback) => {
     const tagQuestionsAsked = req.body.tagQuestionsAsked
     const tagScore = req.body.tagScore
 
+
+    console.log("sunnt tag name->" + tagName)
+    console.log("sunnt tag name->" + tagDescription)
+    console.log("sunnt tag name->" + tagQuestionsAsked)
+    console.log("sunnt tag name->" + tagScore)
+
     let sqlInsert =
         'Insert INTO tags (tagName,tagDescription,tagQuestionsAsked,tagScore) VALUES(?,?,?,?)'
     db.query(

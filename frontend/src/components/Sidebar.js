@@ -44,7 +44,7 @@ export default function Sidebar() {
                     <li className={isActivePath('questions', 'sub')}>Questions</li>
                     <li className={isActivePath('tags', 'sub')} onClick={() => navigate('/tags')}>Tags</li>
                     <li className={isActivePath('users', 'sub')} onClick={() => navigate('/users')}>Users</li>
-                    <li className={isActivePath('companies', 'sub')} onClick={() => navigate('/adminReview')}>Companies</li>
+                    <li className={isActivePath('companies', 'sub')}>Companies</li>
                 </ol>
             </ol>
         </Col>

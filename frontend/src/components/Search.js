@@ -73,7 +73,7 @@ function Search() {
                         </Col>
                         </Row>
                         <hr />
-                        {searchItems && searchItems.map(searchItem => <QuestionSummaryCard data={searchItem} />)}
+                        {searchItems && searchItems.map(searchItem => <QuestionSummaryCard data={searchItem} isUser={true}/>)}
                         </>}
                     </Row>
                 </>}
