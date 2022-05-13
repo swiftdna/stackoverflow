@@ -3,9 +3,19 @@
  import goldImage from  "./Images/gold.png"
  import silverImage from "./Images/silver.png";
  import bronzeImage from "./Images/bronze.png";
+import { useNavigate, useParams } from 'react-router-dom';
 
-function UserProfileTab({data, bronze, silver, gold, topTags, about})
- {
+function UserProfileTab({data, bronze, silver, gold, topTags, about}) {
+
+    const navigate = useNavigate();
+    const urlParams = useParams();
+
+    const { id } = urlParams;
+    
+    const searchForTag = (name) => {
+        navigate(`/search?q=user:${id} [${name}]`)
+    }
+
     return(
         <UserProfileTabContainer>
         <div className="userProfileTabs">
@@ -126,7 +136,7 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
 
                <p style={{display:"flex", marginLeft:"20px", marginTop:"15px"}}> 
                   <div style={{width:"50px"}}> 
-                      <span className="question-tags"> { item[0]}  </span>
+                      <span className="question-tags" onClick={() => searchForTag(item[0])}> { item[0]}  </span>
                   </div> 
 
                   <div style={{marginLeft:"450px", width:"70px"}}> 
@@ -161,8 +171,8 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
     width: 190px;
     height: 160px;
     border-style: solid;
-    border-color: #888888;
-    border-radius: 10px;
+    border-color: #DEDEDE;
+    border-radius: 5px;
  }
 
 .user-reputation
@@ -211,8 +221,8 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
     width: 270px;
     height: 250px;
     border-style: solid;
-    border-color: #888888;
-    border-radius: 10px;
+    border-color: #DEDEDE;
+    border-radius: 5px;
 }
 
 .badges-silver-tab
@@ -234,8 +244,8 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
 .aboutMe
 {
     border-style: solid;
-    border-color: #888888;
-    border-radius: 10px;
+    border-color: #DEDEDE;
+    border-radius: 5px;
     width: 650px;
     height: 162px;
 }
@@ -251,8 +261,9 @@ function UserProfileTab({data, bronze, silver, gold, topTags, about})
     margin-top: 10px;
     width: 850px;
     height: 400px;
-    border-style: solid; 
-    border-radius: 10px;
+    border-style: solid;
+    border-color: #DEDEDE;
+    border-radius: 5px;
 }
 
 .question-tags

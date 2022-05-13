@@ -7,6 +7,7 @@ import ActivityTab from "./ActivityTab";
 import axios from "axios";
 import UserEditProfile from "./UserEditProfile";
 import Sidebar from "./Sidebar";
+import { Row, Col } from 'react-bootstrap';
 import Loader from "./Loader";
 
 function UserProfile() {
@@ -98,13 +99,10 @@ function UserProfile() {
       {loading ? (
         <Loader />
       ) : (
-        <>
-          <div
-            className="container"
-            style={{ marginTop: "80px", border: "1px solid red;" }}
-          >
-            <Sidebar />
-          </div>
+      <div className="container" style={{marginTop: '80px'}}>
+        <Row>
+          <Sidebar />
+          <Col xs={10} style={{paddingLeft: '20px'}}>
 
           <UserProfileContainer>
             <div className="user-image">
@@ -130,7 +128,7 @@ function UserProfile() {
               <p> {userPersonalDetails.location}</p>
             </div>
 
-            <div className="container">
+            <div>
               <div className="bloc-tabs">
                 <button
                   className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
@@ -162,6 +160,7 @@ function UserProfile() {
                     }
                   >
                     <UserProfileTab
+                      id={id}
                       data={userProfile}
                       bronze={bronzeBages}
                       silver={silverBadges}
@@ -192,7 +191,9 @@ function UserProfile() {
               </div>
             </div>
           </UserProfileContainer>
-        </>
+          </Col>
+        </Row>
+      </div>
       )}
     </>
   );
@@ -205,16 +206,6 @@ const UserProfileContainer = styled.footer`
   ::before,
   ::after {
     box-sizing: border-box;
-  }
-
-  .container {
-    display: flex;
-    flex-direction: column;
-    width: 500px;
-    height: 300px;
-    margin-left: 300px;
-    margin-top: 40px;
-    font-size: 13px;
   }
 
   .bloc-tabs {
@@ -280,18 +271,13 @@ const UserProfileContainer = styled.footer`
   }
 
   .user-image {
-    margin-left: 320px;
-    margin-top: -180px;
   }
 
   .user-join-details {
-    margin-left: 550px;
-    margin-top: -150px;
     font-size: 12px;
     color: #888888;
   }
   .user-location {
-    margin-left: 550px;
     font-size: 12px;
     color: #888888;
   }
