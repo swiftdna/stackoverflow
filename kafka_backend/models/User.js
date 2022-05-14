@@ -17,8 +17,8 @@ const userModel = new Schema({
   Reputation: { type: Number, default: 0 },
   lastseen: { type: Date, default: null },
   about: { type: String, default: null },
-  tags_score: { type: Object, default: null },
-  tags_post_count: { type: Object, default: null },
+  tags_score: { type: Object },
+  tags_post_count: { type: Object },
   username: { type: String, default: null },
 });
 
